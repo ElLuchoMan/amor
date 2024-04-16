@@ -95,6 +95,14 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@netlify-builder/deploy:deploy",
+          "options": {
+            "outputPath": "dist/amor",
+            "netlifyToken": "nfp_xEtjBwunAXoyfjGt7VND45uVf2LzF1pN11ba",
+            "siteId": "amornatyalejo"
+          }
         }
       }
     }
