@@ -7,5 +7,5 @@ export const routes: Routes = [
     { path: 'hello', component: HelloComponent },
     { path:'songs', component: SongsComponent},
     {path:'say-yes', component: SayYesComponent},
-    { path: '**', redirectTo: '/hello' },
+    { path: '**', component: HelloComponent },
 ];
