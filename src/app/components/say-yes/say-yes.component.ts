@@ -1,35 +1,59 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import * as bootstrap from 'bootstrap';
 import { Router } from '@angular/router';
 import { SongsService } from '../../services/songs.service';
 
 @Component({
   selector: 'app-say-yes',
-  standalone: true,
-  imports: [],
   templateUrl: './say-yes.component.html',
-  styleUrl: './say-yes.component.scss'
+  styleUrls: ['./say-yes.component.scss']
 })
-export class SayYesComponent implements OnInit {
+export class SayYesComponent implements OnInit, AfterViewInit {
+  @ViewChild('exampleModal', { static: false }) exampleModalElement: ElementRef | undefined;
+  private modal: any;
+  image = '';
+  insta ='';
+
+  constructor(private router: Router, private service: SongsService) {}
+
   ngOnInit() {
-    this.getIamge();
+    this.getImage();
   }
 
-  private router = inject(Router);
-  private service = inject(SongsService);
-
-  image = '../../../assets/imagen.jpeg';
-
-  goToPage(pageName: string){
-    this.router.navigate([`${pageName}`]);
+  ngAfterViewInit() {
+    this.initModal();
   }
-  getIamge(){
-    this.service.listSongs().subscribe((data:any)=>{
+
+  getImage() {
+    this.service.listSongs().subscribe((data: any) => {
       this.image = data.image;
-      console.log(data.image);
-    })
+      this.insta = data.insta;
+    });
   }
 
-  salirDePagina(){
+  initModal() {
+    if (this.exampleModalElement?.nativeElement) {
+      this.modal = new bootstrap.Modal(this.exampleModalElement.nativeElement, {
+        keyboard: false
+      });
+    } else {
+      console.error('Modal element not found');
+    }
+  }
+
+  openModal() {
+    if (this.modal) {
+      this.modal.show();
+    } else {
+      console.error('Modal is not initialized');
+    }
+  }
+
+  salirDePagina() {
     window.location.href = 'https://youtu.be/7oKZeo779Xg?si=4SM-GqgcJYqmGLNw&t=103';
+  }
+
+  goToPage(pageName: string) {
+    this.router.navigate([pageName]);
   }
 }

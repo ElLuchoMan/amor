@@ -28,6 +28,7 @@
     "@angular/cli": "^17.3.4",
     "@angular/compiler-cli": "^17.3.0",
     "@netlify-builder/deploy": "^5.0.0",
+    "@types/bootstrap": "^5.2.10",
     "@types/jasmine": "~5.1.0",
     "@types/jest": "^29.5.12",
     "jasmine-core": "~5.1.0",
