@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-say-yes',
@@ -8,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './say-yes.component.scss'
 })
 export class SayYesComponent {
+  private router = inject(Router);
 
+  goToPage(pageName: string){
+    this.router.navigate([`${pageName}`]);
+  }
 }
