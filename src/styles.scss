@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+.gradient-custom {
+    background: #6a11cb;
+    
+    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(100, 17, 252, 1));
+    
+    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(100, 17, 252, 1))
+    }
