@@ -25,6 +25,9 @@ export class HelloComponent implements OnInit {
   getText() {
     this.songService.listSongs().subscribe((data: any) => {
       this.text = data.text[0].letter.split("\n\n");
+      setTimeout(() => {
+        this.toastr.success('Información cargada', '¡BIEN!')
+      }, 5000)
     }, (error: any) => {
       console.error('Error fetching letter:', error);
       this.toastr.error(`Error fetching letter: ${error} `, 'ERROR');
@@ -34,5 +37,4 @@ export class HelloComponent implements OnInit {
   goToPage(pageName: string) {
     this.router.navigate([`${pageName}`]);
   }
-
 }
