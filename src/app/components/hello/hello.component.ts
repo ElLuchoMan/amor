@@ -23,7 +23,6 @@ export class HelloComponent implements OnInit{
   getText(){
     this.songService.listSongs().subscribe((data:any)=>{
       this.text = data.text[0].letter.split("\n\n");
-      console.table(data.text[0].letter);
     })
   }
   goToPage(pageName: string){
