@@ -10,22 +10,22 @@ import { Router } from '@angular/router';
   templateUrl: './hello.component.html',
   styleUrl: './hello.component.scss'
 })
-export class HelloComponent implements OnInit{
+export class HelloComponent implements OnInit {
   text: any;
   private songService = inject(SongsService);
-  private router = inject(Router);
+  public router = inject(Router);
 
   ngOnInit(): void {
     this.getText();
-    
+
   }
 
-  getText(){
-    this.songService.listSongs().subscribe((data:any)=>{
+  getText() {
+    this.songService.listSongs().subscribe((data: any) => {
       this.text = data.text[0].letter.split("\n\n");
     })
   }
-  goToPage(pageName: string){
+  goToPage(pageName: string) {
     this.router.navigate([`${pageName}`]);
   }
 
