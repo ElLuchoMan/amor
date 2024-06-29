@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './hello.component.html',
   styleUrl: './hello.component.scss'
 })
-export class HelloComponent implements OnInit{
+export class HelloComponent implements OnInit {
   text: any;
   private songService = inject(SongsService);
   private router = inject(Router);
@@ -19,15 +19,19 @@ export class HelloComponent implements OnInit{
 
   ngOnInit(): void {
     this.getText();
-    
+
   }
 
-  getText(){
-    this.songService.listSongs().subscribe((data:any)=>{
+  getText() {
+    this.songService.listSongs().subscribe((data: any) => {
       this.text = data.text[0].letter.split("\n\n");
-    })
+    }, (error: any) => {
+      console.error('Error fetching letter:', error);
+      this.toastr.error(`Error fetching letter: ${error} `, 'ERROR');
+    }
+    );
   }
-  goToPage(pageName: string){
+  goToPage(pageName: string) {
     this.router.navigate([`${pageName}`]);
   }
 

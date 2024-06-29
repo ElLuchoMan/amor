@@ -15,7 +15,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   image = '';
   insta = '';
 
-  constructor(private router: Router, private service: SongsService, private toastr : ToastrService) { }
+  constructor(private router: Router, private service: SongsService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.getImage();
@@ -33,7 +33,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
       },
       error: (error: any) => {
         console.error('Error fetching image and insta:', error);
-        this.toastr.error( `Error fetching image and insta: ${error} `, 'ERROR');
+        this.toastr.error(`Error fetching image and insta: ${error} `, 'ERROR');
       }
     });
   }
