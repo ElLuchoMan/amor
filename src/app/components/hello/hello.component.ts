@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { SongsService } from '../../services/songs.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-hello',
@@ -14,6 +15,7 @@ export class HelloComponent implements OnInit{
   text: any;
   private songService = inject(SongsService);
   private router = inject(Router);
+  private toastr = inject(ToastrService);
 
   ngOnInit(): void {
     this.getText();

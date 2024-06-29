@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angula
 import * as bootstrap from 'bootstrap';
 import { Router } from '@angular/router';
 import { SongsService } from '../../services/songs.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-say-yes',
@@ -14,7 +15,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   image = '';
   insta = '';
 
-  constructor(private router: Router, private service: SongsService) { }
+  constructor(private router: Router, private service: SongsService, private toastr : ToastrService) { }
 
   ngOnInit(): void {
     this.getImage();
@@ -32,7 +33,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
       },
       error: (error: any) => {
         console.error('Error fetching image and insta:', error);
-        // Puedes manejar el error aquí, por ejemplo mostrando un mensaje al usuario
+        this.toastr.error( `Error fetching image and insta: ${error} `, 'ERROR');
       }
     });
   }
@@ -44,6 +45,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
       });
     } else {
       console.error('Modal element not found');
+      this.toastr.error('Modal element not found', 'ERROR');
     }
   }
 
@@ -52,6 +54,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
       this.modal.show();
     } else {
       console.error('Modal is not initialized');
+      this.toastr.error('Modal is not initialized', 'ERROR');
     }
   }
 
