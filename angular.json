@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/amor",
+            "outputPath": "dist/amor/browser",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -106,7 +106,7 @@
         "deploy": {
           "builder": "@netlify-builder/deploy:deploy",
           "options": {
-            "outputPath": "dist/amor",
+            "outputPath": "dist/amor/browser",
             "netlifyToken": "nfp_S1AXRNh64kRWVQBUQyb2gtWoaXXLEqKa41f7",
             "siteId": "884385a4-399b-4028-bd3e-0ef8d78b8059"
           }
