@@ -6,10 +6,9 @@ import { TristezaComponent } from './components/tristeza/tristeza.component';
 
 export const routes: Routes = [
     { path: '', component: HelloComponent },
-    { path: '/', component: TristezaComponent },
     { path: 'hello', component: HelloComponent },
     { path: 'songs', component: SongsComponent },
     { path: 'say-yes', component: SayYesComponent },
     { path: 'no-estes-triste', component: TristezaComponent },
-    { path: '**', component: TristezaComponent },
+    { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
