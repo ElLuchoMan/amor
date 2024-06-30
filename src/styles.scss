@@ -1,7 +1,10 @@
-body, html {
+html,
+body {
+    min-height: 100%;
     margin: 0;
     padding: 0;
-  }
+    font-family: "Playwrite DE Grund", sans-serif;
+}
 
 .gradient-custom {
     background: #6a11cb;
@@ -9,18 +12,27 @@ body, html {
     background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(100, 17, 252, 1));
     padding: 0;
     margin: 0;
-    height: 100%;
+    min-height: 100vh;
+    width: 100%;
 }
 
-.btn-dark,.btn-dark:active, .btn-dark:visited {
+.btn-dark,
+.btn-dark:active,
+.btn-dark:visited {
     background-color: rgba(106, 17, 203, 1) !important;
-
 }
- .btn-dark:hover {
+.btn-dark:hover {
     background-color: rgba(100, 17, 252, 1) !important;
 }
 .a {
     text-decoration: none;
     font-style: bold;
     color: white;
+    font-family: "Playwrite DE Grund", sans-serif;
+}
+@font-face {
+    font-family: "Playwrite España Decorativa";
+    src: url("./assets/fonts/PlaywriteDEGrund.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
 }
