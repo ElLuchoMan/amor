@@ -1,0 +1,40 @@
+<div class="flexColumn">
+    <div class="cabecera flexColumn">
+        <h1 class="textoCentrado">Ahorcado</h1>
+        <hr>
+        <div class="flexFila filaPuntuaciones">
+            <div class="flexFila filaPuntuacionesAciertos">
+                <div class="flexColumn">
+                    <div class="aciertos textoCentrado">aciertos</div>
+                    <div class="imagenAciertos"></div>
+                </div>
+                <div class="numeroAciertos flexColumn">{{ numeroAciertos }}</div>
+            </div>
+            <div class="flexFila filaPuntuacionesFallos">
+                <div class="flexColumn">
+                    <div class="fallos textoCentrado">fallos</div>
+                    <div class="imagenFallos"></div>
+                </div>
+                <div class="numeroFallos flexColumn">{{ numeroFallos }}</div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+
+<div class="contenido flexFila">
+    <div class="contenedorInformacion flexColumn">
+        <h2 class="textoCentrado">Palabra Oculta</h2>
+        <h2 class="palabraAdivinar textoCentrado">{{ palabraVisible }}</h2>
+        <h4 class="textoCentrado">introduce letra</h4>
+        <input type="text" class="form-control inputParaLetra" placeholder="Letra" required [(ngModel)]="letraElegida"
+            (keyup)="analizarLetra()" [disabled]="juegoTerminado" autofocus />
+        <h2 class="letraElegida textoCentrado">{{ letraElegida }}</h2>
+        <div class="mensaje textoCentrado">{{ mensaje }}</div>
+        <button type="button" class="btn btn-dark botonReiniciar flexFila" (click)="reloadPage()">Reiniciar</button>
+    </div>
+    <div class="contenedorParaAhorcado textoCentrado" [style.backgroundImage]="'url(' + imagenAhorcado + ')'"></div>
+</div>
+<div *ngIf="panelGanador" class="panelGanador textoCentrado mt-5">¡GANASTE!</div>
+<div *ngIf="panelPerdedor" class="panelPerdedor textoCentrado mt-5">¡PERDISTE!</div>
+<button (click)="goToPage('/hello')" type="button" class="btn btn-dark mt-5">VOLVER</button>

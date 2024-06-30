@@ -1,0 +1,119 @@
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.flexFila {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.textoCentrado {
+    margin: auto;
+    text-align: center;
+    font-family: "Playwrite DE Grund", sans-serif;
+}
+
+.cabecera {
+    margin: auto;
+    height: 20%;
+    width: 98%;
+}
+
+.aciertos,
+.fallos {
+    height: 15%;
+}
+
+.imagenAciertos,
+.imagenFallos {
+    height: 78%;
+    width: 80%;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+.imagenAciertos {
+    margin-top: 10px;
+    background-image: url("../../../assets/imagenAciertos.png");
+}
+
+.imagenFallos {
+    margin-top: 10px;
+    background-image: url("../../../assets/imagenFallos.png");
+}
+
+.numeroAciertos,
+.numeroFallos {
+    font-size: 40px;
+}
+
+.filaPuntuacionesAciertos {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 49%;
+    height: 100px;
+    border: 1px solid green;
+}
+
+.filaPuntuacionesFallos {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 49%;
+    height: 100px;
+    border: 1px solid red;
+}
+
+.contenido {
+    height: 70%;
+}
+
+.contenedorInformacion {
+    width: 58%;
+}
+
+.contenedorParaAhorcado {
+    width: 38%;
+    height: 444px;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+.inputParaLetra {
+    width: 60%;
+    margin: auto;
+}
+
+.mensaje {
+    font-size: larger;
+    width: 60%;
+}
+
+.botonReiniciar {
+    width: 60%;
+    background-color: aquamarine;
+    border-radius: 5px;
+    margin: auto;
+}
+
+.panelGanador {
+    width: 100%;
+    height: 15%;
+    background-color: rgba(161, 224, 175, 0.5);
+    top: 85%;
+    margin: auto;
+    font-size: 30px;
+    font-family: "Playwrite DE Grund", sans-serif;
+}
+
+.panelPerdedor {
+    width: 100%;
+    height: 15%;
+    background-color: rosybrown;
+    top: 85%;
+    margin: auto;
+    font-size: 30px;
+    font-family: "Playwrite DE Grund", sans-serif;
+}
