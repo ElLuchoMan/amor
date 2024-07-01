@@ -17,31 +17,31 @@ interface Card {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   cards: Card[] = [
     {
-      title: 'Hello Page',
+      title: 'Hello',
       imageUrl: 'assets/hello.jpg',
-      description: 'Go to the Hello Page',
+      description: '¿Te gustaría recordar cómo te pedí que fueras mi novia? ¡Revívelo aquí!',
       route: '/hello'
     },
     {
-      title: 'Songs Page',
+      title: 'Canciones',
       imageUrl: 'assets/songs.jpg',
-      description: 'Go to the Songs Page',
+      description: '¿Quisieras recordar cada una de las canciones que te dediqué? ¡Escúchalas aquí!',
       route: '/songs'
     },
     {
-      title: 'Say Yes Page',
+      title: 'Pregunta',
       imageUrl: 'assets/say-yes.jpg',
-      description: 'Go to the Say Yes Page',
+      description: 'Mira, aquí está la pregunta más importante de todas.',
       route: '/say-yes'
     },
     {
-      title: 'No Estes Triste',
+      title: 'No Estés Triste',
       imageUrl: 'assets/no-estes-triste.jpg',
-      description: 'Go to the No Estes Triste Page',
+      description: 'Esta es una función especial para ayudarte a distraerte un poco mientras pienso en cómo puedo ayudarte.',
       route: '/no-estes-triste'
     }
   ];
