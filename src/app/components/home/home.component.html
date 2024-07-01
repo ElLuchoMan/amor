@@ -1,12 +1,36 @@
-<h1>Bienvenida</h1>
-<hr>
+<!-- <header>
+    <nav>
+      <ul>
+        <li><a routerLink="/">Inicio</a></li>
+        <li><a routerLink="/hello">Hello</a></li>
+        <li><a routerLink="/songs">Songs</a></li>
+        <li><a routerLink="/say-yes">Say Yes</a></li>
+        <li><a routerLink="/no-estes-triste">No Estes Triste</a></li>
+      </ul>
+    </nav>
+  </header>
+   -->
+<main>
+    <h1>Bienvenida</h1>
+    <hr>
 
-<div class="card-container">
-    <div class="card" *ngFor="let card of cards" (click)="navigateTo(card.route)">
-        <img [src]="card.imageUrl" alt="{{ card.title }}" class="card-image" />
-        <div class="card-content">
-            <h3>{{ card.title }}</h3>
-            <p>{{ card.description }}</p>
+    <p class="intro-description">
+        Bienvenida a nuestro rincón especial. Aquí encontrarás recuerdos y momentos que hemos compartido juntos.
+        Navega a través de las tarjetas para revivir cada uno de estos momentos. ¡Espero que disfrutes este viaje
+        por nuestra historia tanto como yo disfruté crearla para ti!
+    </p>
+
+    <div class="card-container">
+        <div class="card" *ngFor="let card of cards" (click)="navigateTo(card.route)">
+            <img [src]="card.imageUrl" alt="{{ card.title }}" class="card-image" />
+            <div class="card-content">
+                <h3>{{ card.title }}</h3>
+                <p>{{ card.description }}</p>
+            </div>
         </div>
     </div>
-</div>
+</main>
+
+<!-- <footer>
+    <p>&copy; 2024 <a [href]="url">{{ user }}</a>. Todos los derechos reservados.</p>
+</footer> -->
