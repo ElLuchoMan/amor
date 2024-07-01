@@ -1,1 +1,12 @@
-<p>home works!</p>
+<h1>Bienvenida</h1>
+<hr>
+<div class="card-container">
+    <div class="card" *ngFor="let card of cards" (click)="navigateTo(card.route)">
+      <!-- <img [src]="card.imageUrl" alt="{{ card.title }}" class="card-image" /> -->
+      <div class="card-content">
+        <h3>{{ card.title }}</h3>
+        <p>{{ card.description }}</p>
+      </div>
+    </div>
+  </div>
+  
