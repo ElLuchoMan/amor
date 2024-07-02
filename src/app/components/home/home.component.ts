@@ -19,7 +19,7 @@ interface Card {
 export class HomeComponent {
   constructor(private router: Router) { }
   user: string = 'ElLuchoMan';
-  url: string ='https://github.com/ElLuchoMan'
+  url: string = 'https://github.com/ElLuchoMan'
   cards: Card[] = [
     {
       title: 'Hello',

@@ -10,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./say-yes.component.scss']
 })
 export class SayYesComponent implements OnInit, AfterViewInit {
-  @ViewChild('exampleModal', { static: false }) exampleModalElement!: ElementRef | undefined;
+  @ViewChild('exampleModal', { static: false }) exampleModalElement!: ElementRef;
   private modal: bootstrap.Modal | undefined;
   image = '';
   insta = '';

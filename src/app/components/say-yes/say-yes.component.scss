@@ -1,11 +1,20 @@
 img {
-    height: 100%;
+    height: auto;
     width: 100%;
+    border-radius: 8px;
 }
+
 .btn {
     height: 50px;
     width: 150px;
 }
+
 .black {
     color: red;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }

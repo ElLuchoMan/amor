@@ -9,29 +9,31 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './songs.component.html',
-  styleUrl: './songs.component.scss'
+  styleUrls: ['./songs.component.scss']
 })
 export class SongsComponent implements OnInit {
   songs: any;
   private songService = inject(SongsService);
   private router = inject(Router);
-  private toastr = inject(ToastrService)
+  private toastr = inject(ToastrService);
 
   ngOnInit(): void {
     this.getSongs();
-
   }
 
-  getSongs() {
-    this.songService.listSongs().subscribe((data: any) => {
-      this.songs = data.songs;
-    }, (error: any) => {
-      console.error('Error fetching songs:', error);
-      this.toastr.error(`Error fetching songs: ${error} `, 'ERROR');
+  getSongs(): void {
+    this.songService.listSongs().subscribe({
+      next: (data: any) => {
+        this.songs = data.songs;
+      },
+      error: (error: any) => {
+        console.error('Error fetching songs:', error);
+        this.toastr.error(`Error fetching songs: ${error} `, 'ERROR');
+      }
     });
   }
 
-  goToPage(pageName: string) {
-    this.router.navigate([`${pageName}`]);
+  goToPage(pageName: string): void {
+    this.router.navigate([pageName]);
   }
 }

@@ -26,23 +26,24 @@
     height: 15%;
 }
 
-.imagenAciertos,
-.imagenFallos {
+.iconoAciertos,
+.iconoFallos {
     height: 78%;
     width: 80%;
-    background-repeat: no-repeat;
-    background-size: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
 }
 
-.imagenAciertos {
-    margin-top: 10px;
-    size: 100%;
-    background-image: url("../../../assets/imagenAciertos.png");
+.iconoAciertos {
+    margin: 10px 0 10px 0;
+    color: green;
 }
 
-.imagenFallos {
-    margin-top: 10px;
-    background-image: url("../../../assets/imagenFallos.png");
+.iconoFallos {
+    margin: 10px 0 10px 0;
+    color: red;
 }
 
 .numeroAciertos,
@@ -100,6 +101,7 @@
     margin: auto;
     margin-top: 20px;
 }
+
 .panelGanador,
 .panelPerdedor {
     width: 100%;
@@ -148,11 +150,11 @@
         margin-top: 20px;
     }
 
-    .imagenAciertos,
-    .imagenFallos {
+    .iconoAciertos,
+    .iconoFallos {
         height: 60%;
         width: 60%;
-        background-size: contain;
+        font-size: 2.5rem;
         margin: auto;
     }
 }
@@ -181,11 +183,11 @@
         margin-top: 20px;
     }
 
-    .imagenAciertos,
-    .imagenFallos {
+    .iconoAciertos,
+    .iconoFallos {
         height: 50%;
         width: 50%;
-        background-size: contain;
+        font-size: 2rem;
         margin: auto;
     }
 }
@@ -214,11 +216,11 @@
         margin-top: 20px;
     }
 
-    .imagenAciertos,
-    .imagenFallos {
+    .iconoAciertos,
+    .iconoFallos {
         height: 100%;
         width: 50%;
-        background-size: contain;
+        font-size: 1.5rem;
         margin: auto;
     }
 

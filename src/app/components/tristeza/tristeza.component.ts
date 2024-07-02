@@ -199,7 +199,7 @@ export class TristezaComponent {
     this.palabraVisible = this.palabraVisible;
   }
 
-  goToPage(pageName: string) {
+  goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
   }
 

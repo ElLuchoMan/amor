@@ -5,12 +5,11 @@ import { inject, Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SongsService {
-  url = 'https://api.jsonstorage.net/v1/json/6426abfb-bbae-43e1-94d8-70c6cbb1554e/3c955013-acd4-4290-99a9-621ecf24b868';
-  
-  private http = inject ( HttpClient);
+  private readonly url = 'https://api.jsonstorage.net/v1/json/6426abfb-bbae-43e1-94d8-70c6cbb1554e/3c955013-acd4-4290-99a9-621ecf24b868';
+
+  private readonly http = inject(HttpClient);
 
   listSongs() {
     return this.http.get(this.url);
   }
-
 }

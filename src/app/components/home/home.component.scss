@@ -1,71 +1,24 @@
 body {
     margin: 0;
-    background-color: #121212;
-    color: #fff;
+    background-color: #121212; /* Fondo oscuro */
+    color: #fff; /* Texto claro */
 }
 
-header {
-    background-color: #1c1c1c;
-    padding: 10px 0;
+.intro-description {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #ccc; /* Texto gris claro */
     text-align: center;
-}
-
-header nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-}
-
-header nav ul li {
-    margin: 0 15px;
-}
-
-header nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-header nav ul li a:hover {
-    text-decoration: underline;
-}
-
-main {
-    padding: 20px;
-}
-
-footer {
-    background-color: #1c1c1c;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
-
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 10px;
 }
 
 .card {
-    flex: 1 1 calc(25% - 20px);
-    border: 1px solid #444;
+    border: 1px solid #444; /* Borde gris oscuro */
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra más oscura */
     transition: transform 0.2s;
     cursor: pointer;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    background-color: #333;
-    color: #fff;
-    margin: 10px 0;
+    background-color: #333; /* Fondo oscuro para la tarjeta */
+    color: #fff; /* Texto claro dentro de la tarjeta */
 }
 
 .card:hover {
@@ -75,25 +28,27 @@ footer {
 .card img {
     width: 100%;
     height: auto;
+    border-bottom: 1px solid #444; /* Añadir un borde inferior para separar la imagen del contenido */
 }
 
 .card-content {
     padding: 15px;
-    flex: 1;
 }
 
 .card-content h3 {
     margin: 0 0 10px;
+    color: #fff; /* Texto claro para el título */
 }
 
 .card-content p {
     margin: 0;
+    color: #ccc; /* Texto gris claro para la descripción */
 }
 
 .intro-description {
     margin-bottom: 20px;
     font-size: 18px;
-    color: #ccc;
+    color: #ccc; /* Texto gris claro */
     text-align: center;
 }
 

@@ -1,16 +1,17 @@
-<h1>SAY YES, PLEASE</h1>
+<h1 class="fw-bold text-uppercase">SAY YES, PLEASE</h1>
 
 <div class="card text-bg-dark mb-3">
     <div class="card-body">
-        <h5 class="card-title"></h5>
-        <img src="{{image}}" alt="{{image}}">
+        <img [src]="image" alt="Special Image" class="img-fluid rounded">
     </div>
 </div>
 
-<button type="button" class="btn btn-dark mt-5 btn-lg mb-5" (click)="openModal()">SI</button>
-<button type="button" class="btn btn-dark mt-5 btn-lg mb-5" (click)="salirDePagina()">NO</button>
+<div class="buttons text-center mt-5">
+    <button type="button" class="btn btn-dark btn-lg mb-3 me-3" (click)="openModal()">SI</button>
+    <button type="button" class="btn btn-dark btn-lg mb-3 ms-3" (click)="salirDePagina()">NO</button>
+</div>
 
-<div>
+<div class="text-center mt-5">
     <button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">VOLVER</button>
 </div>
 
@@ -18,15 +19,15 @@
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
             <div class="modal-header border-secondary">
+                <h1 class="modal-title" id="exampleModalLabel">Mensaje</h1>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
             <div class="modal-body bg-dark">
                 <h5 class="card-title">GRACIAS POR ACEPTAR, PROMETO DARTE LO MEJOR DE MÍ.</h5>
-                <img src="{{insta}}" alt="{{insta}}">
+                <img [src]="insta" alt="Instagram Image" class="img-fluid rounded">
             </div>
-            <div class="modal-footer border-secondary">
-            </div>
+            <div class="modal-footer border-secondary"></div>
         </div>
     </div>
 </div>

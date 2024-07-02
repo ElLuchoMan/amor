@@ -1,17 +1,5 @@
-<!-- <header>
-    <nav>
-      <ul>
-        <li><a routerLink="/">Inicio</a></li>
-        <li><a routerLink="/hello">Hello</a></li>
-        <li><a routerLink="/songs">Songs</a></li>
-        <li><a routerLink="/say-yes">Say Yes</a></li>
-        <li><a routerLink="/no-estes-triste">No Estes Triste</a></li>
-      </ul>
-    </nav>
-  </header>
-   -->
-<main>
-    <h1>Bienvenida</h1>
+<main class="container">
+    <h1 class="text-center mt-4">Bienvenida</h1>
     <hr>
 
     <p class="intro-description">
@@ -20,17 +8,15 @@
         por nuestra historia tanto como yo disfruté crearla para ti!
     </p>
 
-    <div class="card-container">
-        <div class="card" *ngFor="let card of cards" (click)="navigateTo(card.route)">
-            <img [src]="card.imageUrl" alt="{{ card.title }}" class="card-image" />
-            <div class="card-content">
-                <h3>{{ card.title }}</h3>
-                <p>{{ card.description }}</p>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4" *ngFor="let card of cards">
+            <div class="card h-100" (click)="navigateTo(card.route)">
+                <img [src]="card.imageUrl" alt="{{ card.title }}" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">{{ card.title }}</h5>
+                    <p class="card-text">{{ card.description }}</p>
+                </div>
             </div>
         </div>
     </div>
 </main>
-
-<!-- <footer>
-    <p>&copy; 2024 <a [href]="url">{{ user }}</a>. Todos los derechos reservados.</p>
-</footer> -->

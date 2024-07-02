@@ -9,32 +9,34 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './hello.component.html',
-  styleUrl: './hello.component.scss'
+  styleUrls: ['./hello.component.scss']
 })
 export class HelloComponent implements OnInit {
-  text: any;
+  text: string[] = [];
   private songService = inject(SongsService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
 
   ngOnInit(): void {
     this.getText();
-
   }
 
   getText() {
-    this.songService.listSongs().subscribe((data: any) => {
-      this.text = data.text[0].letter.split("\n\n");
-      setTimeout(() => {
-        this.toastr.success('Información cargada', '¡BIEN!')
-      }, 5000)
-    }, (error: any) => {
-      console.error('Error fetching letter:', error);
-      this.toastr.error(`Error fetching letter: ${error} `, 'ERROR');
-    }
-    );
+    this.songService.listSongs().subscribe({
+      next: (data: any) => {
+        this.text = data.text[0].letter.split("\n\n");
+        setTimeout(() => {
+          this.toastr.success('Información cargada', '¡BIEN!');
+        }, 5000);
+      },
+      error: (error: any) => {
+        console.error('Error fetching letter:', error);
+        this.toastr.error(`Error fetching letter: ${error}`, 'ERROR');
+      }
+    });
   }
-  goToPage(pageName: string) {
+
+  goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
   }
 }

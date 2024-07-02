@@ -1,3 +1,9 @@
+h1 {
+  font-family: "Anton SC", sans-serif;
+  color: #fff;
+  text-align: center;
+}
+
 ul {
   list-style: none;
   padding: 0;
@@ -5,5 +11,17 @@ ul {
 }
 
 li {
-  margin-bottom: 0px;
+  margin-bottom: 10px;
+  font-family: "Roboto", sans-serif;
+  color: #ccc;
+}
+
+iframe {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.btn {
+  height: 50px;
+  width: 150px;
 }
