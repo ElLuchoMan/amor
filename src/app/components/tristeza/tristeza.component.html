@@ -31,7 +31,7 @@
         <h4 *ngIf="!juegoTerminado" class="textoCentrado mt-2">Introduce letra</h4>
         <input *ngIf="!juegoTerminado" type="text" class="form-control inputParaLetra mt-2" placeholder="Letra" required
             [(ngModel)]="letraElegida" (keyup)="analizarLetra()" [disabled]="juegoTerminado" autofocus />
-        <h2>{{ letraElegida }}</h2>
+        <h4>{{ letraElegida }}</h4>
         <div *ngIf="!juegoTerminado" class="mensaje textoCentrado">{{ mensaje }}</div>
         <button *ngIf="!juegoTerminado" type="button" class="btn btn-dark botonReiniciar flexFila"
             (click)="reiniciarJuego()">Reiniciar</button>
