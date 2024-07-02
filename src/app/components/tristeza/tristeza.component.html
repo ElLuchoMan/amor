@@ -33,12 +33,16 @@
             [(ngModel)]="letraElegida" (keyup)="analizarLetra()" [disabled]="juegoTerminado" autofocus />
         <h2>{{ letraElegida }}</h2>
         <div class="mensaje textoCentrado">{{ mensaje }}</div>
-        <button type="button" class="btn btn-dark botonReiniciar flexFila" (click)="reloadPage()">Reiniciar</button>
+        <button type="button" class="btn btn-dark botonReiniciar flexFila" (click)="reiniciarJuego()">Reiniciar</button>
+        <button *ngIf="mostrarCambiarPalabra" type="button" class="btn btn-dark botonReiniciar flexFila mt-2"
+            (click)="cambiarPalabra()">Cambiar
+            palabra</button>
     </div>
     <div *ngIf="numeroFallos > 0" class="contenedorParaAhorcado textoCentrado"
         [style.backgroundImage]="'url(' + imagenAhorcado + ')'"></div>
 </div>
-<button *ngIf="juegoTerminado" type="button" class="btn btn-dark mt-5 me-2" (click)="reloadPage()">Reiniciar</button>
+<button *ngIf="juegoTerminado" type="button" class="btn btn-dark mt-5 me-2"
+    (click)="reiniciarJuego()">Reiniciar</button>
 <button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">Volver</button>
 <div *ngIf="panelGanador" class="panelGanador textoCentrado mt-5 ">¡GANASTE!</div>
 <div *ngIf="panelPerdedor" class="panelPerdedor textoCentrado mt-5">¡PERDISTE!</div>

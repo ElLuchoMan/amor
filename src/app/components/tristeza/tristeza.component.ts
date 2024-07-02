@@ -27,10 +27,25 @@ export class TristezaComponent {
   imagenAhorcado: string = '';
   juegoTerminado: boolean = false;
   letrasUsadas: Set<string> = new Set();
+  reiniciarContador: number = 0;
+  mostrarCambiarPalabra: boolean = false;
 
   constructor() {
-    this.palabraOculta = this.crearPalabraOculta(this.palabrasPosibles);
-    this.palabraVisible = this.crearPalabraVisible(this.palabraOculta);
+    const savedState = localStorage.getItem('hangmanState');
+    if (savedState) {
+      const state = JSON.parse(savedState);
+      this.palabraOculta = state.palabraOculta;
+      this.palabraVisible = state.palabraVisible;
+      this.numeroFallos = state.numeroFallos;
+      this.numeroAciertos = state.numeroAciertos;
+      this.juegoTerminado = state.juegoTerminado;
+      this.panelGanador = state.panelGanador;
+      this.panelPerdedor = state.panelPerdedor;
+      this.letrasUsadas = new Set(state.letrasUsadas);
+    } else {
+      this.palabraOculta = this.crearPalabraOculta(this.palabrasPosibles);
+      this.palabraVisible = this.crearPalabraVisible(this.palabraOculta);
+    }
   }
 
   ngOnInit(): void {
@@ -111,6 +126,8 @@ export class TristezaComponent {
     if (this.comprobarPerdedor()) {
       this.finalizarPerdedor();
     }
+
+    this.saveState();
   }
 
   comprobarPerdedor(): boolean {
@@ -137,12 +154,41 @@ export class TristezaComponent {
     this.panelGanador = true;
     this.juegoTerminado = true;
     this.toastr.success('¡GANASTE!', '¡FELICIDADES!');
+    this.mostrarMensaje('GANADOR');
+    this.clearState();
   }
 
   finalizarPerdedor(): void {
     this.panelPerdedor = true;
     this.juegoTerminado = true;
     this.toastr.error('¡PERDISTE!', 'LÁSTIMA!');
+    this.mostrarMensaje('NO GANADOR');
+    this.clearState();
+  }
+
+  reiniciarJuego(): void {
+    this.reiniciarContador++;
+    if (this.reiniciarContador % 3 === 0) {
+      this.mostrarCambiarPalabra = true;
+      return;
+    }
+    this.numeroFallos = 0;
+    this.numeroAciertos = 0;
+    this.mensaje = '';
+    this.letrasUsadas.clear();
+    this.panelGanador = false;
+    this.panelPerdedor = false;
+    this.juegoTerminado = false;
+    this.palabraVisible = this.crearPalabraVisible(this.palabraOculta);
+    this.actualizarPalabraVisible();
+    this.saveState();
+  }
+
+  cambiarPalabra(): void {
+    this.palabraOculta = this.crearPalabraOculta(this.palabrasPosibles);
+    this.reiniciarContador = 0;
+    this.mostrarCambiarPalabra = false;
+    this.reiniciarJuego();
   }
 
   reloadPage(): void {
@@ -155,5 +201,23 @@ export class TristezaComponent {
 
   goToPage(pageName: string) {
     this.router.navigate([`${pageName}`]);
+  }
+
+  saveState(): void {
+    const state = {
+      palabraOculta: this.palabraOculta,
+      palabraVisible: this.palabraVisible,
+      numeroFallos: this.numeroFallos,
+      numeroAciertos: this.numeroAciertos,
+      juegoTerminado: this.juegoTerminado,
+      panelGanador: this.panelGanador,
+      panelPerdedor: this.panelPerdedor,
+      letrasUsadas: Array.from(this.letrasUsadas)
+    };
+    localStorage.setItem('hangmanState', JSON.stringify(state));
+  }
+
+  clearState(): void {
+    localStorage.removeItem('hangmanState');
   }
 }
