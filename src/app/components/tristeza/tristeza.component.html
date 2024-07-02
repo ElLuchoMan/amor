@@ -1,19 +1,19 @@
 <h1 class="textoCentrado">Ahorcado</h1>
 <hr>
 <div *ngIf="!juegoTerminado" class="flexColumn">
-    <h4 class="textoCentrado mt-1 mb-1">La palabra tiene {{ palabraOculta.length }} letras.</h4>
+    <h4 class="textoCentrado mt-1 mb-1">La palabra tiene {{ palabraOculta.length }} letras</h4>
     <div class="cabecera flexColumn">
         <div class="flexFila filaPuntuaciones">
             <div class="flexFila filaPuntuacionesAciertos">
                 <div class="flexColumn">
-                    <div class="aciertos textoCentrado">aciertos</div>
+                    <div class="aciertos textoCentrado">Aciertos</div>
                     <div class="imagenAciertos"></div>
                 </div>
                 <div class="numeroAciertos flexColumn">{{ numeroAciertos }}</div>
             </div>
             <div class="flexFila filaPuntuacionesFallos">
                 <div class="flexColumn">
-                    <div class="fallos textoCentrado">fallos</div>
+                    <div class="fallos textoCentrado">Fallos</div>
                     <div class="imagenFallos"></div>
                 </div>
                 <div class="numeroFallos flexColumn">{{ numeroFallos }}</div>
@@ -29,8 +29,8 @@
         <h2 class="palabraAdivinar textoCentrado">{{ juegoTerminado && panelPerdedor ? palabraOculta : palabraVisible }}
         </h2>
         <h4 class="textoCentrado mt-2">Introduce letra</h4>
-        <input type="text" class="form-control inputParaLetra mt-2" placeholder="Letra" required [(ngModel)]="letraElegida"
-            (keyup)="analizarLetra()" [disabled]="juegoTerminado" autofocus />
+        <input type="text" class="form-control inputParaLetra mt-2" placeholder="Letra" required
+            [(ngModel)]="letraElegida" (keyup)="analizarLetra()" [disabled]="juegoTerminado" autofocus />
         <h2>{{ letraElegida }}</h2>
         <div class="mensaje textoCentrado">{{ mensaje }}</div>
         <button type="button" class="btn btn-dark botonReiniciar flexFila" (click)="reloadPage()">Reiniciar</button>
