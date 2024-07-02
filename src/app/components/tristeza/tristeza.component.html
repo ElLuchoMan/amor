@@ -1,7 +1,8 @@
-<div class="flexColumn">
+<h1 class="textoCentrado">Ahorcado</h1>
+<hr>
+<div *ngIf="!juegoTerminado" class="flexColumn">
+    <h4 class="textoCentrado mt-1 mb-1">La palabra tiene {{ palabraOculta.length }} letras.</h4>
     <div class="cabecera flexColumn">
-        <h1 class="textoCentrado">Ahorcado</h1>
-        <hr>
         <div class="flexFila filaPuntuaciones">
             <div class="flexFila filaPuntuacionesAciertos">
                 <div class="flexColumn">
@@ -23,18 +24,21 @@
 </div>
 
 <div class="contenido flexFila">
-    <div class="contenedorInformacion flexColumn">
-        <h2 class="textoCentrado">Palabra Oculta</h2>
-        <h2 class="palabraAdivinar textoCentrado">{{ palabraVisible }}</h2>
-        <h4 class="textoCentrado">introduce letra</h4>
+    <div *ngIf="!juegoTerminado" class="contenedorInformacion flexColumn">
+        <h2 class="textoCentrado">{{ juegoTerminado && panelPerdedor ? 'La palabra era:' : 'Palabra Oculta' }}</h2>
+        <h2 class="palabraAdivinar textoCentrado">{{ juegoTerminado && panelPerdedor ? palabraOculta : palabraVisible }}
+        </h2>
+        <h4 class="textoCentrado">Introduce letra</h4>
         <input type="text" class="form-control inputParaLetra" placeholder="Letra" required [(ngModel)]="letraElegida"
             (keyup)="analizarLetra()" [disabled]="juegoTerminado" autofocus />
-        <h2 class="letraElegida textoCentrado">{{ letraElegida }}</h2>
+        <h2>{{ letraElegida }}</h2>
         <div class="mensaje textoCentrado">{{ mensaje }}</div>
         <button type="button" class="btn btn-dark botonReiniciar flexFila" (click)="reloadPage()">Reiniciar</button>
     </div>
-    <div class="contenedorParaAhorcado textoCentrado" [style.backgroundImage]="'url(' + imagenAhorcado + ')'"></div>
+    <div *ngIf="numeroFallos > 0" class="contenedorParaAhorcado textoCentrado"
+        [style.backgroundImage]="'url(' + imagenAhorcado + ')'"></div>
 </div>
-<div *ngIf="panelGanador" class="panelGanador textoCentrado mt-5">¡GANASTE!</div>
+<button *ngIf="juegoTerminado" type="button" class="btn btn-dark mt-5 me-2" (click)="reloadPage()">Reiniciar</button>
+<button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">Volver</button>
+<div *ngIf="panelGanador" class="panelGanador textoCentrado mt-5 ">¡GANASTE!</div>
 <div *ngIf="panelPerdedor" class="panelPerdedor textoCentrado mt-5">¡PERDISTE!</div>
-<button (click)="goToPage('/hello')" type="button" class="btn btn-dark mt-5">VOLVER</button>

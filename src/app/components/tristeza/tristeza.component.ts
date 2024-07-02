@@ -26,6 +26,7 @@ export class TristezaComponent {
   panelPerdedor: boolean = false;
   imagenAhorcado: string = '';
   juegoTerminado: boolean = false;
+  letrasUsadas: Set<string> = new Set();
 
   constructor() {
     this.palabraOculta = this.crearPalabraOculta(this.palabrasPosibles);
@@ -86,20 +87,24 @@ export class TristezaComponent {
   }
 
   comprobarLetras(letra: string): void {
+    if (this.letrasUsadas.has(letra)) {
+      this.mostrarMensaje('Esa letra ya la habías elegido');
+      return;
+    }
+
+    this.letrasUsadas.add(letra);
+
     if (this.palabraOculta.includes(letra)) {
-      if (!this.palabraVisible.includes(letra)) {
-        this.palabraVisible = this.ponerLetraEnPalabraVisible(letra);
-        this.numeroAciertos++;
-        this.actualizarPalabraVisible();
-        this.mostrarMensaje('');
-      } else {
-        this.mostrarMensaje('Esa letra ya la habías elegido');
-      }
+      this.palabraVisible = this.ponerLetraEnPalabraVisible(letra);
+      this.numeroAciertos++;
+      this.actualizarPalabraVisible();
+      this.mostrarMensaje('');
     } else {
       this.mostrarMensaje('La letra elegida no está');
       this.numeroFallos++;
       this.ponerImagen(this.numeroFallos);
     }
+
     if (this.comprobarGanador()) {
       this.finalizarGanador();
     }
@@ -132,14 +137,12 @@ export class TristezaComponent {
     this.panelGanador = true;
     this.juegoTerminado = true;
     this.toastr.success('¡GANASTE!', '¡FELICIDADES!');
-    this.mostrarMensaje('GANADOR');
   }
 
   finalizarPerdedor(): void {
     this.panelPerdedor = true;
     this.juegoTerminado = true;
     this.toastr.error('¡PERDISTE!', 'LÁSTIMA!');
-    this.mostrarMensaje('NO GANADOR');
   }
 
   reloadPage(): void {
@@ -149,6 +152,7 @@ export class TristezaComponent {
   actualizarPalabraVisible(): void {
     this.palabraVisible = this.palabraVisible;
   }
+
   goToPage(pageName: string) {
     this.router.navigate([`${pageName}`]);
   }

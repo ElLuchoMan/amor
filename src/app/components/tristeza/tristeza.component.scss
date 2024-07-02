@@ -13,7 +13,6 @@
 .textoCentrado {
     margin: auto;
     text-align: center;
-    font-family: "Playwrite DE Grund", sans-serif;
 }
 
 .cabecera {
@@ -37,6 +36,7 @@
 
 .imagenAciertos {
     margin-top: 10px;
+    size: 100%;
     background-image: url("../../../assets/imagenAciertos.png");
 }
 
@@ -54,16 +54,18 @@
     margin-top: 10px;
     margin-bottom: 20px;
     width: 49%;
-    height: 100px;
+    height: 60%;
     border: 1px solid green;
+    border-radius: 10px;
 }
 
 .filaPuntuacionesFallos {
     margin-top: 10px;
     margin-bottom: 20px;
     width: 49%;
-    height: 100px;
+    height: 60%;
     border: 1px solid red;
+    border-radius: 10px;
 }
 
 .contenido {
@@ -71,14 +73,16 @@
 }
 
 .contenedorInformacion {
-    width: 58%;
+    width: 50%;
 }
 
 .contenedorParaAhorcado {
     width: 38%;
     height: 444px;
     background-repeat: no-repeat;
-    background-size: auto;
+    background-size: contain;
+    background-position: center;
+    margin-top: 20px;
 }
 
 .inputParaLetra {
@@ -93,27 +97,157 @@
 
 .botonReiniciar {
     width: 60%;
-    background-color: aquamarine;
-    border-radius: 5px;
     margin: auto;
+    margin-top: 20px;
 }
-
-.panelGanador {
-    width: 100%;
-    height: 15%;
-    background-color: rgba(161, 224, 175, 0.5);
-    top: 85%;
-    margin: auto;
-    font-size: 30px;
-    font-family: "Playwrite DE Grund", sans-serif;
-}
-
+.panelGanador,
 .panelPerdedor {
     width: 100%;
     height: 15%;
-    background-color: rosybrown;
-    top: 85%;
+    top: 50%;
+    transform: translateY(-50%);
     margin: auto;
     font-size: 30px;
-    font-family: "Playwrite DE Grund", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.panelGanador {
+    background-color: rgba(161, 224, 175, 0.5);
+    border: 1px solid green;
+}
+
+.panelPerdedor {
+    background-color: rgba(224, 161, 161, 0.5);
+    border: 1px solid red;
+    color: red;
+}
+
+@media (max-width: 1200px) {
+    .flexFila {
+        flex-direction: column;
+    }
+
+    .filaPuntuacionesAciertos,
+    .filaPuntuacionesFallos {
+        width: 100%;
+    }
+
+    .contenedorInformacion,
+    .contenedorParaAhorcado {
+        width: 100%;
+    }
+
+    .contenedorParaAhorcado {
+        height: 300px;
+        margin-top: 20px;
+    }
+
+    .imagenAciertos,
+    .imagenFallos {
+        height: 60%;
+        width: 60%;
+        background-size: contain;
+        margin: auto;
+    }
+}
+
+@media (max-width: 992px) {
+    .numeroAciertos,
+    .numeroFallos {
+        font-size: 30px;
+    }
+
+    .botonReiniciar {
+        width: 80%;
+    }
+
+    .inputParaLetra {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .mensaje {
+        width: 80%;
+    }
+
+    .contenedorParaAhorcado {
+        height: 250px;
+        margin-top: 20px;
+    }
+
+    .imagenAciertos,
+    .imagenFallos {
+        height: 50%;
+        width: 50%;
+        background-size: contain;
+        margin: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .numeroAciertos,
+    .numeroFallos {
+        font-size: 20px;
+    }
+
+    .botonReiniciar {
+        width: 100%;
+    }
+
+    .inputParaLetra {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .mensaje {
+        width: 100%;
+    }
+
+    .contenedorParaAhorcado {
+        height: 200px;
+        margin-top: 20px;
+    }
+
+    .imagenAciertos,
+    .imagenFallos {
+        height: 100%;
+        width: 50%;
+        background-size: contain;
+        margin: auto;
+    }
+
+    .filaPuntuacionesAciertos,
+    .filaPuntuacionesFallos {
+        height: 50%;
+    }
+
+    .botonReiniciar {
+        width: 100%;
+        margin: auto;
+        margin-top: 20px;
+        align-items: center;
+    }
+
+    .panelGanador,
+    .panelPerdedor {
+        width: 100%;
+        height: 10%;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: auto;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
 }
