@@ -28,8 +28,8 @@
         <h2 class="textoCentrado">{{ juegoTerminado && panelPerdedor ? 'La palabra era:' : 'Palabra Oculta' }}</h2>
         <h2 class="palabraAdivinar textoCentrado">{{ juegoTerminado && panelPerdedor ? palabraOculta : palabraVisible }}
         </h2>
-        <h4 class="textoCentrado">Introduce letra</h4>
-        <input type="text" class="form-control inputParaLetra" placeholder="Letra" required [(ngModel)]="letraElegida"
+        <h4 class="textoCentrado mt-2">Introduce letra</h4>
+        <input type="text" class="form-control inputParaLetra mt-2" placeholder="Letra" required [(ngModel)]="letraElegida"
             (keyup)="analizarLetra()" [disabled]="juegoTerminado" autofocus />
         <h2>{{ letraElegida }}</h2>
         <div class="mensaje textoCentrado">{{ mensaje }}</div>
