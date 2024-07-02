@@ -1,0 +1,17 @@
+{
+    "name": "Amor",
+    "short_name": "Amor",
+    "description": "Página dedicada para demostrarle diaramente amor a Natalia.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#317EFB",
+    "theme_color": "#317EFB",
+    "icons": [
+      {
+        "src": "favicon.ico",
+        "sizes": "64x64 32x32 24x24 16x16",
+        "type": "image/x-icon"
+      }
+    ]
+  }
+  

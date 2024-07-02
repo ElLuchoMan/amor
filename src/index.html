@@ -7,6 +7,9 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- mainfest -->
+  <link rel="manifest" href="manifest.json">
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,18 +21,40 @@
   <meta name="keywords" content="NatyAlejo">
   <meta name="author" content="Alejandro Luis Torres">
 
-  <!-- Social Media Meta Tags -->
-  <meta property="og:title" content="NatyAlejo">
-  <meta property="og:description" content="Página dedidaca para demostrarle diaramente amor a Natalia.">
-  <meta property="og:image" content="https://master--amornatyalejo.netlify.app/assets/hello.jpg">
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="NatyAlejo - Amor Diario">
+  <meta name="description" content="Página dedicada para demostrarle diaramente amor a Natalia.">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
   <meta property="og:url" content="https://master--amornatyalejo.netlify.app/">
-  <meta name="twitter:card" content="https://master--amornatyalejo.netlify.app/assets/hello.jpg">
+  <meta property="og:title" content="NatyAlejo - Amor Diario">
+  <meta property="og:description" content="Página dedicada para demostrarle diaramente amor a Natalia.">
+  <meta property="og:image" content="https://master--amornatyalejo.netlify.app/assets/hello.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://master--amornatyalejo.netlify.app/">
+  <meta property="twitter:title" content="NatyAlejo - Amor Diario">
+  <meta property="twitter:description" content="Página dedicada para demostrarle diaramente amor a Natalia.">
+  <meta property="twitter:image" content="https://master--amornatyalejo.netlify.app/assets/hello.jpg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
   <!-- Theme Color -->
   <meta name="theme-color" content="#317EFB">
+  
+  <!-- service worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').then(function (registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }).catch(function (error) {
+        console.log('ServiceWorker registration failed: ', error);
+      });
+    }
+  </script>
 </head>
 
 <body>
