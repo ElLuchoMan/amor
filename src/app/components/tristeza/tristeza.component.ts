@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./tristeza.component.scss']
 })
 export class TristezaComponent {
-  palabrasPosibles: string[] = ["coffie", "milu", "natalia", "mia", "amorcito", "alejandro", "betty"];
+  palabrasPosibles: string[] = ["coffie", "milu", "natalia", "mia", "amorcito", "alejandro", "betty", "monchito", "morado", "elefante"];
   toastr = inject(ToastrService);
   router = inject(Router);
   letras: string = "abcdefghijklmnñopqrstuvwxyz";
