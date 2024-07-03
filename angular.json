@@ -94,7 +94,10 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/_redirects",
+              "src/manifest.json",
+              "src/service-worker.js"
             ],
             "styles": [
               "src/styles.scss",
