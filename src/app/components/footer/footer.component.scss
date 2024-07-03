@@ -1,0 +1,18 @@
+footer {
+    background-color: #343a40;
+    color: #fff;
+    padding: 1rem 0;
+
+    .list-inline-item {
+        margin-right: 10px;
+    }
+
+    .list-inline-item a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .list-inline-item a:hover {
+        text-decoration: underline;
+    }
+}
