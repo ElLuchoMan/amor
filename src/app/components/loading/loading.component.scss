@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  width: 100%;
 }
 
 .heart {
@@ -43,4 +44,11 @@
   50% {
     transform: scale(1.2);
   }
+}
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
 }
