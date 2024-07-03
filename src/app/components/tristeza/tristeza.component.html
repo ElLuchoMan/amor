@@ -33,17 +33,38 @@
             [(ngModel)]="letraElegida" (keyup)="analizarLetra()" [disabled]="juegoTerminado" autofocus />
         <h4>{{ letraElegida }}</h4>
         <div *ngIf="!juegoTerminado" class="mensaje textoCentrado">{{ mensaje }}</div>
-        <button *ngIf="!juegoTerminado" type="button" class="btn btn-dark botonReiniciar flexFila"
-            (click)="reiniciarJuego()">Reiniciar</button>
+        <button type="button" class="btn btn-dark botonReiniciar flexFila"
+            (click)="reiniciarJuego(); clearState(); cambiarPalabra();">Reiniciar</button>
         <button *ngIf="mostrarCambiarPalabra" type="button" class="btn btn-dark botonReiniciar flexFila mt-2"
-            (click)="cambiarPalabra()">Cambiar
-            palabra</button>
+            (click)="cambiarPalabra()">Cambiar palabra</button>
     </div>
     <div *ngIf="numeroFallos > 0" class="contenedorParaAhorcado textoCentrado"
         [style.backgroundImage]="'url(' + imagenAhorcado + ')'"></div>
 </div>
-<button *ngIf="juegoTerminado" type="button" class="btn btn-dark mt-5 me-2"
-    (click)="cambiarPalabra()">Reiniciar</button>
 <button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">Volver</button>
-<div *ngIf="panelGanador" class="panelGanador textoCentrado mt-5 ">¡GANASTE!</div>
-<div *ngIf="panelPerdedor" class="panelPerdedor textoCentrado mt-5">¡PERDISTE!</div>
+
+<!-- Modal General -->
+<div class="modal fade" id="resultadoModal" tabindex="-1" aria-labelledby="resultadoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-secondary">
+                <h1 class="modal-title textoCentrado" id="resultadoModalLabel">{{ modalTitle }}</h1>
+                <button type="button" class="btn-close btn-close-white" (click)="closeModalAndRestart()"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center mb-3">
+                    <i [ngClass]="modalIconClass" [style.color]="modalIconColor" style="font-size: 3rem;"></i>
+                </div>
+                <h2 class="textoCentrado">La palabra era: </h2>
+                <h2 class="textoCentrado">{{ palabraOculta }}</h2>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-dark"
+                    (click)="reiniciarJuego(); clearState(); cambiarPalabra(); cerrarModal()">Reiniciar</button>
+                <button type="button" class="btn btn-dark"
+                    (click)="goToPage('/home'); clearState(); cambiarPalabra(); cerrarModal()">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-tristeza',
@@ -29,6 +30,11 @@ export class TristezaComponent {
   letrasUsadas: Set<string> = new Set();
   reiniciarContador: number = 0;
   mostrarCambiarPalabra: boolean = false;
+
+  // Modal properties
+  modalTitle: string = '';
+  modalIconClass: string = '';
+  modalIconColor: string = '';
 
   constructor() {
     const savedState = localStorage.getItem('hangmanState');
@@ -156,6 +162,12 @@ export class TristezaComponent {
     this.toastr.success('¡GANASTE!', '¡FELICIDADES!');
     this.mostrarMensaje('GANADOR');
     this.clearState();
+
+    this.modalTitle = '¡GANASTE!';
+    this.modalIconClass = 'fas fa-trophy';
+    this.modalIconColor = 'gold';
+    const modal = new bootstrap.Modal(document.getElementById('resultadoModal')!);
+    modal.show();
   }
 
   finalizarPerdedor(): void {
@@ -164,6 +176,12 @@ export class TristezaComponent {
     this.toastr.error('¡PERDISTE!', 'LÁSTIMA!');
     this.mostrarMensaje('NO GANADOR');
     this.clearState();
+
+    this.modalTitle = '¡PERDISTE!';
+    this.modalIconClass = 'fas fa-sad-tear';
+    this.modalIconColor = 'red';
+    const modal = new bootstrap.Modal(document.getElementById('resultadoModal')!);
+    modal.show();
   }
 
   reiniciarJuego(): void {
@@ -219,5 +237,20 @@ export class TristezaComponent {
 
   clearState(): void {
     localStorage.removeItem('hangmanState');
+  }
+
+  cerrarModal(): void {
+    const modalElement = document.getElementById('resultadoModal');
+    if (modalElement) {
+      const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+      modal.hide();
+    }
+  }
+
+  closeModalAndRestart(): void {
+    this.cerrarModal();
+    this.clearState();
+    this.cambiarPalabra();
+    this.reiniciarJuego();
   }
 }
