@@ -3,16 +3,18 @@ import { SongsService } from '../../services/songs.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-hello',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingComponent],
   templateUrl: './hello.component.html',
   styleUrls: ['./hello.component.scss']
 })
 export class HelloComponent implements OnInit {
-  text: string[] = [];
+  text: any;
+  isLoading = true;
   private songService = inject(SongsService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
@@ -22,21 +24,19 @@ export class HelloComponent implements OnInit {
   }
 
   getText() {
-    this.songService.listSongs().subscribe({
-      next: (data: any) => {
-        this.text = data.text[0].letter.split("\n\n");
-        setTimeout(() => {
-          this.toastr.success('Información cargada', '¡BIEN!');
-        }, 5000);
-      },
-      error: (error: any) => {
-        console.error('Error fetching letter:', error);
-        this.toastr.error(`Error fetching letter: ${error}`, 'ERROR');
-      }
+    this.songService.listSongs().subscribe((data: any) => {
+      this.text = data.text[0].letter.split("\n\n");
+      this.toastr.success('Información cargada', '¡BIEN!');
+      this.isLoading = false;
+
+    }, (error: any) => {
+      console.error('Error fetching letter:', error);
+      this.isLoading = false;
+      this.toastr.error(`Error fetching letter: ${error} `, 'ERROR');
     });
   }
 
-  goToPage(pageName: string): void {
+  goToPage(pageName: string) {
     this.router.navigate([`${pageName}`]);
   }
 }

@@ -3,16 +3,18 @@ import { SongsService } from '../../services/songs.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-songs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LoadingComponent],
   templateUrl: './songs.component.html',
   styleUrls: ['./songs.component.scss']
 })
 export class SongsComponent implements OnInit {
   songs: any;
+  isLoading = true;
   private songService = inject(SongsService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
@@ -21,19 +23,18 @@ export class SongsComponent implements OnInit {
     this.getSongs();
   }
 
-  getSongs(): void {
-    this.songService.listSongs().subscribe({
-      next: (data: any) => {
-        this.songs = data.songs;
-      },
-      error: (error: any) => {
-        console.error('Error fetching songs:', error);
-        this.toastr.error(`Error fetching songs: ${error} `, 'ERROR');
-      }
+  getSongs() {
+    this.songService.listSongs().subscribe((data: any) => {
+      this.songs = data.songs;
+      this.isLoading = false;
+    }, (error: any) => {
+      console.error('Error fetching songs:', error);
+      this.isLoading = false;
+      this.toastr.error(`Error fetching songs: ${error} `, 'ERROR');
     });
   }
 
-  goToPage(pageName: string): void {
-    this.router.navigate([pageName]);
+  goToPage(pageName: string) {
+    this.router.navigate([`${pageName}`]);
   }
 }

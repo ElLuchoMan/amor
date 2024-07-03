@@ -1,14 +1,20 @@
-<h1 class="fw-bold text-uppercase">Solo quiero decirte una cosa</h1>
-<div class="songs-container mt-5">
-  <div class="text-container mt-5">
-    <p *ngFor="let line of text" class="text-line">{{ line }}</p>
-  </div>
-  <div class="buttons mt-5">
-    <button (click)="goToPage('say-yes')" type="button" class="btn btn-dark mb-3">HAY ALGO QUE TE PREGUNTARÉ</button>
-    <br>
-    <button (click)="goToPage('songs')" type="button" class="btn btn-dark mt-3">¿QUIERES SABER QUÉ SON LOS
-      NÚMEROS?</button>
-    <br>
-    <button (click)="goToPage('home')" type="button" class="btn btn-dark mt-3">VOLVER</button>
-  </div>
+<!-- hello.component.html -->
+<div *ngIf="isLoading; else content">
+  <app-loading></app-loading>
 </div>
+<ng-template #content>
+  <h1 class="fw-bold text-uppercase">Solo quiero decirte una cosa</h1>
+  <div class="songs-container mt-5">
+    <div class="text-container mt-5">
+      <p *ngFor="let line of text" class="text-line">{{ line }}</p>
+    </div>
+    <div class="buttons mt-5">
+      <button (click)="goToPage('say-yes')" type="button" class="btn btn-dark mb-3">HAY ALGO QUE TE PREGUNTARÉ</button>
+      <br>
+      <button (click)="goToPage('songs')" type="button" class="btn btn-dark mt-3">¿QUIERES SABER QUÉ SON LOS
+        NÚMEROS?</button>
+      <br>
+      <button (click)="goToPage('home')" type="button" class="btn btn-dark mt-3">VOLVER</button>
+    </div>
+  </div>
+</ng-template>
