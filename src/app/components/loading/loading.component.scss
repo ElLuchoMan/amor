@@ -1,7 +1,47 @@
+/* loading.component.scss */
 .loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.heart {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  animation: heartbeat 1.5s infinite;
+}
+
+.heart:before,
+.heart:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 100px;
+  height: 160px;
+  border-radius: 100px 100px 0 0;
+  background: red;
+}
+
+.heart:before {
+  left: 100px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+
+.heart:after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
   }
-  
+  50% {
+    transform: scale(1.2);
+  }
+}
