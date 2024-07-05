@@ -8,6 +8,3 @@
   to = "/service-worker.js"
   status = 200
   force = true
-
-[build]
-command = "npm run build && node sendNotification.js"
