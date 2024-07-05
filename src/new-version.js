@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 const serviceAccount = require('./path/to/firebase-admin-sdk.json');
 const cron = require('node-cron');
-const { SongsService } = require('../src/app/services/songs.service');
+const { SongsService } = require('./app/services/songs.service');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
