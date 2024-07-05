@@ -75,7 +75,7 @@ export class TristezaComponent {
   }
 
   ponerImagen(numero: number): void {
-    this.imagenAhorcado = `../../../assets/img${numero}.jpg`;
+    this.imagenAhorcado = `../../../assets/img${numero}.png`;
     console.log(this.imagenAhorcado);
   }
 
