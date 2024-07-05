@@ -13,8 +13,11 @@ self.addEventListener('install', event => {
       .then(cache => {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
+      }).catch(error => {
+        console.error('Failed to cache resources:', error);
       })
   );
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
@@ -23,7 +26,7 @@ self.addEventListener('activate', event => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
+          if (!cacheWhitelist.includes(cacheName)) {
             return caches.delete(cacheName);
           }
         })
@@ -36,10 +39,19 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
+        return response || fetch(event.request);
+      }).catch(error => {
+        console.error('Failed to fetch resource:', error);
       })
   );
+});
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting().then(() => {
+      self.clients.matchAll().then(clients => {
+        clients.forEach(client => client.postMessage({ type: 'CACHE_UPDATED' }));
+      });
+    });
+  }
 });

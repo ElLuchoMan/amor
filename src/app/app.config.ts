@@ -3,6 +3,7 @@ import { provideRouter, RouterModule } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { routes } from './app.routes';
 
@@ -17,6 +18,10 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-top-center',
       preventDuplicates: true,
     })),
-    importProvidersFrom(RouterModule.forRoot(routes))
+    importProvidersFrom(RouterModule.forRoot(routes)),
+    importProvidersFrom(ServiceWorkerModule.register('service-worker.js', {
+      enabled: true,
+      registrationStrategy: 'registerWhenStable:30000'
+    }))
   ]
 };
