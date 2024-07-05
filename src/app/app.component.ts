@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   messaging = getMessaging(initializeApp(firebaseConfig));
 
   constructor(private updates: SwUpdate, private toastr: ToastrService, private songService: SongsService) { }
-  token = '';
+
   ngOnInit() {
     this.registerServiceWorker();
     this.requestNotificationPermission();
@@ -53,7 +53,6 @@ export class AppComponent implements OnInit {
     getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then((token) => {
       if (token) {
         this.songService.addToken(token);
-        this.toastr.info(token, 'Este es el token');
         console.log('FCM Token:', token);
       } else {
         console.log('No registration token available. Request permission to generate one.');
