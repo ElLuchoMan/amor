@@ -30,8 +30,7 @@
               "src/assets",
               "src/_redirects",
               "src/manifest.json",
-              "src/service-worker.js",
-              "src/firebase-messaging-sw.js"
+              "src/service-worker.js"
             ],
             "styles": [
               "src/styles.scss",
@@ -98,8 +97,7 @@
               "src/assets",
               "src/_redirects",
               "src/manifest.json",
-              "src/service-worker.js",
-              "src/firebase-messaging-sw.js"
+              "src/service-worker.js"
             ],
             "styles": [
               "src/styles.scss",
