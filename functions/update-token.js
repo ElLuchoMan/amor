@@ -1,18 +1,25 @@
 const faunadb = require('faunadb');
 const q = faunadb.query;
-const client = new faunadb.Client({ secret: process.env.FAUNADB_SECRET });
 
 exports.handler = async (event) => {
-  try {
-    const data = JSON.parse(event.body);
-    const { token, user_id } = data;
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ message: 'Method Not Allowed' }),
+    };
+  }
 
-    const response = await client.query(
+  try {
+    const { token, user_id } = JSON.parse(event.body);
+    if (!token || !user_id) {
+      throw new Error('Missing token or user_id');
+    }
+
+    const client = new faunadb.Client({ secret: 'YOUR_FAUNADB_SECRET' });
+
+    const result = await client.query(
       q.Update(
-        q.Select(
-          "ref",
-          q.Get(q.Match(q.Index("user_by_id"), user_id))
-        ),
+        q.Ref(q.Collection('tokens'), user_id),
         { data: { token: token } }
       )
     );
@@ -22,8 +29,9 @@ exports.handler = async (event) => {
       body: JSON.stringify({ message: 'Token actualizado correctamente', token, user_id }),
     };
   } catch (error) {
+    console.error('Error actualizando token:', error);
     return {
-      statusCode: 400,
+      statusCode: 500,
       body: JSON.stringify({ message: 'Error actualizando token', error: error.message }),
     };
   }
