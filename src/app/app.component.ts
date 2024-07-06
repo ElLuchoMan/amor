@@ -8,6 +8,8 @@ import { firebaseConfig } from '../environments/firebase-config';
 import { initializeApp } from "firebase/app";
 import { ToastrService } from 'ngx-toastr';
 import { SongsService } from './services/songs.service';
+import { MessagePayload } from 'firebase/messaging';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -19,21 +21,12 @@ import { SongsService } from './services/songs.service';
 export class AppComponent implements OnInit {
   title = 'amor';
   messaging = getMessaging(initializeApp(firebaseConfig));
-
+  currentMessage = new BehaviorSubject<MessagePayload | null>(null);
   constructor(private updates: SwUpdate, private toastr: ToastrService, private songService: SongsService) { }
   token = '';
   ngOnInit() {
     this.registerServiceWorker();
     this.requestNotificationPermission();
-    if (this.updates.isEnabled) {
-      this.updates.versionUpdates.subscribe(event => {
-        if (event.type === 'VERSION_READY') {
-          if (confirm('Nueva versión disponible, ¿Deseas cargarla?')) {
-            window.location.reload();
-          }
-        }
-      });
-    }
     this.scheduleCacheUpdate();
     this.listenForMessages();
   }
@@ -64,10 +57,17 @@ export class AppComponent implements OnInit {
   }
 
   listenForMessages() {
-    onMessage(this.messaging, (payload) => {
+    onMessage(this.messaging, (payload: any) => {
       console.log('Message received. ', payload);
       this.toastr.info(payload.notification?.body, payload.notification?.title);
+      this.showNotification(payload.notification.title, payload.notification?.body, payload.notification?.image);
+      this.currentMessage.next(payload);
     });
+  }
+  showNotification(title: string, body: string, icon: string) {
+    if (Notification.permission === 'granted') {
+      new Notification(title, { body, icon });
+    }
   }
 
   registerServiceWorker() {
