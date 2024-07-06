@@ -28,3 +28,6 @@
 
 [build.environment]
   FAUNADB_SECRET = "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
+
+[context.production.environment]
+  FAUNADB_SECRET = "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"

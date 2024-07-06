@@ -20,7 +20,7 @@ exports.handler = async (event) => {
             throw new Error('Missing token or user_id');
         }
 
-        const client = new faunadb.Client({ secret: 'fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB' });
+        const client = new faunadb.Client({ secret: process.env.FAUNADB_SECRET });
 
         const result = await client.query(
             q.Update(
