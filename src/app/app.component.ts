@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -10,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SongsService } from './services/songs.service';
 import { MessagePayload } from 'firebase/messaging';
 import { BehaviorSubject } from 'rxjs';
+import { PostToken } from './models/token.model';
 
 @Component({
   selector: 'app-root',
@@ -22,9 +24,12 @@ export class AppComponent implements OnInit {
   title = 'amor';
   messaging = getMessaging(initializeApp(firebaseConfig));
   currentMessage = new BehaviorSubject<MessagePayload | null>(null);
-  constructor(private toastr: ToastrService, private songService: SongsService) { }
+  constructor(private toastr: ToastrService, private songService: SongsService, private http: HttpClient) { }
   token = '';
+  user_id = this.songService.getUUID();
+
   ngOnInit() {
+    this.user_id = this.songService.getUUID();
     this.registerServiceWorker();
     this.requestNotificationPermission();
     this.scheduleCacheUpdate();
@@ -46,12 +51,32 @@ export class AppComponent implements OnInit {
     getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then((token) => {
       if (token) {
         this.songService.token = token;
-        console.log('FCM Token:', token);
+        const postToken: PostToken = {
+          token: token,
+          user_id: this.user_id
+        }
+        this.songService.postToken(postToken).subscribe(response => {
+          console.log('Token actualizado en el servidor:', response);
+          this.getToken(); // Intentar recuperar el token después de actualizarlo en el servidor
+        }, error => {
+          console.error('Error enviando token al servidor', error);
+        });
+
       } else {
         console.log('No registration token available. Request permission to generate one.');
       }
     }).catch((err) => {
       console.log('An error occurred while retrieving token. ', err);
+    });
+  }
+
+  getToken() {
+    this.songService.getToken(this.user_id).subscribe(response => {
+      this.token = response.token;
+      console.log('Token recuperado:', this.token);
+      console.log('uuid', this.user_id);
+    }, error => {
+      console.error('Error recuperando token', error);
     });
   }
 
@@ -63,6 +88,7 @@ export class AppComponent implements OnInit {
       this.currentMessage.next(payload);
     });
   }
+
   showNotification(title: string, body: string, icon: string) {
     if (Notification.permission === 'granted') {
       new Notification(title, { body, icon });
