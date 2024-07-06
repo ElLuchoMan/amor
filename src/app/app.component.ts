@@ -3,6 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SwUpdate } from '@angular/service-worker';
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
+import { firebaseConfig } from '../environments/firebase-config';
+import { initializeApp } from "firebase/app";
+import { ToastrService } from 'ngx-toastr';
+import { SongsService } from './services/songs.service';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +18,9 @@ import { SwUpdate } from '@angular/service-worker';
 })
 export class AppComponent implements OnInit {
   title = 'amor';
+  messaging = getMessaging(initializeApp(firebaseConfig));
 
-  constructor(private updates: SwUpdate) {}
+  constructor(private updates: SwUpdate, private toastr: ToastrService, private songService: SongsService) { }
 
   ngOnInit() {
     this.registerServiceWorker();
@@ -29,23 +35,43 @@ export class AppComponent implements OnInit {
       });
     }
     this.scheduleCacheUpdate();
+    this.listenForMessages();
   }
 
   requestNotificationPermission() {
-    if ('Notification' in window) {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          console.log('Notification permission granted.');
-        } else {
-          console.log('Notification permission denied.');
-        }
-      });
-    }
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+        this.subscribeToNotifications();
+      } else {
+        console.log('Notification permission denied.');
+      }
+    });
+  }
+
+  subscribeToNotifications() {
+    getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then((token) => {
+      if (token) {
+        this.songService.addToken(token);
+        console.log('FCM Token:', token);
+      } else {
+        console.log('No registration token available. Request permission to generate one.');
+      }
+    }).catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+    });
+  }
+
+  listenForMessages() {
+    onMessage(this.messaging, (payload) => {
+      console.log('Message received. ', payload);
+      this.toastr.info(payload.notification?.body, payload.notification?.title);
+    });
   }
 
   registerServiceWorker() {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').then(registration => {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js').then(registration => {
         console.log('Service Worker registered:', registration);
 
         navigator.serviceWorker.addEventListener('message', event => {
