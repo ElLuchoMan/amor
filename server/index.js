@@ -33,8 +33,12 @@ app.post('/api/update-token', (req, res) => {
   res.status(200).json({ message: 'Token actualizado correctamente', token, user_id });
 });
 
-app.get('/api/get-token/:user_id', (req, res) => {
-  const { user_id } = req.params;
+app.get('/api/get-token', (req, res) => {
+  const { user_id } = req.query;
+
+  if (!user_id) {
+    return res.status(400).json({ message: 'User ID is required' });
+  }
 
   const db = readDB();
   const token = db.userTokens[user_id];
