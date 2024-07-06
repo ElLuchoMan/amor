@@ -26,7 +26,7 @@ export class SongsService {
   }
 
   getToken(user_id: string): Observable<{ token: string }> {
-    return this.http.get<{ token: string }>(`${this.apiUrl}/get-token/${user_id}`);
+    return this.http.get<{ token: string }>(`${this.apiUrl}/get-token`, { params: { user_id } });
   }
 
   generateUUID(): string {
