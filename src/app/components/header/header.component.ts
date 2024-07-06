@@ -26,33 +26,20 @@ export class HeaderComponent {
     { label: 'Pregunta', path: '/say-yes' },
     { label: 'No Estés Triste', path: '/no-estes-triste' },
   ];
+  constructor(private toastr: ToastrService, private songService: SongsService) { }
 
-  token: string | null = null;
-  messaging = getMessaging(initializeApp(firebaseConfig));
-  constructor(private toastr: ToastrService) { }
+  user_id = '';
 
   ngOnInit(): void {
-    this.subscribeToNotifications();
-  }
-  subscribeToNotifications() {
-    getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then((token) => {
-      if (token) {
-        this.token = token;
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
-      }
-    }).catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-    });
+    this.user_id = this.songService.getUUID();
   }
 
   copyTokenToClipboard() {
-    if (this.token) {
-      navigator.clipboard.writeText(this.token).then(() => {
-        console.log('Token copied to clipboard!');
-        this.toastr.success('Copiado al portapapeles', undefined);
+    if (this.user_id) {
+      navigator.clipboard.writeText(this.user_id).then(() => {
+        console.log('Uuid copied to clipboard!');
       }).catch(err => {
-        console.error('Could not copy token: ', err);
+        console.error('Could not copy uuid: ', err);
       });
     }
   }
