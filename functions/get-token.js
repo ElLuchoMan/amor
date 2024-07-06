@@ -2,6 +2,18 @@ const faunadb = require('faunadb');
 const q = faunadb.query;
 
 exports.handler = async (event) => {
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+            },
+            body: JSON.stringify({ message: 'Options Request' }),
+        };
+    }
+
     if (event.httpMethod !== 'GET') {
         return {
             statusCode: 405,
@@ -15,16 +27,16 @@ exports.handler = async (event) => {
     }
 
     try {
-        const user_id = event.queryStringParameters.user_id;
-        if (!user_id) {
-            throw new Error('Missing user_id');
-        }
-
-        const client = new faunadb.Client({ secret: 'fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB' });
+        const { user_id } = event.queryStringParameters;
+        const client = new faunadb.Client({ secret: process.env.FAUNADB_SECRET });
 
         const result = await client.query(
-            q.Get(q.Ref(q.Collection('tokens'), user_id))
+            q.Get(
+                q.Ref(q.Collection('tokens'), user_id)
+            )
         );
+
+        const token = result.data.token;
 
         return {
             statusCode: 200,
@@ -33,7 +45,7 @@ exports.handler = async (event) => {
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
             },
-            body: JSON.stringify({ token: result.data.token }),
+            body: JSON.stringify({ token }),
         };
     } catch (error) {
         console.error('Error recuperando token:', error);

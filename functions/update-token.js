@@ -2,6 +2,18 @@ const faunadb = require('faunadb');
 const q = faunadb.query;
 
 exports.handler = async (event) => {
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+            },
+            body: JSON.stringify({ message: 'Options Request' }),
+        };
+    }
+
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
