@@ -5,6 +5,7 @@ import { SongsService } from '../../services/songs.service';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../../environments/firebase-config';
+import { ToastrService } from 'ngx-toastr';
 interface NavLink {
   label: string;
   path: string;
@@ -28,7 +29,7 @@ export class HeaderComponent {
 
   token: string | null = null;
   messaging = getMessaging(initializeApp(firebaseConfig));
-  constructor(private songsService: SongsService) { }
+  constructor(private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.subscribeToNotifications();
@@ -49,6 +50,7 @@ export class HeaderComponent {
     if (this.token) {
       navigator.clipboard.writeText(this.token).then(() => {
         console.log('Token copied to clipboard!');
+        this.toastr.success('Copiado al portapapeles', undefined);
       }).catch(err => {
         console.error('Could not copy token: ', err);
       });
