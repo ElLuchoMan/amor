@@ -422,42 +422,95 @@ function _asyncToGenerator(fn) {
 }
 var faunadb = __webpack_require__(0);
 var q = faunadb.query;
-var client = new faunadb.Client({
-  secret: process.env.Faunadb_SECRET
-});
 exports.handler = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-    var user_id, response;
+    var headers, user_id, client, result;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          _context.prev = 0;
-          user_id = event.path.split("/").pop();
-          _context.next = 4;
-          return client.query(q.Get(q.Match(q.Index("user_by_id"), user_id)));
-        case 4:
-          response = _context.sent;
+          headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
+          };
+          if (!(event.httpMethod === 'OPTIONS')) {
+            _context.next = 3;
+            break;
+          }
           return _context.abrupt("return", {
             statusCode: 200,
+            headers: headers,
             body: JSON.stringify({
-              token: response.data.token
+              message: 'Options Request'
             })
           });
-        case 8:
-          _context.prev = 8;
-          _context.t0 = _context["catch"](0);
+        case 3:
+          if (!(event.httpMethod !== 'GET')) {
+            _context.next = 5;
+            break;
+          }
+          return _context.abrupt("return", {
+            statusCode: 405,
+            headers: headers,
+            body: JSON.stringify({
+              message: 'Method Not Allowed'
+            })
+          });
+        case 5:
+          _context.prev = 5;
+          user_id = event.queryStringParameters.user_id;
+          if (user_id) {
+            _context.next = 9;
+            break;
+          }
+          throw new Error('Missing user_id');
+        case 9:
+          client = new faunadb.Client({
+            secret: "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
+          });
+          _context.next = 12;
+          return client.query(q.Let({
+            match: q.Match(q.Index('tokens_by_user_id'), user_id)
+          }, q.If(q.Exists(q.Var('match')), q.Get(q.Var('match')), null)));
+        case 12:
+          result = _context.sent;
+          if (!(result === null)) {
+            _context.next = 15;
+            break;
+          }
           return _context.abrupt("return", {
             statusCode: 404,
+            headers: headers,
             body: JSON.stringify({
               message: 'Token no encontrado para el usuario proporcionado',
+              user: user_id
+            })
+          });
+        case 15:
+          return _context.abrupt("return", {
+            statusCode: 200,
+            headers: headers,
+            body: JSON.stringify({
+              token: result.data.token
+            })
+          });
+        case 18:
+          _context.prev = 18;
+          _context.t0 = _context["catch"](5);
+          console.error('Error recuperando token:', _context.t0);
+          return _context.abrupt("return", {
+            statusCode: 500,
+            headers: headers,
+            body: JSON.stringify({
+              message: 'Error recuperando token',
               error: _context.t0.message
             })
           });
-        case 11:
+        case 22:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 8]]);
+    }, _callee, null, [[5, 18]]);
   }));
   return function (_x) {
     return _ref.apply(this, arguments);

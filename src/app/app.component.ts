@@ -5,7 +5,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SwUpdate } from '@angular/service-worker';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { firebaseConfig } from '../environments/firebase-config';
+import { firebaseConfig } from './environments/firebase-config';
 import { initializeApp } from "firebase/app";
 import { ToastrService } from 'ngx-toastr';
 import { SongsService } from './services/songs.service';

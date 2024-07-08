@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { HelloComponent } from './components/hello/hello.component';
-import { SongsComponent } from './components/songs/songs.component';
-import { SayYesComponent } from './components/say-yes/say-yes.component';
-import { TristezaComponent } from './components/tristeza/tristeza.component';
+import { HomeComponent } from './pages/home/home.component';
+import { HelloComponent } from './pages/hello/hello.component';
+import { SongsComponent } from './pages/songs/songs.component';
+import { SayYesComponent } from './pages/say-yes/say-yes.component';
+import { TristezaComponent } from './pages/tristeza/tristeza.component';
 
-// Definir una constante para las rutas
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'hello', component: HelloComponent },

@@ -6,7 +6,7 @@ import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getMessaging, provideMessaging } from '@angular/fire/messaging';
-import { firebaseConfig } from '../environments/firebase-config';
+import { firebaseConfig } from './environments/firebase-config';
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {

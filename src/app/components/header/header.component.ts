@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SongsService } from '../../services/songs.service';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '../../../environments/firebase-config';
+import { firebaseConfig } from '../../environments/firebase-config';
 import { ToastrService } from 'ngx-toastr';
 interface NavLink {
   label: string;
