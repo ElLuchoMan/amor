@@ -73,8 +73,7 @@ export class AppComponent implements OnInit {
   getToken() {
     this.songService.getToken(this.user_id).subscribe(response => {
       this.token = response.token;
-      console.log('Token recuperado:', this.token);
-      console.log('uuid', this.user_id);
+      console.log('Token recuperado correctamente');
     }, error => {
       console.error('Error recuperando token', error);
     });
@@ -98,7 +97,7 @@ export class AppComponent implements OnInit {
   registerServiceWorker() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js').then(registration => {
-        console.log('Service Worker registered:', registration);
+        console.log('Service Worker registered');
 
         navigator.serviceWorker.addEventListener('message', event => {
           if (event.data && event.data.type === 'CACHE_UPDATED') {

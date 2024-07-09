@@ -31,7 +31,6 @@ export class TristezaComponent {
   reiniciarContador: number = 0;
   mostrarCambiarPalabra: boolean = false;
 
-  // Modal properties
   modalTitle: string = '';
   modalIconClass: string = '';
   modalIconColor: string = '';

@@ -1,5 +1,3 @@
-// src/app/components/header/header.component.spec.ts
-
 import { TestBed } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -14,7 +12,7 @@ describe('HeaderComponent', () => {
         ToastrModule.forRoot(),
         RouterTestingModule,
         HttpClientTestingModule,
-        HeaderComponent // Importar el componente como independiente
+        HeaderComponent
       ],
       providers: [
         SongsService,
@@ -29,7 +27,7 @@ describe('HeaderComponent', () => {
       writable: true
     });
 
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => { });
   });
 
   it('should create', () => {

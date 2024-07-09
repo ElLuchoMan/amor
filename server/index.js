@@ -30,7 +30,7 @@ app.post('/api/update-token', (req, res) => {
   db.userTokens[user_id] = token;
   writeDB(db);
 
-  res.status(200).json({ message: 'Token actualizado correctamente', token, user_id });
+  res.status(200).json({ message: 'Token actualizado correctamente'});
 });
 
 app.get('/api/get-token', (req, res) => {

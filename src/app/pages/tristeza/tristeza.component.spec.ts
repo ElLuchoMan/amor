@@ -1,5 +1,3 @@
-// src/app/pages/tristeza/tristeza.component.spec.ts
-
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { TristezaComponent } from './tristeza.component';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -23,7 +21,7 @@ describe('TristezaComponent', () => {
         FormsModule,
         TristezaComponent
       ],
-      declarations: []  // No se debe incluir TristezaComponent aquí
+      declarations: []
     }).compileComponents();
   });
 

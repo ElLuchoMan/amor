@@ -1,5 +1,3 @@
-// src/app/pages/songs/songs.component.spec.ts
-
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SongsComponent } from './songs.component';
 import { ToastrModule, ToastrService, TOAST_CONFIG } from 'ngx-toastr';
@@ -23,7 +21,7 @@ describe('SongsComponent', () => {
         ToastrModule.forRoot(),
         RouterTestingModule,
         HttpClientTestingModule,
-        SongsComponent // Importar en lugar de declarar
+        SongsComponent
       ],
       providers: [
         SongsService

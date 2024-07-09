@@ -1,5 +1,3 @@
-// src/app/services/songs.service.spec.ts
-
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SongsService } from './songs.service';
@@ -19,7 +17,6 @@ describe('SongsService', () => {
     service = TestBed.inject(SongsService);
     httpMock = TestBed.inject(HttpTestingController);
 
-    // Mock localStorage
     const store: { [key: string]: string } = {};
     const mockLocalStorage = {
       getItem: jest.fn((key: string) => store[key] || null),

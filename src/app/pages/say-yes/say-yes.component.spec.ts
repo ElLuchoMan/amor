@@ -1,5 +1,3 @@
-// src/app/pages/say-yes/say-yes.component.spec.ts
-
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SayYesComponent } from './say-yes.component';
 import { ToastrModule, ToastrService, TOAST_CONFIG } from 'ngx-toastr';
@@ -79,30 +77,30 @@ describe('SayYesComponent', () => {
     component.initModal();
   });
 
- /* it('should open modal', () => {
-    component.exampleModalElement = {
-      nativeElement: document.createElement('div')
-    } as ElementRef;
-    component.ngAfterViewInit();
-
-    jest.spyOn(component['modal']!, 'show');
-
-    component.openModal();
-
-    expect(component['modal']!.show).toHaveBeenCalled();
-  });
-
- it('should handle error when modal is not initialized', () => {
-    jest.spyOn(toastrService, 'error');
-    component.openModal();
-    expect(toastrService.error).toHaveBeenCalledWith('Modal is not initialized', 'ERROR');
-  });
-  it('should navigate to specific page', () => {
-    jest.spyOn(router, 'navigate');
-
-    component.goToPage('test-page');
-
-    expect(router.navigate).toHaveBeenCalledWith(['test-page']);
-  });
-  */
+  /* it('should open modal', () => {
+     component.exampleModalElement = {
+       nativeElement: document.createElement('div')
+     } as ElementRef;
+     component.ngAfterViewInit();
+ 
+     jest.spyOn(component['modal']!, 'show');
+ 
+     component.openModal();
+ 
+     expect(component['modal']!.show).toHaveBeenCalled();
+   });
+ 
+  it('should handle error when modal is not initialized', () => {
+     jest.spyOn(toastrService, 'error');
+     component.openModal();
+     expect(toastrService.error).toHaveBeenCalledWith('Modal is not initialized', 'ERROR');
+   });
+   it('should navigate to specific page', () => {
+     jest.spyOn(router, 'navigate');
+ 
+     component.goToPage('test-page');
+ 
+     expect(router.navigate).toHaveBeenCalledWith(['test-page']);
+   });
+   */
 });
