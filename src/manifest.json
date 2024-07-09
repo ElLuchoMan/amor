@@ -3,12 +3,43 @@
   "short_name": "Amor",
   "description": "Página dedicada para demostrarle diaramente amor a Natalia.",
   "start_url": "/",
+  "lang": "es",
   "display": "standalone",
-  "background_color": "rgba(106, 17, 203, 1)",
-  "theme_color": "rgba(106, 17, 203, 1)",
+  "background_color": "#6b10cc",
+  "theme_color": "#6b10cc",
+  "categories": [
+    "books",
+    "entertainment",
+    "magazines"
+  ],
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "/assets/logo-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logo-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logo-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logo-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logo-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }
