@@ -21,7 +21,7 @@ messaging.onBackgroundMessage(function(payload) {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: payload.notification.image || '/firebase-logo.png'  // Usa un ícono por defecto si no se proporciona uno
+    icon: payload.notification.image || '/firebase-logo.png'
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);

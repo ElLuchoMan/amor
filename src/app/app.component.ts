@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
         }
         this.songService.postToken(postToken).subscribe(response => {
           console.log('Token actualizado en el servidor:', response);
-          this.getToken(); // Intentar recuperar el token después de actualizarlo en el servidor
+          this.getToken();
         }, error => {
           console.error('Error enviando token al servidor', error);
         });
@@ -143,8 +143,8 @@ export class AppComponent implements OnInit {
       navigator.serviceWorker.ready.then(registration => {
         const options: ExtendedNotificationOptions = {
           body: 'La aplicación se ha actualizado con éxito.',
-          icon: '/assets/icons/icon-72x72.png',
-          badge: '/assets/icons/icon-72x72.png',
+          icon: '../assets/logo-72x72.png',
+          badge: '../assets/logo-72x72.png',
           tag: 'cache-update-notification',
           renotify: true,
           vibrate: [200, 100, 200]
