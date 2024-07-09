@@ -21,6 +21,15 @@ describe('HeaderComponent', () => {
         ToastrService
       ]
     }).compileComponents();
+
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        writeText: jest.fn(),
+      },
+      writable: true
+    });
+
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   it('should create', () => {
@@ -43,7 +52,7 @@ describe('HeaderComponent', () => {
     const fixture = TestBed.createComponent(HeaderComponent);
     const component = fixture.componentInstance;
     component.user_id = 'mock-uuid';
-    const writeTextSpy = jest.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();
+    const writeTextSpy = jest.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined);
     await component.copyTokenToClipboard();
     expect(writeTextSpy).toHaveBeenCalledWith('mock-uuid');
   });
