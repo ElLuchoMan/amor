@@ -1,8 +1,10 @@
+// src/app/services/songs.service.ts
+
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { environment } from '../environments/environment';
-import { PostToken } from '../models/token.model';
 import { Observable } from 'rxjs';
+import { PostToken } from '../models/token.model';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,16 +15,14 @@ export class SongsService {
   private readonly apiUrl = environment.apiUrl;
   private readonly storageKey = 'user-uuid';
 
-
   constructor(private http: HttpClient) { }
 
-  listSongs() {
+  listSongs(): Observable<any> {
     return this.http.get(this.jsonUrl);
   }
 
   postToken(token: PostToken): Observable<PostToken> {
-    console.log('TOKEN', token)
-    return this.http.post<PostToken>(this.apiUrl + '/update-token', token);
+    return this.http.post<PostToken>(`${this.apiUrl}/update-token`, token);
   }
 
   getToken(user_id: string): Observable<{ token: string }> {
@@ -44,5 +44,4 @@ export class SongsService {
     }
     return uuid;
   }
-
 }
