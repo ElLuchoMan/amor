@@ -54,7 +54,7 @@ describe('SongsService', () => {
       expect(songs).toEqual(dummySongs);
     });
 
-    const req = httpMock.expectOne(environment.apiUrl + '/songs');
+    const req = httpMock.expectOne(environment.apiUrl + '/get-songs');
     expect(req.request.method).toBe('GET');
     req.flush(dummySongs);
   });
