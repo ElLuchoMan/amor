@@ -425,7 +425,7 @@ var faunadb = __webpack_require__(0);
 var q = faunadb.query;
 exports.handler = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-    var headers, client, result;
+    var headers, client, result, data;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -463,16 +463,19 @@ exports.handler = /*#__PURE__*/function () {
           });
           _context.prev = 6;
           _context.next = 9;
-          return client.query(q.Get(q.Ref(q.Collection('text'), 'text')));
+          return client.query(q.Map(q.Paginate(q.Documents(q.Collection('text'))), q.Lambda('ref', q.Get(q.Var('ref')))));
         case 9:
           result = _context.sent;
+          data = result.data.map(function (item) {
+            return item.data;
+          });
           return _context.abrupt("return", {
             statusCode: 200,
             headers: headers,
-            body: JSON.stringify(result.data)
+            body: JSON.stringify(data)
           });
-        case 13:
-          _context.prev = 13;
+        case 14:
+          _context.prev = 14;
           _context.t0 = _context["catch"](6);
           return _context.abrupt("return", {
             statusCode: 500,
@@ -482,11 +485,11 @@ exports.handler = /*#__PURE__*/function () {
               error: _context.t0.message
             })
           });
-        case 16:
+        case 17:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[6, 13]]);
+    }, _callee, null, [[6, 14]]);
   }));
   return function (_x) {
     return _ref.apply(this, arguments);
