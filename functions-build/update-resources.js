@@ -392,6 +392,106 @@ function _regeneratorRuntime() {
     }
   }, e;
 }
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _iterableToArrayLimit(r, l) {
+  var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+  if (null != t) {
+    var e,
+      n,
+      i,
+      u,
+      a = [],
+      f = !0,
+      o = !1;
+    try {
+      if (i = (t = t.call(r)).next, 0 === l) {
+        if (Object(t) !== t) return;
+        f = !1;
+      } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+    } catch (r) {
+      o = !0, n = r;
+    } finally {
+      try {
+        if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return;
+      } finally {
+        if (o) throw n;
+      }
+    }
+    return a;
+  }
+}
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+function _createForOfIteratorHelper(o, allowArrayLike) {
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+  if (!it) {
+    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+      if (it) o = it;
+      var i = 0;
+      var F = function F() {};
+      return {
+        s: F,
+        n: function n() {
+          if (i >= o.length) return {
+            done: true
+          };
+          return {
+            done: false,
+            value: o[i++]
+          };
+        },
+        e: function e(_e) {
+          throw _e;
+        },
+        f: F
+      };
+    }
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  var normalCompletion = true,
+    didErr = false,
+    err;
+  return {
+    s: function s() {
+      it = it.call(o);
+    },
+    n: function n() {
+      var step = it.next();
+      normalCompletion = step.done;
+      return step;
+    },
+    e: function e(_e2) {
+      didErr = true;
+      err = _e2;
+    },
+    f: function f() {
+      try {
+        if (!normalCompletion && it["return"] != null) it["return"]();
+      } finally {
+        if (didErr) throw err;
+      }
+    }
+  };
+}
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+  return arr2;
+}
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -426,7 +526,7 @@ var faunadb = __webpack_require__(0);
 var q = faunadb.query;
 exports.handler = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-    var headers, client, _JSON$parse, url, result;
+    var headers, client, resources, results, _iterator, _step, resource, _i, _Object$entries, _Object$entries$_i, key, url, result;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -462,40 +562,79 @@ exports.handler = /*#__PURE__*/function () {
           client = new faunadb.Client({
             secret: "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
           });
-          _JSON$parse = JSON.parse(event.body), url = _JSON$parse.url;
+          resources = JSON.parse(event.body);
           _context.prev = 7;
-          _context.next = 10;
+          results = [];
+          _iterator = _createForOfIteratorHelper(resources);
+          _context.prev = 10;
+          _iterator.s();
+        case 12:
+          if ((_step = _iterator.n()).done) {
+            _context.next = 26;
+            break;
+          }
+          resource = _step.value;
+          _i = 0, _Object$entries = Object.entries(resource);
+        case 15:
+          if (!(_i < _Object$entries.length)) {
+            _context.next = 24;
+            break;
+          }
+          _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2), key = _Object$entries$_i[0], url = _Object$entries$_i[1];
+          _context.next = 19;
           return client.query(q.Create(q.Collection('resources'), {
             data: {
+              type: key,
               url: url
             }
           }));
-        case 10:
+        case 19:
           result = _context.sent;
+          results.push({
+            id: result.ref.id,
+            type: key,
+            url: result.data.url
+          });
+        case 21:
+          _i++;
+          _context.next = 15;
+          break;
+        case 24:
+          _context.next = 12;
+          break;
+        case 26:
+          _context.next = 31;
+          break;
+        case 28:
+          _context.prev = 28;
+          _context.t0 = _context["catch"](10);
+          _iterator.e(_context.t0);
+        case 31:
+          _context.prev = 31;
+          _iterator.f();
+          return _context.finish(31);
+        case 34:
           return _context.abrupt("return", {
             statusCode: 200,
             headers: headers,
-            body: JSON.stringify({
-              id: result.ref.id,
-              url: result.data.url
-            })
+            body: JSON.stringify(results)
           });
-        case 14:
-          _context.prev = 14;
-          _context.t0 = _context["catch"](7);
+        case 37:
+          _context.prev = 37;
+          _context.t1 = _context["catch"](7);
           return _context.abrupt("return", {
             statusCode: 500,
             headers: headers,
             body: JSON.stringify({
-              message: 'Error saving image URL',
-              error: _context.t0.message
+              message: 'Error saving image URLs',
+              error: _context.t1.message
             })
           });
-        case 17:
+        case 40:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[7, 14]]);
+    }, _callee, null, [[7, 37], [10, 28, 31, 34]]);
   }));
   return function (_x) {
     return _ref.apply(this, arguments);
