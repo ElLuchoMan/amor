@@ -13,7 +13,7 @@ import { LoadingComponent } from '../../components/loading/loading.component';
   styleUrls: ['./hello.component.scss']
 })
 export class HelloComponent implements OnInit {
-  text: any;
+  text: string[] = [];
   isLoading = true;
   private songService = inject(SongsService);
   private router = inject(Router);
@@ -26,7 +26,7 @@ export class HelloComponent implements OnInit {
   getText() {
     this.songService.listText().subscribe((data: any) => {
       console.log(data);
-      this.text = data.text[0].letter.split("\n\n");
+      this.text = data[0].letter.split("\n\n");
       this.toastr.success('Información cargada', '¡BIEN!');
       this.isLoading = false;
 

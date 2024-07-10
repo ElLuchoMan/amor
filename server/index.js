@@ -61,8 +61,14 @@ app.get('/api/get-songs', (req, res) => {
 });
 
 app.get('/api/get-text', (req, res) => {
-  const text = readJSON(textPath);
-  res.json(text);
+  const db = readJSON(textPath);
+  const textData = db.text;
+
+  if (textData) {
+    res.status(200).json(textData);
+  } else {
+    res.status(404).json({ message: 'Text not found' });
+  }
 });
 
 app.get('/api/get-resources', (req, res) => {
