@@ -26,26 +26,16 @@ exports.handler = async (event) => {
 
   const client = new faunadb.Client({ secret: process.env.FAUNADB_SECRET });
 
-  const songs = JSON.parse(event.body).songs;
-
   try {
+    const data = JSON.parse(event.body);
     const result = await client.query(
-      q.Map(
-        songs,
-        q.Lambda(
-          "song",
-          q.Create(
-            q.Collection('songs'),
-            { data: q.Var("song") }
-          )
-        )
-      )
+      q.Create(q.Collection('songs'), { data })
     );
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ message: 'Songs added successfully', result }),
+      body: JSON.stringify(result),
     };
   } catch (error) {
     return {

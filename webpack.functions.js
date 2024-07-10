@@ -6,9 +6,9 @@ module.exports = {
     'update-token': './update-token.js',
     'get-token': './get-token.js',
     'get-text': './get-text.js',
-    'get-songs':'./get-songs.js',
+    'get-songs': './get-songs.js',
     'get-resources': './get-resources.js',
-    'add.songs':'./add-songs.js'
+    'add.songs': './add_songs.js'
   },
   target: 'node',
   externals: [nodeExternals()],
