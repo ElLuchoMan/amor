@@ -14,22 +14,24 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   private modal: bootstrap.Modal | undefined;
   image = '';
   insta = '';
+  youtube = '';
 
   constructor(private router: Router, private service: SongsService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.getImage();
+    this.getResources();
   }
 
   ngAfterViewInit(): void {
     this.initModal();
   }
 
-  getImage(): void {
-    this.service.listSongs().subscribe({
+  getResources(): void {
+    this.service.listResources().subscribe({
       next: (data: any) => {
         this.image = data.image || '';
         this.insta = data.insta || '';
+        this.youtube = data.youtube || '';
       },
       error: (error: any) => {
         console.error('Error fetching image and insta:', error);

@@ -61,19 +61,18 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 module.exports = require("faunadb");
 
 /***/ }),
-
-/***/ 5:
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -425,98 +424,43 @@ function _asyncToGenerator(fn) {
 var faunadb = __webpack_require__(0);
 var q = faunadb.query;
 exports.handler = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-    var headers, _JSON$parse, token, user_id, client, result;
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event, context) {
+    var client, result;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          headers = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
-          };
-          if (!(event.httpMethod === 'OPTIONS')) {
-            _context.next = 3;
-            break;
-          }
-          return _context.abrupt("return", {
-            statusCode: 200,
-            headers: headers,
-            body: JSON.stringify({
-              message: 'Options Request'
-            })
-          });
-        case 3:
-          if (!(event.httpMethod !== 'POST')) {
-            _context.next = 5;
-            break;
-          }
-          return _context.abrupt("return", {
-            statusCode: 405,
-            headers: headers,
-            body: JSON.stringify({
-              message: 'Method Not Allowed'
-            })
-          });
-        case 5:
-          _context.prev = 5;
-          _JSON$parse = JSON.parse(event.body), token = _JSON$parse.token, user_id = _JSON$parse.user_id;
-          if (!(!token || !user_id)) {
-            _context.next = 9;
-            break;
-          }
-          throw new Error('Missing token or user_id');
-        case 9:
           client = new faunadb.Client({
-            secret: "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
+            secret: process.env.FAUNA_SECRET
           });
-          _context.next = 12;
-          return client.query(q.Let({
-            match: q.Match(q.Index('tokens_by_user_id'), user_id)
-          }, q.If(q.Exists(q.Var('match')), q.Update(q.Select('ref', q.Get(q.Var('match'))), {
-            data: {
-              token: token
-            }
-          }), q.Create(q.Collection('tokens'), {
-            data: {
-              user_id: user_id,
-              token: token
-            }
-          }))));
-        case 12:
+          _context.prev = 1;
+          _context.next = 4;
+          return client.query(q.Get(q.Ref(q.Collection('songs'), 'songs')));
+        case 4:
           result = _context.sent;
           return _context.abrupt("return", {
             statusCode: 200,
-            headers: headers,
-            body: JSON.stringify({
-              message: 'Token actualizado correctamente',
-              token: token,
-              user_id: user_id
-            })
+            body: JSON.stringify(result.data)
           });
-        case 16:
-          _context.prev = 16;
-          _context.t0 = _context["catch"](5);
-          console.error('Error actualizando token:', _context.t0);
+        case 8:
+          _context.prev = 8;
+          _context.t0 = _context["catch"](1);
           return _context.abrupt("return", {
             statusCode: 500,
-            headers: headers,
             body: JSON.stringify({
-              message: 'Error actualizando token',
+              message: 'Error fetching songs',
               error: _context.t0.message
             })
           });
-        case 20:
+        case 11:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[5, 16]]);
+    }, _callee, null, [[1, 8]]);
   }));
-  return function (_x) {
+  return function (_x, _x2) {
     return _ref.apply(this, arguments);
   };
 }();
 
 /***/ })
-
-/******/ });
+/******/ ]);

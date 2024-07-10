@@ -1,3 +1,5 @@
+// src/app/services/songs.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -9,14 +11,21 @@ import { environment } from '../environments/environment';
 })
 export class SongsService {
   public token = '';
-  private readonly jsonUrl = environment.jsonUrl;
   private readonly apiUrl = environment.apiUrl;
   private readonly storageKey = 'user-uuid';
 
   constructor(private http: HttpClient) { }
 
   listSongs(): Observable<any> {
-    return this.http.get(this.jsonUrl);
+    return this.http.get<any>(`${this.apiUrl}/get-songs`);
+  }
+
+  listText(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/get-text`);
+  }
+
+  listResources(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/get-resources`);
   }
 
   postToken(token: PostToken): Observable<PostToken> {

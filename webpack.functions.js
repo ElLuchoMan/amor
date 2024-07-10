@@ -4,7 +4,10 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   entry: {
     'update-token': './update-token.js',
-    'get-token': './get-token.js'
+    'get-token': './get-token.js',
+    'get-text': './get-text.js',
+    'get-songs':'./get.songs.js',
+    'get-resources': './get-resources.js'
   },
   target: 'node',
   externals: [nodeExternals()],
