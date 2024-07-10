@@ -60,11 +60,11 @@ app.get('/api/get-songs', (req, res) => {
   res.json(songs);
 });
 
-app.post('/api/add-songs', async (req, res) => {
+app.post('/api/update-songs', async (req, res) => {
   const songs = req.body.songs;
 
   try {
-    const response = await fetch('https://amornatyalejo.netlify.app/.netlify/functions/add-songs', {
+    const response = await fetch('https://amornatyalejo.netlify.app/.netlify/functions/update-songs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ songs })
