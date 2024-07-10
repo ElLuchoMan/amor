@@ -7,7 +7,8 @@ module.exports = {
     'get-token': './get-token.js',
     'get-text': './get-text.js',
     'get-songs':'./get-songs.js',
-    'get-resources': './get-resources.js'
+    'get-resources': './get-resources.js',
+    'add.songs':'./add-songs.js'
   },
   target: 'node',
   externals: [nodeExternals()],

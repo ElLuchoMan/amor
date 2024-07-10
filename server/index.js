@@ -60,6 +60,28 @@ app.get('/api/get-songs', (req, res) => {
   res.json(songs);
 });
 
+app.post('/api/add-songs', async (req, res) => {
+  const songs = req.body.songs;
+
+  try {
+    const response = await fetch('https://amornatyalejo.netlify.app/.netlify/functions/add-songs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ songs })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      res.status(200).json({ message: 'Songs added successfully', data });
+    } else {
+      res.status(response.status).json({ message: 'Error adding songs', error: data.error });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 app.get('/api/get-text', (req, res) => {
   const db = readJSON(textPath);
   const textData = db.text;

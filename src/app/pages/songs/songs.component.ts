@@ -25,6 +25,7 @@ export class SongsComponent implements OnInit {
 
   getSongs() {
     this.songService.listSongs().subscribe((data: any) => {
+      console.log(data);
       this.songs = data.songs;
       this.isLoading = false;
     }, (error: any) => {
