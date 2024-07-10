@@ -30,9 +30,9 @@ export class HelloComponent implements OnInit {
       this.isLoading = false;
 
     }, (error: any) => {
-      console.error('Error fetching letter:', error);
+      console.error('Error fetching letter:', error[0] || error);
       this.isLoading = false;
-      this.toastr.error(`Error fetching letter: ${error[0]||error} `, 'ERROR');
+      this.toastr.error(`Error fetching letter: ${error[0] || error} `, 'ERROR');
     });
   }
 
