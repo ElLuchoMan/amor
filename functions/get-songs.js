@@ -34,12 +34,12 @@ exports.handler = async (event) => {
       )
     );
 
-    const data = result.data.map(item => item.data);
+    const songs = result.data.map(item => item.data);
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(data),
+      body: JSON.stringify({ songs }),
     };
   } catch (error) {
     return {

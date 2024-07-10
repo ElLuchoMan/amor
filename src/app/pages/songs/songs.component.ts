@@ -13,7 +13,7 @@ import { LoadingComponent } from '../../components/loading/loading.component';
   styleUrls: ['./songs.component.scss']
 })
 export class SongsComponent implements OnInit {
-  songs: any;
+  songs: any[] = [];
   isLoading = true;
   private songService = inject(SongsService);
   private router = inject(Router);
@@ -25,7 +25,7 @@ export class SongsComponent implements OnInit {
 
   getSongs() {
     this.songService.listSongs().subscribe((data: any) => {
-      console.log('Songs', data);
+      console.log(data)
       this.songs = data[0].songs;
       this.isLoading = false;
     }, (error: any) => {
