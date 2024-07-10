@@ -25,7 +25,8 @@ export class HelloComponent implements OnInit {
 
   getText() {
     this.songService.listText().subscribe((data: any) => {
-      this.text = data.text[0].letter.split("\n\n");
+      console.log(data);
+      this.text = data.text.letter.split("\n\n");
       this.toastr.success('Información cargada', '¡BIEN!');
       this.isLoading = false;
 
