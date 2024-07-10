@@ -489,9 +489,7 @@ exports.handler = /*#__PURE__*/function () {
             statusCode: 200,
             headers: headers,
             body: JSON.stringify({
-              message: 'Token actualizado correctamente',
-              token: token,
-              user_id: user_id
+              message: 'Token actualizado correctamente'
             })
           });
         case 16:

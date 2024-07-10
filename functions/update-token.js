@@ -51,7 +51,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             headers,
-            body: JSON.stringify({ message: 'Token actualizado correctamente', token, user_id }),
+            body: JSON.stringify({ message: 'Token actualizado correctamente'}),
         };
     } catch (error) {
         console.error('Error actualizando token:', error);
