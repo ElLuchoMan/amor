@@ -60,26 +60,13 @@ app.get('/api/get-songs', (req, res) => {
   res.json(songs);
 });
 
-app.post('/api/update-songs', async (req, res) => {
-  const songs = req.body.songs;
+app.post('/api/update-songs', (req, res) => {
+  const { songs } = req.body;
+  console.log('Actualizando canciones:', songs);
 
-  try {
-    const response = await fetch('https://amornatyalejo.netlify.app/.netlify/functions/update-songs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ songs })
-    });
+  writeJSON(songsPath, { songs });
 
-    const data = await response.json();
-
-    if (response.ok) {
-      res.status(200).json({ message: 'Songs added successfully', data });
-    } else {
-      res.status(response.status).json({ message: 'Error adding songs', error: data.error });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
+  res.status(200).json({ message: 'Songs updated successfully' });
 });
 
 app.get('/api/get-text', (req, res) => {
@@ -96,6 +83,15 @@ app.get('/api/get-text', (req, res) => {
 app.get('/api/get-resources', (req, res) => {
   const resources = readJSON(resourcesPath);
   res.json(resources);
+});
+
+app.post('/api/update-resources', (req, res) => {
+  const resources = req.body;
+  console.log('Actualizando recursos:', resources);
+
+  writeJSON(resourcesPath, resources);
+
+  res.status(200).json({ message: 'Resources updated successfully' });
 });
 
 app.get('*', (req, res) => {

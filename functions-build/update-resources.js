@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -73,7 +73,7 @@ module.exports = require("faunadb");
 
 /***/ }),
 
-/***/ 6:
+/***/ 5:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -426,7 +426,7 @@ var faunadb = __webpack_require__(0);
 var q = faunadb.query;
 exports.handler = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-    var headers, client, data, result;
+    var headers, client, _JSON$parse, url, result;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -462,27 +462,32 @@ exports.handler = /*#__PURE__*/function () {
           client = new faunadb.Client({
             secret: "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
           });
-          _context.prev = 6;
-          data = JSON.parse(event.body);
+          _JSON$parse = JSON.parse(event.body), url = _JSON$parse.url;
+          _context.prev = 7;
           _context.next = 10;
-          return client.query(q.Create(q.Collection('songs'), {
-            data: data
+          return client.query(q.Create(q.Collection('resources'), {
+            data: {
+              url: url
+            }
           }));
         case 10:
           result = _context.sent;
           return _context.abrupt("return", {
             statusCode: 200,
             headers: headers,
-            body: JSON.stringify(result)
+            body: JSON.stringify({
+              id: result.ref.id,
+              url: result.data.url
+            })
           });
         case 14:
           _context.prev = 14;
-          _context.t0 = _context["catch"](6);
+          _context.t0 = _context["catch"](7);
           return _context.abrupt("return", {
             statusCode: 500,
             headers: headers,
             body: JSON.stringify({
-              message: 'Error adding songs',
+              message: 'Error saving image URL',
               error: _context.t0.message
             })
           });
@@ -490,7 +495,7 @@ exports.handler = /*#__PURE__*/function () {
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[6, 14]]);
+    }, _callee, null, [[7, 14]]);
   }));
   return function (_x) {
     return _ref.apply(this, arguments);

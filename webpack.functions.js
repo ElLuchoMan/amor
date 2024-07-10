@@ -8,7 +8,8 @@ module.exports = {
     'get-text': './get-text.js',
     'get-songs': './get-songs.js',
     'get-resources': './get-resources.js',
-    'update-songs': './update-songs.js'
+    'update-songs': './update-songs.js',
+    'update-resources': './update-resources.js',
   },
   target: 'node',
   externals: [nodeExternals()],
