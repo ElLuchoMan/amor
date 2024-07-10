@@ -29,6 +29,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   getResources(): void {
     this.service.listResources().subscribe({
       next: (data: any) => {
+        console.log(data);
         this.image = data.image || '';
         this.insta = data.insta || '';
         this.youtube = data.youtube || '';
