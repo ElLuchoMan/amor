@@ -27,11 +27,19 @@ exports.handler = async (event) => {
   const client = new faunadb.Client({ secret: process.env.FAUNADB_SECRET });
 
   try {
-    const result = await client.query(q.Get(q.Ref(q.Collection('songs'), 'songs')));
+    const result = await client.query(
+      q.Map(
+        q.Paginate(q.Documents(q.Collection('songs'))),
+        q.Lambda('ref', q.Get(q.Var('ref')))
+      )
+    );
+
+    const data = result.data.map(item => item.data);
+
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(result.data),
+      body: JSON.stringify(data),
     };
   } catch (error) {
     return {

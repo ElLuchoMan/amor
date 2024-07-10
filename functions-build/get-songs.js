@@ -424,40 +424,74 @@ function _asyncToGenerator(fn) {
 var faunadb = __webpack_require__(0);
 var q = faunadb.query;
 exports.handler = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event, context) {
-    var client, result;
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
+    var headers, client, result, data;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          client = new faunadb.Client({
-            secret: process.env.FAUNA_SECRET
-          });
-          _context.prev = 1;
-          _context.next = 4;
-          return client.query(q.Get(q.Ref(q.Collection('songs'), 'songs')));
-        case 4:
-          result = _context.sent;
+          headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
+          };
+          if (!(event.httpMethod === 'OPTIONS')) {
+            _context.next = 3;
+            break;
+          }
           return _context.abrupt("return", {
             statusCode: 200,
-            body: JSON.stringify(result.data)
+            headers: headers,
+            body: JSON.stringify({
+              message: 'Options Request'
+            })
           });
-        case 8:
-          _context.prev = 8;
-          _context.t0 = _context["catch"](1);
+        case 3:
+          if (!(event.httpMethod !== 'GET')) {
+            _context.next = 5;
+            break;
+          }
+          return _context.abrupt("return", {
+            statusCode: 405,
+            headers: headers,
+            body: JSON.stringify({
+              message: 'Method Not Allowed'
+            })
+          });
+        case 5:
+          client = new faunadb.Client({
+            secret: "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
+          });
+          _context.prev = 6;
+          _context.next = 9;
+          return client.query(q.Map(q.Paginate(q.Documents(q.Collection('songs'))), q.Lambda('ref', q.Get(q.Var('ref')))));
+        case 9:
+          result = _context.sent;
+          data = result.data.map(function (item) {
+            return item.data;
+          });
+          return _context.abrupt("return", {
+            statusCode: 200,
+            headers: headers,
+            body: JSON.stringify(data)
+          });
+        case 14:
+          _context.prev = 14;
+          _context.t0 = _context["catch"](6);
           return _context.abrupt("return", {
             statusCode: 500,
+            headers: headers,
             body: JSON.stringify({
               message: 'Error fetching songs',
               error: _context.t0.message
             })
           });
-        case 11:
+        case 17:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[1, 8]]);
+    }, _callee, null, [[6, 14]]);
   }));
-  return function (_x, _x2) {
+  return function (_x) {
     return _ref.apply(this, arguments);
   };
 }();
