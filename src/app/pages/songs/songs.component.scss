@@ -1,3 +1,10 @@
+/* songs.component.scss */
+body {
+  margin: 0;
+  background-color: #121212;
+  color: #fff;
+}
+
 h1 {
   font-family: "Anton SC", sans-serif;
   color: #fff;
@@ -24,4 +31,11 @@ iframe {
 .btn {
   height: 50px;
   width: 150px;
+}
+
+.reference {
+  font-family: 'Roboto', sans-serif; /* Reemplaza 'YourNumberFont' con la fuente deseada */
+  color: #f39c12; /* Color opcional para destacar los números */
+  font-style: italic; /* Opcional: hacer que el número se vea como una referencia */
+  font-weight: bold; /* Opcional: hacer que el número se vea como una referencia */
 }

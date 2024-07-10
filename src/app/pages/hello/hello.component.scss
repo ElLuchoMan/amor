@@ -1,21 +1,22 @@
+/* hello.component.scss */
 body {
     margin: 0;
     background-color: #121212;
     color: #fff;
-}
-
-.text-container {
+  }
+  
+  .text-container {
     margin-top: 20px;
-}
-
-.text-line {
+  }
+  
+  .text-line {
     font-size: 18px;
     color: #ccc;
     margin-bottom: 10px;
-}
-
-.text-line .reference {
-    font-family: "Anton S", sans-serif;
+  }
+  
+  .text-line .reference {
+    font-family: 'Roboto', sans-serif;
     color: #f39c12;
     font-style: italic;
     font-weight: bold;
@@ -25,20 +26,21 @@ body {
     background-color: #222;
     padding: 2px 5px;
     border-radius: 3px;
-}
-
-.buttons {
+  }
+  
+  .buttons {
     text-align: center;
-}
-
-.buttons .btn {
+  }
+  
+  .buttons .btn {
     width: 100%;
     max-width: 300px;
     margin: 10px auto;
-}
-
-@media (max-width: 768px) {
+  }
+  
+  @media (max-width: 768px) {
     .buttons .btn {
-        width: 100%;
+      width: 100%;
     }
-}
+  }
+  
