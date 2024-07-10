@@ -14,6 +14,19 @@ body {
     margin-bottom: 10px;
 }
 
+.text-line .reference {
+    font-family: "Anton S", sans-serif;
+    color: #f39c12;
+    font-style: italic;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-right: 5px;
+    display: inline-block;
+    background-color: #222;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
 .buttons {
     text-align: center;
 }

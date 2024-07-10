@@ -13,7 +13,7 @@ import { LoadingComponent } from '../../components/loading/loading.component';
   styleUrls: ['./hello.component.scss']
 })
 export class HelloComponent implements OnInit {
-  text: string[] = [];
+  text: string[][] = [];
   isLoading = true;
   private songService = inject(SongsService);
   private router = inject(Router);
@@ -25,15 +25,18 @@ export class HelloComponent implements OnInit {
 
   getText() {
     this.songService.listText().subscribe((data: any) => {
-      this.text = data[0].letter.split("\n\n");
+      this.text = data[0].letter.split("\n\n").map((line: string) => line.split(/(\d+)/));
       this.toastr.success('Información cargada', '¡BIEN!');
       this.isLoading = false;
-
     }, (error: any) => {
       console.error('Error fetching letter:', error[0] || error);
       this.isLoading = false;
       this.toastr.error(`Error fetching letter: ${error[0] || error} `, 'ERROR');
     });
+  }
+
+  isNumber(str: string): boolean {
+    return !isNaN(Number(str)) && str.trim() !== '';
   }
 
   goToPage(pageName: string) {
