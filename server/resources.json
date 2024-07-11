@@ -1,14 +1,18 @@
 [
   {
-    "image": "https://i.ibb.co/1bgBk9Z/imagen.jpg"
+    "type": "image",
+    "url": "https://i.ibb.co/1bgBk9Z/imagen.jpg"
   },
   {
-    "insta": "https://i.ibb.co/cgJDRp8/Whats-App-Image-2024-04-16-at-9-54-01-AM.jpg"
+    "type": "insta",
+    "url": "https://i.ibb.co/cgJDRp8/Whats-App-Image-2024-04-16-at-9-54-01-AM.jpg"
   },
   {
-    "youtube": "https://youtu.be/7oKZeo779Xg?si=f69rP2eFTD26J6Sl&t=101"
+    "type": "youtube",
+    "url": "https://youtu.be/7oKZeo779Xg?si=f69rP2eFTD26J6Sl&t=101"
   },
   {
-    "logo": "https://i.ibb.co/r4t8dbJ/logo.png"
+    "type": "logo",
+    "url": "https://i.ibb.co/r4t8dbJ/logo.png"
   }
 ]

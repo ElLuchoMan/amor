@@ -29,15 +29,20 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   getResources(): void {
     this.service.listResources().subscribe({
       next: (data: any) => {
-        this.image = data[0].image || '';
-        this.insta = data[1].insta || '';
-        this.youtube = data[2].youtube || '';
+        this.image = this.getUrlByType(data, 'image');
+        this.insta = this.getUrlByType(data, 'insta');
+        this.youtube = this.getUrlByType(data, 'youtube');
       },
       error: (error: any) => {
         console.error('Error fetching image and insta:', error);
         this.toastr.error(`Error fetching image and insta: ${error} `, 'ERROR');
       }
     });
+  }
+
+  getUrlByType(data: any[], type: string): string {
+    const resource = data.find(item => item.type === type);
+    return resource ? resource.url : '';
   }
 
   initModal(): void {
