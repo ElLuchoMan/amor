@@ -44,23 +44,6 @@ describe('SayYesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  /*it('should fetch image and insta on init', () => {
-    const mockData = { image: 'test-image', insta: 'test-insta' };
-    spyOn(songsService, 'listSongs').and.returnValue(of(mockData));
-
-    component.getImage();
-
-    expect(component.image).toBe('test-image');
-    expect(component.insta).toBe('test-insta');
-  });
-
-  it('should handle error when fetching image and insta', () => {
-    const mockError = new Error('Error fetching data');
-    jest.spyOn(toastrService, 'error');
-    component.getImage();
-    expect(toastrService.error).toHaveBeenCalledWith(`Error fetching image and insta: ${mockError} `, 'ERROR');
-  });
-*/
   it('should initialize modal after view init', () => {
     component.exampleModalElement = {
       nativeElement: document.createElement('div')
@@ -76,31 +59,4 @@ describe('SayYesComponent', () => {
     component.exampleModalElement = undefined!;
     component.initModal();
   });
-
-  /* it('should open modal', () => {
-     component.exampleModalElement = {
-       nativeElement: document.createElement('div')
-     } as ElementRef;
-     component.ngAfterViewInit();
- 
-     jest.spyOn(component['modal']!, 'show');
- 
-     component.openModal();
- 
-     expect(component['modal']!.show).toHaveBeenCalled();
-   });
- 
-  it('should handle error when modal is not initialized', () => {
-     jest.spyOn(toastrService, 'error');
-     component.openModal();
-     expect(toastrService.error).toHaveBeenCalledWith('Modal is not initialized', 'ERROR');
-   });
-   it('should navigate to specific page', () => {
-     jest.spyOn(router, 'navigate');
- 
-     component.goToPage('test-page');
- 
-     expect(router.navigate).toHaveBeenCalledWith(['test-page']);
-   });
-   */
 });

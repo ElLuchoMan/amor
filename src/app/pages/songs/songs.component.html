@@ -8,12 +8,10 @@
             src="https://open.spotify.com/embed/playlist/0lM32WfGF6OHHbRvnZ46zl?utm_source=generator&theme=0"
             width="100%" height="152" frameBorder="0" allowfullscreen=""
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
         <ol *ngFor="let song of songs; let i = index" class="">
             <span class="reference">{{ i + 1 }}.</span> {{ song.title }} - {{ song.artist }}
         </ol>
     </div>
-
     <div class="mb-5 mt-5">
         <button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">VOLVER</button>
     </div>

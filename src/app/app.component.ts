@@ -63,10 +63,10 @@ export class AppComponent implements OnInit {
         });
 
       } else {
-        console.log('No registration token available. Request permission to generate one.');
+        console.log('No hay un token de registro disponible. Solicita permiso para generar uno.');
       }
     }).catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
+      console.log('Se produjo un error al recuperar el token.', err);
     });
   }
 
@@ -98,12 +98,6 @@ export class AppComponent implements OnInit {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js').then(registration => {
         console.log('Service Worker registered');
-
-        navigator.serviceWorker.addEventListener('message', event => {
-          if (event.data && event.data.type === 'CACHE_UPDATED') {
-            this.showUpdateNotification();
-          }
-        });
       }).catch(error => {
         console.error('Service Worker registration failed:', error);
       });
@@ -136,25 +130,5 @@ export class AppComponent implements OnInit {
       });
     }
   }
-
-  showUpdateNotification() {
-    if (Notification.permission === 'granted') {
-      navigator.serviceWorker.ready.then(registration => {
-        const options: ExtendedNotificationOptions = {
-          body: 'La aplicación se ha actualizado con éxito.',
-          icon: '../assets/logo-72x72.png',
-          badge: '../assets/logo-72x72.png',
-          tag: 'cache-update-notification',
-          renotify: true,
-          vibrate: [200, 100, 200]
-        };
-        registration.showNotification('Aplicación Actualizada', options);
-      });
-    }
-  }
 }
 
-interface ExtendedNotificationOptions extends NotificationOptions {
-  vibrate?: number[];
-  renotify: boolean;
-}

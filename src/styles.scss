@@ -61,3 +61,11 @@ a {
     text-decoration: none;
     color: white;
 }
+
+@media (max-width: 768px) {
+    .loader-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

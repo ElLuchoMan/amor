@@ -1,46 +1,44 @@
-/* hello.component.scss */
 body {
-    margin: 0;
-    background-color: #121212;
-    color: #fff;
-  }
-  
-  .text-container {
-    margin-top: 20px;
-  }
-  
-  .text-line {
-    font-size: 18px;
-    color: #ccc;
-    margin-bottom: 10px;
-  }
-  
-  .text-line .reference {
-    font-family: 'Roboto', sans-serif;
-    color: #f39c12;
-    font-style: italic;
-    font-weight: bold;
-    margin-left: 5px;
-    margin-right: 5px;
-    display: inline-block;
-    background-color: #222;
-    padding: 2px 5px;
-    border-radius: 3px;
-  }
-  
-  .buttons {
-    text-align: center;
-  }
-  
+  margin: 0;
+  background-color: #121212;
+  color: #fff;
+}
+
+.text-container {
+  margin-top: 20px;
+}
+
+.text-line {
+  font-size: 18px;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.text-line .reference {
+  font-family: "Roboto", sans-serif;
+  color: #f39c12;
+  font-style: italic;
+  font-weight: bold;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: inline-block;
+  background-color: #222;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.buttons {
+  text-align: center;
+}
+
+.buttons .btn {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px auto;
+}
+
+@media (max-width: 768px) {
   .buttons .btn {
     width: 100%;
-    max-width: 300px;
-    margin: 10px auto;
   }
-  
-  @media (max-width: 768px) {
-    .buttons .btn {
-      width: 100%;
-    }
-  }
-  
+}

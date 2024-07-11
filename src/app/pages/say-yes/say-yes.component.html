@@ -1,20 +1,16 @@
 <h1 class="fw-bold text-uppercase">SAY YES, PLEASE</h1>
-
 <div class="card text-bg-dark mb-3">
     <div class="card-body">
         <img [src]="image" alt="Special Image" class="img-fluid rounded">
     </div>
 </div>
-
 <div class="buttons text-center mt-5">
     <button type="button" class="btn btn-dark btn-lg mb-3 me-3" (click)="openModal()">SI</button>
     <button type="button" class="btn btn-dark btn-lg mb-3 ms-3" (click)="salirDePagina()">NO</button>
 </div>
-
 <div class="text-center mt-5">
     <button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">VOLVER</button>
 </div>
-
 <div #exampleModal class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">

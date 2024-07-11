@@ -113,33 +113,4 @@ describe('AppComponent', () => {
 
     await component.registerServiceWorker();
   });
-
-  /*  it('should handle subscription to notifications', async () => {
-      const postToken: PostToken = { token: 'mock-token', user_id: 'mock-uuid' };
-      jest.spyOn(songService, 'postToken').mockReturnValue(of(postToken));
-      jest.spyOn(component, 'getToken').mockImplementation();
-  
-      await component.subscribeToNotifications();
-      expect(songService.postToken).toHaveBeenCalledWith(postToken);
-      expect(component.getToken).toHaveBeenCalled();
-    });
-  
-    it('should handle incoming messages', () => {
-      const mockPayload: Partial<MessagePayload> = { notification: { title: 'Test', body: 'Test body' } };
-      const toastrSpy = jest.spyOn(toastrService, 'info').mockImplementation();
-      const showNotificationSpy = jest.spyOn(component, 'showNotification').mockImplementation();
-      const nextSpy = jest.spyOn(component.currentMessage, 'next').mockImplementation();
-  
-      component.listenForMessages();
-      expect(toastrSpy).toHaveBeenCalledWith('Test body', 'Test');
-      expect(showNotificationSpy).toHaveBeenCalledWith('Test', 'Test body', undefined);
-      expect(nextSpy).toHaveBeenCalledWith(mockPayload as MessagePayload);
-    });
-  
-    it('should show update notification', async () => {
-      const showNotificationSpy = jest.spyOn(component, 'showNotification').mockImplementation();
-      await component.showUpdateNotification();
-      expect(showNotificationSpy).toHaveBeenCalled();
-    });
-    */
 });

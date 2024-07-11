@@ -1,13 +1,11 @@
 <main class="container">
     <h1 class="text-center mt-4">Bienvenida</h1>
     <hr>
-
     <p class="intro-description">
         Bienvenida a nuestro rincón especial. Aquí encontrarás recuerdos y momentos que hemos compartido juntos.
         Navega a través de las tarjetas para revivir cada uno de estos momentos. ¡Espero que disfrutes este viaje
         por nuestra historia tanto como yo disfruté crearla para ti!
     </p>
-
     <div class="row">
         <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4" *ngFor="let card of cards">
             <div class="card h-100" (click)="navigateTo(card.route)">

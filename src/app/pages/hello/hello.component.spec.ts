@@ -48,18 +48,13 @@ describe('HelloComponent', () => {
     jest.spyOn(songsService, 'listSongs').mockReturnValue(of(mockData));
 
     component.ngOnInit();
-
-   // expect(component.isLoading).toBeFalsy();
   });
 
   it('should handle error when fetching text', () => {
     const mockError = new Error('Error fetching data');
     jest.spyOn(songsService, 'listSongs').mockReturnValue(throwError(mockError));
     jest.spyOn(toastrService, 'error');
-
     component.ngOnInit();
-
-   // expect(toastrService.error).toHaveBeenCalledWith(`Error fetching letter: ${mockError} `, 'ERROR');
   });
 
   it('should navigate to specific page', () => {

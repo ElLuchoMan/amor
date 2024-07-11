@@ -1,24 +1,24 @@
 body {
     margin: 0;
-    background-color: #121212; /* Fondo oscuro */
-    color: #fff; /* Texto claro */
+    background-color: #121212;
+    color: #fff;
 }
 
 .intro-description {
     margin-bottom: 20px;
     font-size: 18px;
-    color: #ccc; /* Texto gris claro */
+    color: #ccc;
     text-align: center;
 }
 
 .card {
-    border: 1px solid #444; /* Borde gris oscuro */
+    border: 1px solid #444;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra más oscura */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     transition: transform 0.2s;
     cursor: pointer;
-    background-color: #333; /* Fondo oscuro para la tarjeta */
-    color: #fff; /* Texto claro dentro de la tarjeta */
+    background-color: #333;
+    color: #fff;
 }
 
 .card:hover {
@@ -28,7 +28,7 @@ body {
 .card img {
     width: 100%;
     height: auto;
-    border-bottom: 1px solid #444; /* Añadir un borde inferior para separar la imagen del contenido */
+    border-bottom: 1px solid #444;
 }
 
 .card-content {
@@ -37,18 +37,18 @@ body {
 
 .card-content h3 {
     margin: 0 0 10px;
-    color: #fff; /* Texto claro para el título */
+    color: #fff;
 }
 
 .card-content p {
     margin: 0;
-    color: #ccc; /* Texto gris claro para la descripción */
+    color: #ccc;
 }
 
 .intro-description {
     margin-bottom: 20px;
     font-size: 18px;
-    color: #ccc; /* Texto gris claro */
+    color: #ccc;
     text-align: center;
 }
 

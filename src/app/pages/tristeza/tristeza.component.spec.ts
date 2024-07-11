@@ -66,7 +66,7 @@ describe('TristezaComponent', () => {
     expect(component.juegoTerminado).toBeFalsy();
     expect(component.letrasUsadas.size).toBe(0);
   });
-  
+
   it('should update the visible word correctly', () => {
     component.palabraOculta = 'test';
     component.palabraVisible = '____';
