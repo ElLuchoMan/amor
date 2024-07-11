@@ -1,0 +1,10 @@
+<div id="errorLogModal" class="modal">
+    <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        <h2>Error Log</h2>
+        <ul>
+            <li *ngFor="let error of errors">{{ error }}</li>
+        </ul>
+        <button (click)="clearErrors()">Clear Log</button>
+    </div>
+</div>
