@@ -433,7 +433,8 @@ exports.handler = /*#__PURE__*/function () {
           headers = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS'
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+            'Content-Type': 'application/json'
           };
           if (!(event.httpMethod === 'OPTIONS')) {
             _context.next = 3;
