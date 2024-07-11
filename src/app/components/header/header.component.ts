@@ -23,11 +23,12 @@ export class HeaderComponent {
     { label: 'No Estés Triste', path: '/no-estes-triste' },
   ];
   constructor(private songService: SongsService) { }
-
+  logo = '';
   user_id = '';
 
   ngOnInit(): void {
     this.user_id = this.songService.getUUID();
+    this.getLogo();
   }
 
   copyTokenToClipboard() {
@@ -38,5 +39,12 @@ export class HeaderComponent {
         console.error('Could not copy uuid: ', err);
       });
     }
+  }
+  getLogo() {
+    this.songService.listResources().subscribe({
+      next: (data: any) => {
+        this.logo = this.songService.getUrlByType(data, 'logo');
+      }
+    });
   }
 }

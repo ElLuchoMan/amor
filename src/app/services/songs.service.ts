@@ -51,4 +51,9 @@ export class SongsService {
     }
     return uuid;
   }
+
+  getUrlByType(data: any[], type: string): string {
+    const resource = data.find(item => item.type === type);
+    return resource ? resource.url : '';
+  }
 }
