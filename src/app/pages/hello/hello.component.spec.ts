@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HelloComponent } from './hello.component';
-import { ToastrModule, ToastrService, TOAST_CONFIG } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SongsService } from '../../services/songs.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -44,17 +44,26 @@ describe('HelloComponent', () => {
   });
 
   it('should fetch text on init', () => {
-    const mockData = { text: [{ letter: 'line1\n\nline2' }] };
-    jest.spyOn(songsService, 'listSongs').mockReturnValue(of(mockData));
+    const mockData = [{ letter: 'line1\n\nline2' }];
+    jest.spyOn(songsService, 'listText').mockReturnValue(of(mockData));
+    jest.spyOn(toastrService, 'success');
 
     component.ngOnInit();
+
+    expect(component.text).toEqual([['line', '1', ''], ['line', '2', '']]);
+    expect(component.isLoading).toBeFalsy();
+    expect(toastrService.success).toHaveBeenCalledWith('Información cargada', '¡BIEN!');
   });
 
   it('should handle error when fetching text', () => {
     const mockError = new Error('Error fetching data');
-    jest.spyOn(songsService, 'listSongs').mockReturnValue(throwError(mockError));
+    jest.spyOn(songsService, 'listText').mockReturnValue(throwError(mockError));
     jest.spyOn(toastrService, 'error');
+
     component.ngOnInit();
+
+    expect(component.isLoading).toBeFalsy();
+    expect(toastrService.error).toHaveBeenCalledWith(`Error fetching letter: ${mockError} `, 'ERROR');
   });
 
   it('should navigate to specific page', () => {
@@ -63,5 +72,16 @@ describe('HelloComponent', () => {
     component.goToPage('test-page');
 
     expect(navigateSpy).toHaveBeenCalledWith(['test-page']);
+  });
+
+  it('should correctly identify numbers', () => {
+    expect(component.isNumber('123')).toBe(true);
+    expect(component.isNumber('  123  ')).toBe(true);
+    expect(component.isNumber('abc')).toBe(false);
+    expect(component.isNumber('123abc')).toBe(false);
+    expect(component.isNumber('')).toBe(false);
+    expect(component.isNumber(' ')).toBe(false);
+    expect(component.isNumber('12.3')).toBe(true);
+    expect(component.isNumber('12,3')).toBe(false);
   });
 });

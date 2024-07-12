@@ -114,4 +114,17 @@ describe('SongsService', () => {
     expect(localStorage.getItem).toHaveBeenCalledWith(service['storageKey']);
     expect(localStorage.setItem).toHaveBeenCalledWith(service['storageKey'], uuid);
   });
+
+  it('should get URL by type', () => {
+    const data = [
+      { type: 'image', url: 'http://example.com/image.jpg' },
+      { type: 'video', url: 'http://example.com/video.mp4' },
+      { type: 'audio', url: 'http://example.com/audio.mp3' }
+    ];
+
+    expect(service.getUrlByType(data, 'video')).toBe('http://example.com/video.mp4');
+    expect(service.getUrlByType(data, 'audio')).toBe('http://example.com/audio.mp3');
+    expect(service.getUrlByType(data, 'image')).toBe('http://example.com/image.jpg');
+    expect(service.getUrlByType(data, 'nonexistent')).toBe('');
+  });
 });

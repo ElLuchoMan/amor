@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SongsComponent } from './songs.component';
-import { ToastrModule, ToastrService, TOAST_CONFIG } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SongsService } from '../../services/songs.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -44,12 +44,12 @@ describe('SongsComponent', () => {
   });
 
   it('should fetch songs on init', () => {
-    const mockData = { songs: ['song1', 'song2'] };
+    const mockData = { songs: [{ songs: ['song1', 'song2'] }] };
     jest.spyOn(songsService, 'listSongs').mockReturnValue(of(mockData));
 
     component.ngOnInit();
 
-    expect(component.songs).toBe(mockData.songs);
+    expect(component.songs).toBe(mockData.songs[0].songs);
     expect(component.isLoading).toBeFalsy();
   });
 

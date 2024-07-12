@@ -30,9 +30,16 @@ export class ErrorLoggingService {
       return error.message;
     }
 
-    if (typeof error === 'object') {
+    if (typeof error === 'object' && error !== null) {
       const { message, name, status, statusText, url, error: innerError } = error;
-      return JSON.stringify({ message, name, status, statusText, url, error: innerError ? this.simplifyError(innerError) : undefined });
+      return JSON.stringify({
+        message,
+        name,
+        status,
+        statusText,
+        url,
+        error: innerError ? this.simplifyError(innerError) : undefined
+      });
     }
 
     return 'An unknown error occurred';

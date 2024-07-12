@@ -8,13 +8,12 @@ import { AppComponent } from './app.component';
 import { SongsService } from './services/songs.service';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { initializeApp } from "firebase/app";
-import { getMessaging, onMessage, getToken, Messaging } from "firebase/messaging";
-import { firebaseConfig } from './environments/firebase-config';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorLoggingService } from './services/error-logging.service';
+import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
 import { PostToken } from './models/token.model';
-import { MessagePayload } from 'firebase/messaging';
 
-jest.mock("firebase/messaging");
+jest.mock('firebase/messaging');
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -22,11 +21,13 @@ describe('AppComponent', () => {
   let songService: SongsService;
   let toastrService: ToastrService;
   let swUpdate: SwUpdate;
+  let modalService: NgbModal;
+  let errorLoggingService: ErrorLoggingService;
+
   let mockLocalStorage: { [key: string]: string } = {};
   let messagingMock: any = {
     getToken: jest.fn().mockResolvedValue('mock-token'),
     onMessage: jest.fn().mockImplementation((callback) => callback({ notification: { title: 'Test', body: 'Test body' } })),
-    app: initializeApp(firebaseConfig)
   };
 
   beforeEach(waitForAsync(() => {
@@ -43,12 +44,17 @@ describe('AppComponent', () => {
       providers: [
         SongsService,
         ToastrService,
+        ErrorLoggingService,
+        NgbModal,
         { provide: SwUpdate, useValue: { available: of({}), activated: of({}) } }
       ]
     }).compileComponents();
 
     globalThis.Notification = {
-      requestPermission: jest.fn().mockResolvedValue('granted')
+      requestPermission: jest.fn().mockResolvedValue('granted'),
+      prototype: {
+        showNotification: jest.fn()
+      }
     } as any;
 
     globalThis.fetch = jest.fn().mockResolvedValue({
@@ -76,6 +82,8 @@ describe('AppComponent', () => {
     songService = TestBed.inject(SongsService);
     toastrService = TestBed.inject(ToastrService);
     swUpdate = TestBed.inject(SwUpdate);
+    modalService = TestBed.inject(NgbModal);
+    errorLoggingService = TestBed.inject(ErrorLoggingService);
 
     Object.defineProperty(component, 'messaging', {
       get: jest.fn(() => messagingMock)
@@ -102,15 +110,93 @@ describe('AppComponent', () => {
     expect(subscribeToNotificationsSpy).toHaveBeenCalled();
   });
 
+  it('should open modal with error message', () => {
+    const modalServiceOpenSpy = jest.spyOn(modalService, 'open').mockImplementation(() => ({
+      componentInstance: {
+        errors: []
+      }
+    }) as any);
+
+    component.openModal('Test error message');
+    expect(modalServiceOpenSpy).toHaveBeenCalledWith(ErrorLogModalComponent);
+  });
+
   it('should register service worker and listen for messages', async () => {
-    const addEventListenerSpy = jest.fn();
+    const registerSpy = jest.fn().mockResolvedValue({ waiting: null });
     Object.defineProperty(navigator, 'serviceWorker', {
       value: {
-        addEventListener: addEventListenerSpy,
-        register: jest.fn().mockResolvedValue({ waiting: null })
-      }
+        register: registerSpy
+      },
+      writable: true
     });
 
     await component.registerServiceWorker();
+    expect(registerSpy).toHaveBeenCalled();
+  });
+
+  it('should get token on init', async () => {
+    const getTokenSpy = jest.spyOn(songService, 'getToken').mockReturnValue(of({ token: 'mock-token' }));
+    await component.getToken();
+    expect(getTokenSpy).toHaveBeenCalled();
+  });
+
+  it('should handle get token error', async () => {
+    const openModalSpy = jest.spyOn(component, 'openModal').mockImplementation();
+    jest.spyOn(songService, 'getToken').mockReturnValue(of({ token: 'mock-token' }));
+
+    await component.getToken();
+    expect(openModalSpy).not.toHaveBeenCalled();
+  });
+
+  it('should listen for messages', () => {
+    const toastrSpy = jest.spyOn(toastrService, 'info').mockImplementation();
+    component.listenForMessages();
+    expect(toastrSpy).toHaveBeenCalledTimes(0);
+  });
+
+  it('should update cache and post message if registration is waiting', async () => {
+    const mockRegistration = {
+      update: jest.fn().mockResolvedValueOnce(undefined),
+      waiting: {
+        postMessage: jest.fn()
+      }
+    };
+
+    const getRegistrationsMock = jest.fn().mockResolvedValueOnce([mockRegistration]);
+
+    Object.defineProperty(navigator, 'serviceWorker', {
+      value: {
+        getRegistrations: getRegistrationsMock
+      },
+      writable: true
+    });
+
+    await component.updateCache();
+
+    expect(getRegistrationsMock).toHaveBeenCalled();
+    expect(mockRegistration.update).toHaveBeenCalled();
+    expect(mockRegistration.waiting.postMessage).toHaveBeenCalledWith({ action: 'skipWaiting' });
+  });
+
+  it('should update cache and not post message if registration is not waiting', async () => {
+    const mockRegistration = {
+      update: jest.fn().mockResolvedValueOnce(undefined),
+      waiting: null
+    };
+
+    const getRegistrationsMock = jest.fn().mockResolvedValueOnce([mockRegistration]);
+
+    Object.defineProperty(navigator, 'serviceWorker', {
+      value: {
+        getRegistrations: getRegistrationsMock
+      },
+      writable: true
+    });
+
+    await component.updateCache();
+
+    expect(getRegistrationsMock).toHaveBeenCalled();
+    expect(mockRegistration.update).toHaveBeenCalled();
+    expect(mockRegistration.waiting).toBeNull();
   });
 });
