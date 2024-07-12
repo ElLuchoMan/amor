@@ -55,7 +55,7 @@ describe('AppComponent', () => {
       showNotification: jest.fn()
     }
   } as any;
-  
+
   afterEach(() => {
     jest.useRealTimers();
   });
@@ -80,6 +80,14 @@ describe('AppComponent', () => {
     expect(subscribeToNotificationsSpy).toHaveBeenCalled();
   });
 
+  it('should handle denied notification permission', async () => {
+    jest.spyOn(Notification, 'requestPermission').mockResolvedValue('denied');
+    const openModalSpy = jest.spyOn(component, 'openModal');
+
+    await component.requestNotificationPermission();
+    expect(openModalSpy).toHaveBeenCalledWith('No se han otorgado permisos para notificaciones.');
+  });
+
   it('should open modal with error message', () => {
     const modalServiceOpenSpy = jest.spyOn(modalService, 'open').mockImplementation(() => ({
       componentInstance: {
@@ -102,6 +110,24 @@ describe('AppComponent', () => {
 
     await component.registerServiceWorker();
     expect(registerSpy).toHaveBeenCalled();
+  });
+
+  it('should handle service worker registration failure', async () => {
+    const mockError = new Error('Service Worker registration failed');
+    const registerSpy = jest.fn().mockRejectedValue(mockError);
+    const openModalSpy = jest.spyOn(component, 'openModal');
+    jest.spyOn(errorLoggingService, 'logError').mockImplementation(() => {});
+
+    Object.defineProperty(navigator, 'serviceWorker', {
+      value: {
+        register: registerSpy
+      },
+      writable: true
+    });
+
+    await component.registerServiceWorker();
+    expect(registerSpy).toHaveBeenCalled();
+    expect(openModalSpy).toHaveBeenCalledWith('Service Worker registration failed: undefined');
   });
 
   it('should get token on init', async () => {
@@ -136,7 +162,7 @@ describe('AppComponent', () => {
 
     expect(toastrSpy).toHaveBeenCalledWith(mockPayload.notification.body, mockPayload.notification.title);
   });
-  
+
   it('should show notification if permission is granted', () => {
     const mockNotification = jest.fn();
     const originalNotification = globalThis.Notification;
