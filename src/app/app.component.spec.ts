@@ -10,7 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorLoggingService } from './services/error-logging.service';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { firebaseConfig } from './environments/firebase-config';
-import { getMessaging, getToken } from 'firebase/messaging';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { PostToken } from './models/token.model';
 import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
 
@@ -48,6 +48,7 @@ describe('AppComponent', () => {
     modalService = TestBed.inject(NgbModal);
     errorLoggingService = TestBed.inject(ErrorLoggingService);
   }));
+
   globalThis.Notification = {
     requestPermission: jest.fn().mockResolvedValue('granted'),
     prototype: {
@@ -119,8 +120,42 @@ describe('AppComponent', () => {
 
   it('should listen for messages', () => {
     const toastrSpy = jest.spyOn(toastrService, 'info').mockImplementation();
+    const mockPayload = {
+      notification: {
+        title: 'Test title',
+        body: 'Test body',
+        image: 'test-image-url'
+      }
+    };
+
+    (onMessage as jest.Mock).mockImplementation((messaging, callback) => {
+      callback(mockPayload);
+    });
+
     component.listenForMessages();
-    expect(toastrSpy).toHaveBeenCalledTimes(0);
+
+    expect(toastrSpy).toHaveBeenCalledWith(mockPayload.notification.body, mockPayload.notification.title);
+  });
+  
+  it('should show notification if permission is granted', () => {
+    const mockNotification = jest.fn();
+    const originalNotification = globalThis.Notification;
+
+    globalThis.Notification = mockNotification as any;
+
+    Object.defineProperty(Notification, 'permission', {
+      get: jest.fn(() => 'granted')
+    });
+
+    const title = 'Test title';
+    const body = 'Test body';
+    const icon = 'test-icon';
+
+    component.showNotification(title, body, icon);
+
+    expect(mockNotification).toHaveBeenCalledWith(title, { body, icon });
+
+    globalThis.Notification = originalNotification; // Restablecer el objeto Notification original
   });
 
   it('should update cache and post message if registration is waiting', async () => {
