@@ -1,11 +1,22 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SongsService } from '../../services/songs.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ErrorLoggingService } from '../../services/error-logging.service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { of, throwError } from 'rxjs';
+import { ErrorLogModalComponent } from '../error-log-modal/error-log-modal.component';
 
 describe('HeaderComponent', () => {
+  let component: HeaderComponent;
+  let fixture: ComponentFixture<HeaderComponent>;
+  let songsService: SongsService;
+  let errorLoggingService: ErrorLoggingService;
+  let modalService: NgbModal;
+  let toastrService: ToastrService;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -16,7 +27,9 @@ describe('HeaderComponent', () => {
       ],
       providers: [
         SongsService,
-        ToastrService
+        ErrorLoggingService,
+        ToastrService,
+        NgbModal
       ]
     }).compileComponents();
 
@@ -28,30 +41,71 @@ describe('HeaderComponent', () => {
     });
 
     jest.spyOn(console, 'error').mockImplementation(() => { });
+
+    fixture = TestBed.createComponent(HeaderComponent);
+    component = fixture.componentInstance;
+    songsService = TestBed.inject(SongsService);
+    errorLoggingService = TestBed.inject(ErrorLoggingService);
+    modalService = TestBed.inject(NgbModal);
+    toastrService = TestBed.inject(ToastrService);
+    fixture.detectChanges();
   });
 
   it('should create', () => {
-    const fixture = TestBed.createComponent(HeaderComponent);
-    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 
   it('should get UUID from songService on init', () => {
-    const fixture = TestBed.createComponent(HeaderComponent);
-    const component = fixture.componentInstance;
-    const songService = TestBed.inject(SongsService);
     const uuid = 'mock-uuid';
-    jest.spyOn(songService, 'getUUID').mockReturnValue(uuid);
-    fixture.detectChanges();
+    jest.spyOn(songsService, 'getUUID').mockReturnValue(uuid);
+    component.ngOnInit();
     expect(component.user_id).toBe(uuid);
   });
 
   it('should copy UUID to clipboard', async () => {
-    const fixture = TestBed.createComponent(HeaderComponent);
-    const component = fixture.componentInstance;
     component.user_id = 'mock-uuid';
     const writeTextSpy = jest.spyOn(navigator.clipboard, 'writeText').mockResolvedValue(undefined);
     await component.copyTokenToClipboard();
     expect(writeTextSpy).toHaveBeenCalledWith('mock-uuid');
+  });
+
+  it('should handle error when copying UUID to clipboard', async () => {
+    component.user_id = 'mock-uuid';
+    const writeTextSpy = jest.spyOn(navigator.clipboard, 'writeText').mockRejectedValue(new Error('Clipboard error'));
+    const openModalSpy = jest.spyOn(component, 'openModal');
+
+    await component.copyTokenToClipboard();
+    
+    expect(writeTextSpy).toHaveBeenCalledWith('mock-uuid');
+    expect(openModalSpy).toHaveBeenCalled();
+  });
+
+  it('should fetch logo on init', () => {
+    const mockData = [{ type: 'logo', url: 'logo-url' }];
+    jest.spyOn(songsService, 'listResources').mockReturnValue(of(mockData));
+    const getUrlByTypeSpy = jest.spyOn(songsService, 'getUrlByType').mockReturnValue('logo-url');
+
+    component.ngOnInit();
+
+    expect(getUrlByTypeSpy).toHaveBeenCalledWith(mockData, 'logo');
+    expect(component.logo).toBe('logo-url');
+  });
+
+  it('should open modal with error message', () => {
+    const errorMessage = 'Test error message';
+    const mockModalRef: NgbModalRef = {
+      componentInstance: {
+        errors: []
+      }
+    } as NgbModalRef;
+    jest.spyOn(modalService, 'open').mockReturnValue(mockModalRef);
+    jest.spyOn(errorLoggingService, 'logError');
+    jest.spyOn(errorLoggingService, 'getErrors').mockReturnValue(['Logged error']);
+
+    component.openModal(errorMessage);
+
+    expect(errorLoggingService.logError).toHaveBeenCalledWith(errorMessage);
+    expect(modalService.open).toHaveBeenCalledWith(ErrorLogModalComponent);
+    expect(mockModalRef.componentInstance.errors).toEqual(['Logged error']);
   });
 });

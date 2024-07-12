@@ -2,16 +2,17 @@ import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { SwUpdate, ServiceWorkerModule } from '@angular/service-worker';
-import { of, BehaviorSubject } from 'rxjs';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { of, throwError } from 'rxjs';
 import { AppComponent } from './app.component';
 import { SongsService } from './services/songs.service';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorLoggingService } from './services/error-logging.service';
-import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { firebaseConfig } from './environments/firebase-config';
+import { getMessaging, getToken } from 'firebase/messaging';
 import { PostToken } from './models/token.model';
+import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
 
 jest.mock('firebase/messaging');
 
@@ -20,75 +21,43 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let songService: SongsService;
   let toastrService: ToastrService;
-  let swUpdate: SwUpdate;
   let modalService: NgbModal;
   let errorLoggingService: ErrorLoggingService;
-
-  let mockLocalStorage: { [key: string]: string } = {};
-  let messagingMock: any = {
-    getToken: jest.fn().mockResolvedValue('mock-token'),
-    onMessage: jest.fn().mockImplementation((callback) => callback({ notification: { title: 'Test', body: 'Test body' } })),
-  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         AppComponent,
-        HeaderComponent,
-        FooterComponent,
         HttpClientTestingModule,
         RouterTestingModule,
         ToastrModule.forRoot(),
-        ServiceWorkerModule.register('', { enabled: false })
+        ServiceWorkerModule.register('', { enabled: false }),
       ],
       providers: [
         SongsService,
         ToastrService,
         ErrorLoggingService,
-        NgbModal,
-        { provide: SwUpdate, useValue: { available: of({}), activated: of({}) } }
+        NgbModal
       ]
     }).compileComponents();
-
-    globalThis.Notification = {
-      requestPermission: jest.fn().mockResolvedValue('granted'),
-      prototype: {
-        showNotification: jest.fn()
-      }
-    } as any;
-
-    globalThis.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue({ measurementId: 'G-HSV6LQVDH8' })
-    });
-
-    globalThis.indexedDB = {
-      open: jest.fn(),
-      deleteDatabase: jest.fn(),
-      databases: jest.fn()
-    } as any;
-
-    Object.defineProperty(window, 'localStorage', {
-      value: {
-        getItem: (key: string) => mockLocalStorage[key] || null,
-        setItem: (key: string, value: string) => mockLocalStorage[key] = value,
-        clear: jest.fn(),
-        removeItem: jest.fn()
-      },
-      writable: true
-    });
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     songService = TestBed.inject(SongsService);
     toastrService = TestBed.inject(ToastrService);
-    swUpdate = TestBed.inject(SwUpdate);
     modalService = TestBed.inject(NgbModal);
     errorLoggingService = TestBed.inject(ErrorLoggingService);
-
-    Object.defineProperty(component, 'messaging', {
-      get: jest.fn(() => messagingMock)
-    });
   }));
+  globalThis.Notification = {
+    requestPermission: jest.fn().mockResolvedValue('granted'),
+    prototype: {
+      showNotification: jest.fn()
+    }
+  } as any;
+  
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   it('should create the app', () => {
     expect(component).toBeTruthy();
@@ -142,10 +111,10 @@ describe('AppComponent', () => {
 
   it('should handle get token error', async () => {
     const openModalSpy = jest.spyOn(component, 'openModal').mockImplementation();
-    jest.spyOn(songService, 'getToken').mockReturnValue(of({ token: 'mock-token' }));
+    const getTokenSpy = jest.spyOn(songService, 'getToken').mockReturnValue(throwError(new Error('error')));
 
     await component.getToken();
-    expect(openModalSpy).not.toHaveBeenCalled();
+    expect(openModalSpy).toHaveBeenCalled();
   });
 
   it('should listen for messages', () => {
@@ -198,5 +167,64 @@ describe('AppComponent', () => {
     expect(getRegistrationsMock).toHaveBeenCalled();
     expect(mockRegistration.update).toHaveBeenCalled();
     expect(mockRegistration.waiting).toBeNull();
+  });
+
+  it('should subscribe to notifications and handle token correctly', async () => {
+    const mockToken = 'mock-token';
+    const postToken: PostToken = { token: mockToken, user_id: component.user_id };
+
+    (getToken as jest.Mock).mockResolvedValue(mockToken);
+    jest.spyOn(songService, 'postToken').mockReturnValue(of(postToken));
+    jest.spyOn(component, 'getToken');
+    jest.spyOn(component, 'openModal');
+    jest.spyOn(errorLoggingService, 'logError');
+
+    await component.subscribeToNotifications();
+
+    expect(songService.token).toBe(mockToken);
+    expect(songService.postToken).toHaveBeenCalledWith(postToken);
+    expect(component.getToken).toHaveBeenCalled();
+    expect(component.openModal).not.toHaveBeenCalled();
+  });
+
+  it('should handle error when token is not available', async () => {
+    (getToken as jest.Mock).mockResolvedValue(null);
+    jest.spyOn(component, 'openModal');
+    jest.spyOn(errorLoggingService, 'logError');
+
+    await component.subscribeToNotifications();
+
+    expect(component.openModal).toHaveBeenCalledWith('No hay un token de registro disponible. Solicita permiso para generar uno.');
+  });
+
+  it('should handle error when getting token fails', async () => {
+    const mockError = new Error('mock error');
+
+    (getToken as jest.Mock).mockRejectedValue(mockError);
+    jest.spyOn(component, 'openModal');
+    jest.spyOn(errorLoggingService, 'logError');
+
+    await component.subscribeToNotifications();
+
+    expect(errorLoggingService.logError).toHaveBeenCalledWith(mockError);
+    expect(component.openModal).toHaveBeenCalledWith(`Se produjo un error al recuperar el token: ${errorLoggingService.logError(mockError)}`);
+  });
+
+  it('should handle error when postToken fails', async () => {
+    const mockToken = 'mock-token';
+    const mockError = new Error('mock error');
+    const postToken: PostToken = { token: mockToken, user_id: component.user_id };
+
+    (getToken as jest.Mock).mockResolvedValue(mockToken);
+    jest.spyOn(songService, 'postToken').mockReturnValue(throwError(mockError));
+    jest.spyOn(component, 'openModal');
+    jest.spyOn(errorLoggingService, 'logError');
+
+    await component.subscribeToNotifications();
+
+    expect(songService.token).toBe(mockToken);
+    expect(songService.postToken).toHaveBeenCalledWith(postToken);
+    expect(errorLoggingService.logError).toHaveBeenCalledWith(mockError);
+    expect(component.openModal).toHaveBeenCalledWith(`Error enviando token al servidor: ${errorLoggingService.logError(mockError)}`);
   });
 });

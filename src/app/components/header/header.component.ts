@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SongsService } from '../../services/songs.service';
+import { ErrorLoggingService } from '../../services/error-logging.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ErrorLogModalComponent } from '../error-log-modal/error-log-modal.component';
 interface NavLink {
   label: string;
   path: string;
@@ -22,7 +25,7 @@ export class HeaderComponent {
     { label: 'Pregunta', path: '/say-yes' },
     { label: 'No Estés Triste', path: '/no-estes-triste' },
   ];
-  constructor(private songService: SongsService) { }
+  constructor(private songService: SongsService, private errorLoggingService: ErrorLoggingService, private modalService: NgbModal) { }
   logo = '';
   user_id = '';
 
@@ -36,7 +39,7 @@ export class HeaderComponent {
       navigator.clipboard.writeText(this.user_id).then(() => {
         console.log('Uuid copied to clipboard!');
       }).catch(err => {
-        console.error('Could not copy uuid: ', err);
+        this.openModal(`Could not copy uuid: ${this.errorLoggingService.logError(err)}`);
       });
     }
   }
@@ -46,5 +49,10 @@ export class HeaderComponent {
         this.logo = this.songService.getUrlByType(data, 'logo');
       }
     });
+  }
+  openModal(errorMessage: string): void {
+    this.errorLoggingService.logError(errorMessage);
+    const modalRef = this.modalService.open(ErrorLogModalComponent);
+    modalRef.componentInstance.errors = this.errorLoggingService.getErrors();
   }
 }

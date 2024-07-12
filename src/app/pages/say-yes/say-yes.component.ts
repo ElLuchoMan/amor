@@ -61,7 +61,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   }
 
   salirDePagina(): void {
-    window.location.href = 'https://youtu.be/7oKZeo779Xg?si=f69rP2eFTD26J6Sl&t=101';
+    window.location.href = this.youtube;
   }
 
   goToPage(pageName: string): void {

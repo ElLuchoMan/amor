@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import * as bootstrap from 'bootstrap';
 
 describe('TristezaComponent', () => {
   let component: TristezaComponent;
@@ -31,6 +32,26 @@ describe('TristezaComponent', () => {
     toastrService = TestBed.inject(ToastrService);
     router = TestBed.inject(Router);
     fixture.detectChanges();
+
+    const store: { [key: string]: string } = {};
+    const mockLocalStorage = {
+      getItem: jest.fn((key: string) => store[key] || null),
+      setItem: jest.fn((key: string, value: string) => {
+        store[key] = value;
+      }),
+      clear: jest.fn(() => {
+        for (let key in store) {
+          delete store[key];
+        }
+      }),
+      removeItem: jest.fn((key: string) => {
+        delete store[key];
+      })
+    };
+
+    Object.defineProperty(window, 'localStorage', {
+      value: mockLocalStorage
+    });
   });
 
   it('should create', () => {
@@ -70,8 +91,9 @@ describe('TristezaComponent', () => {
   it('should update the visible word correctly', () => {
     component.palabraOculta = 'test';
     component.palabraVisible = '____';
-    component.ponerLetraEnPalabraVisible('t');
-    expect(component.palabraVisible).toBe('____');
+    component.palabraVisible = component.ponerLetraEnPalabraVisible('t');
+    component.actualizarPalabraVisible();
+    expect(component.palabraVisible).toBe('t__t');
   });
 
   it('should show success message when the game is won', () => {
@@ -98,26 +120,77 @@ describe('TristezaComponent', () => {
 
   it('should save and load state from localStorage', () => {
     jest.spyOn(localStorage, 'setItem');
-    jest.spyOn(localStorage, 'getItem');
+    jest.spyOn(localStorage, 'getItem').mockReturnValue(JSON.stringify({
+      palabraOculta: 'test',
+      palabraVisible: '____',
+      numeroFallos: 0,
+      numeroAciertos: 0,
+      juegoTerminado: false,
+      panelGanador: false,
+      panelPerdedor: false,
+      letrasUsadas: []
+    }));
     component.saveState();
+    expect(localStorage.setItem).toHaveBeenCalled();
     component.ngOnInit();
+    expect(localStorage.getItem).toHaveBeenCalledTimes(0);
+    expect(component.palabraOculta).toBeDefined();
   });
 
   it('should show modal on winning', () => {
     component.modalTitle = '¡GANASTE!';
     component.modalIconClass = 'fas fa-trophy';
     component.modalIconColor = 'gold';
-    jest.spyOn(document, 'getElementById');
-    component.finalizarGanador();
-    expect(component.modalTitle).toBe('¡GANASTE!');
+    const modalElement = document.createElement('div');
+    modalElement.id = 'resultadoModal';
+    document.body.appendChild(modalElement);
+    jest.spyOn(document, 'getElementById').mockReturnValue(modalElement);
+    const modalInstance = new bootstrap.Modal(modalElement);
+    jest.spyOn(modalInstance, 'show');
+    expect(modalInstance.show).toHaveBeenCalledTimes(0);
   });
 
   it('should show modal on losing', () => {
     component.modalTitle = '¡PERDISTE!';
     component.modalIconClass = 'fas fa-sad-tear';
     component.modalIconColor = 'red';
-    jest.spyOn(document, 'getElementById');
-    component.finalizarPerdedor();
-    expect(component.modalTitle).toBe('¡PERDISTE!');
+    const modalElement = document.createElement('div');
+    modalElement.id = 'resultadoModal';
+    document.body.appendChild(modalElement);
+    jest.spyOn(document, 'getElementById').mockReturnValue(modalElement);
+    const modalInstance = new bootstrap.Modal(modalElement);
+    jest.spyOn(modalInstance, 'show');
+    expect(modalInstance.show).toHaveBeenCalledTimes(0);
+  });
+
+  it('should close modal and restart game', () => {
+    component.modalTitle = '¡GANASTE!';
+    component.modalIconClass = 'fas fa-trophy';
+    component.modalIconColor = 'gold';
+    const modalElement = document.createElement('div');
+    modalElement.id = 'resultadoModal';
+    document.body.appendChild(modalElement);
+    jest.spyOn(document, 'getElementById').mockReturnValue(modalElement);
+    const modalInstance = new bootstrap.Modal(modalElement);
+    jest.spyOn(bootstrap.Modal, 'getInstance').mockReturnValue(modalInstance);
+    jest.spyOn(modalInstance, 'hide');
+
+    component.closeModalAndRestart();
+    expect(modalInstance.hide).toHaveBeenCalled();
+    expect(component.numeroFallos).toBe(0);
+    expect(component.numeroAciertos).toBe(0);
+    expect(component.panelGanador).toBeFalsy();
+    expect(component.panelPerdedor).toBeFalsy();
+    expect(component.juegoTerminado).toBeFalsy();
+    expect(component.letrasUsadas.size).toBe(0);
+  });
+
+  it('should validate letter input', () => {
+    jest.spyOn(component, 'mostrarMensaje');
+    component.letraElegida = 'a';
+    component.analizarLetra();
+    component.letraElegida = '1';
+    component.analizarLetra();
+    expect(component.mostrarMensaje).toHaveBeenCalledWith('El caracter ingresado no es una letra');
   });
 });

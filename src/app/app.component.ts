@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { SwUpdate } from '@angular/service-worker';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { firebaseConfig } from './environments/firebase-config';
 import { initializeApp } from "firebase/app";
@@ -37,7 +36,6 @@ export class AppComponent implements OnInit {
     this.user_id = this.songService.getUUID();
     this.registerServiceWorker();
     this.requestNotificationPermission();
-    this.scheduleCacheUpdate();
     this.listenForMessages();
   }
 
@@ -101,19 +99,6 @@ export class AppComponent implements OnInit {
         this.openModal(`Service Worker registration failed: ${this.errorLoggingService.logError(error)}`);
       });
     }
-  }
-
-  scheduleCacheUpdate() {
-    const now = new Date();
-    const hoursUntilMidnight = 24 - now.getHours();
-    const minutesUntilMidnight = 60 - now.getMinutes();
-    const secondsUntilMidnight = 60 - now.getSeconds();
-    const millisecondsUntilMidnight = ((hoursUntilMidnight * 60 + minutesUntilMidnight) * 60 + secondsUntilMidnight) * 1000;
-
-    setTimeout(() => {
-      this.updateCache();
-      setInterval(() => this.updateCache(), 24 * 60 * 60 * 1000);
-    }, millisecondsUntilMidnight);
   }
 
   updateCache() {
