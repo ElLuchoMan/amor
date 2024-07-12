@@ -1,10 +1,13 @@
-<div id="errorLogModal" class="modal">
-    <div class="modal-content">
-        <span class="close" (click)="closeModal()">&times;</span>
-        <h2>Error Log</h2>
-        <ul>
-            <li *ngFor="let error of errors">{{ error }}</li>
-        </ul>
-        <button (click)="clearErrors()">Clear Log</button>
-    </div>
+<div class="modal-header">
+    <h5 class="modal-title">Error Log</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+<div class="modal-body">
+    <ul>
+        <li *ngFor="let error of errorLogs">{{ error }}</li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="clearErrors()">Clear</button>
+    <button type="button" class="btn btn-primary" (click)="activeModal.close()">Close</button>
 </div>

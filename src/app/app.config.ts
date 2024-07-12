@@ -8,6 +8,7 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 import { firebaseConfig } from './environments/firebase-config';
 import { routes } from './app.routes';
+import { NgbModalModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +27,8 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000'
     })),
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideMessaging(() => getMessaging())
+    provideMessaging(() => getMessaging()),
+    importProvidersFrom(NgbModalModule),
+    NgbActiveModal,
   ]
 };

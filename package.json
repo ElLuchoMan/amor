@@ -28,6 +28,7 @@
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.5",
     "@firebase/app-compat": "^0.2.36",
+    "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "babel-loader": "^8.2.2",
     "bootstrap": "^5.3.3",
     "faunadb": "^4.8.0",

@@ -6,9 +6,11 @@ import { Injectable } from '@angular/core';
 export class ErrorLoggingService {
   private errors: string[] = [];
 
-  logError(error: string): void {
+  logError(error: any): void {
+    console.log(error);
     const timestamp = new Date().toLocaleString();
-    this.errors.push(`[${timestamp}] ${error}`);
+    const simplifiedError = this.simplifyError(error);
+    this.errors.push(`[${timestamp}] ${simplifiedError}`);
   }
 
   getErrors(): string[] {
@@ -17,5 +19,22 @@ export class ErrorLoggingService {
 
   clearErrors(): void {
     this.errors = [];
+  }
+
+  public simplifyError(error: any): string {
+    if (typeof error === 'string') {
+      return error;
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    if (typeof error === 'object') {
+      const { message, name, status, statusText, url, error: innerError } = error;
+      return JSON.stringify({ message, name, status, statusText, url, error: innerError ? this.simplifyError(innerError) : undefined });
+    }
+
+    return 'An unknown error occurred';
   }
 }

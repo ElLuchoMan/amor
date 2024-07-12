@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -12,6 +11,9 @@ import { SongsService } from './services/songs.service';
 import { MessagePayload } from 'firebase/messaging';
 import { BehaviorSubject } from 'rxjs';
 import { PostToken } from './models/token.model';
+import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
+import { ErrorLoggingService } from './services/error-logging.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +26,10 @@ export class AppComponent implements OnInit {
   title = 'amor';
   messaging = getMessaging(initializeApp(firebaseConfig));
   currentMessage = new BehaviorSubject<MessagePayload | null>(null);
-  constructor(private toastr: ToastrService, private songService: SongsService, private http: HttpClient) { }
+
+  constructor(private toastr: ToastrService, private songService: SongsService,
+    private errorLoggingService: ErrorLoggingService, private modalService: NgbModal) { }
+
   token = '';
   user_id = this.songService.getUUID();
 
@@ -39,10 +44,9 @@ export class AppComponent implements OnInit {
   requestNotificationPermission() {
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
-        console.log('Notification permission granted.');
         this.subscribeToNotifications();
       } else {
-        console.log('Notification permission denied.');
+        this.openModal('No se han otorgado permisos para notificaciones.');
       }
     });
   }
@@ -54,34 +58,30 @@ export class AppComponent implements OnInit {
         const postToken: PostToken = {
           token: token,
           user_id: this.user_id
-        }
+        };
         this.songService.postToken(postToken).subscribe(response => {
-          console.log('Token actualizado en el servidor:', response);
           this.getToken();
         }, error => {
-          console.error('Error enviando token al servidor', error);
+          this.openModal(`Error enviando token al servidor: ${this.errorLoggingService.logError(error)}`);
         });
-
       } else {
-        console.log('No hay un token de registro disponible. Solicita permiso para generar uno.');
+        this.openModal('No hay un token de registro disponible. Solicita permiso para generar uno.');
       }
     }).catch((err) => {
-      console.log('Se produjo un error al recuperar el token.', err);
+      this.openModal(`Se produjo un error al recuperar el token: ${this.errorLoggingService.logError(err)}`);
     });
   }
 
   getToken() {
     this.songService.getToken(this.user_id).subscribe(response => {
       this.token = response.token;
-      console.log('Token recuperado correctamente');
     }, error => {
-      console.error('Error recuperando token', error);
+      this.openModal(`Error recuperando token: ${this.errorLoggingService.logError(error)}`);
     });
   }
 
   listenForMessages() {
     onMessage(this.messaging, (payload: any) => {
-      console.log('Message received. ', payload);
       this.toastr.info(payload.notification?.body, payload.notification?.title);
       this.showNotification(payload.notification.title, payload.notification?.body, payload.notification?.image);
       this.currentMessage.next(payload);
@@ -97,9 +97,8 @@ export class AppComponent implements OnInit {
   registerServiceWorker() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js').then(registration => {
-        console.log('Service Worker registered');
       }).catch(error => {
-        console.error('Service Worker registration failed:', error);
+        this.openModal(`Service Worker registration failed: ${this.errorLoggingService.logError(error)}`);
       });
     }
   }
@@ -130,5 +129,10 @@ export class AppComponent implements OnInit {
       });
     }
   }
-}
 
+  openModal(errorMessage: string): void {
+    this.errorLoggingService.logError(errorMessage);
+    const modalRef = this.modalService.open(ErrorLogModalComponent);
+    modalRef.componentInstance.errors = this.errorLoggingService.getErrors();
+  }
+}

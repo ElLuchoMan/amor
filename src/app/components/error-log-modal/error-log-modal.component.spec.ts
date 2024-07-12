@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ErrorLogModalComponent } from './error-log-modal.component';
 import { ErrorLoggingService } from '../../services/error-logging.service';
+import { By } from '@angular/platform-browser';
 
 describe('ErrorLogModalComponent', () => {
   let component: ErrorLogModalComponent;
@@ -9,16 +10,15 @@ describe('ErrorLogModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ErrorLogModalComponent],
+      imports: [ErrorLogModalComponent],
       providers: [ErrorLoggingService]
     }).compileComponents();
-
-    errorLoggingService = TestBed.inject(ErrorLoggingService);
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ErrorLogModalComponent);
     component = fixture.componentInstance;
+    errorLoggingService = TestBed.inject(ErrorLoggingService);
     fixture.detectChanges();
   });
 
@@ -26,18 +26,24 @@ describe('ErrorLogModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display errors from the service', () => {
+  it('should display error logs', () => {
     errorLoggingService.logError('Test error');
     component.ngOnInit();
-    expect(component.errors.length).toBe(1);
-    expect(component.errors[0]).toContain('Test error');
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('li').textContent).toContain('Test error');
   });
 
-  it('should clear errors', () => {
+  it('should clear error logs', () => {
     errorLoggingService.logError('Test error');
     component.ngOnInit();
+    fixture.detectChanges();
+
     component.clearErrors();
-    expect(component.errors.length).toBe(0);
-    expect(errorLoggingService.getErrors().length).toBe(0);
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('li')).toBeNull();
   });
 });
