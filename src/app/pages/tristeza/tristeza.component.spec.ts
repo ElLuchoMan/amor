@@ -12,6 +12,7 @@ describe('TristezaComponent', () => {
   let fixture: ComponentFixture<TristezaComponent>;
   let toastrService: ToastrService;
   let router: Router;
+  let mockBootstrapModal: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -35,6 +36,7 @@ describe('TristezaComponent', () => {
     component = fixture.componentInstance;
     toastrService = TestBed.inject(ToastrService);
     router = TestBed.inject(Router);
+    mockBootstrapModal = require('bootstrap').Modal;
     fixture.detectChanges();
 
     const store: { [key: string]: string } = {};
@@ -226,4 +228,88 @@ describe('TristezaComponent', () => {
     reloadPage();
     expect(window.location.reload).toHaveBeenCalled();
   });
+  it('should show message when the letter has already been used', () => {
+    component.letrasUsadas.add('a');
+    jest.spyOn(component, 'mostrarMensaje');
+    
+    component.comprobarLetras('a');
+    
+    expect(component.mostrarMensaje).toHaveBeenCalledWith('Esa letra ya la habías elegido');
+  });
+  
+  it('should add the letter to letrasUsadas and update the visible word if the letter has not been used', () => {
+    component.palabraOculta = 'test';
+    component.palabraVisible = '____';
+    component.letrasUsadas.clear();
+    
+    component.comprobarLetras('t');
+    
+    expect(component.letrasUsadas.has('t')).toBeTruthy();
+    expect(component.palabraVisible).toBe('t__t');
+  });
+  
+  it('should increase the number of failures and show message when the letter is not in the word', () => {
+    component.palabraOculta = 'test';
+    component.palabraVisible = '____';
+    component.letrasUsadas.clear();
+    
+    jest.spyOn(component, 'mostrarMensaje');
+    jest.spyOn(component, 'ponerImagen');
+    
+    component.comprobarLetras('a');
+    
+    expect(component.letrasUsadas.has('a')).toBeTruthy();
+    expect(component.numeroFallos).toBe(1);
+    expect(component.mostrarMensaje).toHaveBeenCalledWith('La letra elegida no está');
+    expect(component.ponerImagen).toHaveBeenCalledWith(1);
+  });
+  
+  it('should finalize the game as won if the last missing letter is guessed', () => {
+    component.palabraOculta = 'test';
+    component.palabraVisible = 'te_t';
+    component.letrasUsadas.clear();
+    
+    jest.spyOn(component, 'finalizarGanador');
+    
+    component.comprobarLetras('s');
+    
+    expect(component.finalizarGanador).toHaveBeenCalled();
+    expect(component.palabraVisible).toBe('test');
+  });
+  
+  it('should finalize the game as lost if the maximum number of failures is reached', () => {
+    component.palabraOculta = 'test';
+    component.palabraVisible = '____';
+    component.letrasUsadas.clear();
+    component.numeroFallos = 8;
+    
+    jest.spyOn(component, 'finalizarPerdedor');
+    
+    component.comprobarLetras('a');
+    
+    expect(component.finalizarPerdedor).toHaveBeenCalled();
+    expect(component.numeroFallos).toBe(9);
+  });
+  it('should close modal and restart game', () => {
+    component.modalTitle = '¡GANASTE!';
+    component.modalIconClass = 'fas fa-trophy';
+    component.modalIconColor = 'gold';
+    const modalElement = document.createElement('div');
+    modalElement.id = 'resultadoModal';
+    document.body.appendChild(modalElement);
+    jest.spyOn(document, 'getElementById').mockReturnValue(modalElement);
+    const modalInstance = new mockBootstrapModal(modalElement);
+    jest.spyOn(mockBootstrapModal, 'getInstance').mockReturnValue(modalInstance);
+    jest.spyOn(modalInstance, 'hide');
+
+    component.closeModalAndRestart();
+    expect(modalInstance.hide).toHaveBeenCalled();
+    expect(component.numeroFallos).toBe(0);
+    expect(component.numeroAciertos).toBe(0);
+    expect(component.panelGanador).toBeFalsy();
+    expect(component.panelPerdedor).toBeFalsy();
+    expect(component.juegoTerminado).toBeFalsy();
+    expect(component.letrasUsadas.size).toBe(0);
+  });
+  
 });
