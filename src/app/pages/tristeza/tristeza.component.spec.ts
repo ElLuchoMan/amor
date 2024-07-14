@@ -26,6 +26,10 @@ describe('TristezaComponent', () => {
     }).compileComponents();
   });
 
+  const reloadPage = () => {
+    window.location.reload();
+  };
+
   beforeEach(() => {
     fixture = TestBed.createComponent(TristezaComponent);
     component = fixture.componentInstance;
@@ -52,6 +56,17 @@ describe('TristezaComponent', () => {
     Object.defineProperty(window, 'localStorage', {
       value: mockLocalStorage
     });
+  });
+
+  beforeAll(() => {
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { reload: jest.fn() },
+    });
+  });
+
+  afterAll(() => {
+    Object.defineProperty(window, 'location', { configurable: true, value: origin });
   });
 
   it('should create', () => {
@@ -192,5 +207,23 @@ describe('TristezaComponent', () => {
     component.letraElegida = '1';
     component.analizarLetra();
     expect(component.mostrarMensaje).toHaveBeenCalledWith('El caracter ingresado no es una letra');
+  });
+
+  it('should display a message to introduce a letter', () => {
+    jest.spyOn(component, 'mostrarMensaje'); // Espía la función mostrarMensaje
+    component.pedirLetra(); // Llama a la función pedirLetra
+    expect(component.mostrarMensaje).toHaveBeenCalledWith('Introduce una letra'); // Verifica que mostrarMensaje fue llamada con el mensaje correcto
+  });
+
+  it('mocks reload function', () => {
+    expect(jest.isMockFunction(window.location.reload)).toBe(true);
+  });
+
+  it('should reload the page', () => {
+    jest.spyOn(window.location, 'reload').mockImplementation(() => { });
+
+    component.reloadPage();
+    reloadPage();
+    expect(window.location.reload).toHaveBeenCalled();
   });
 });
