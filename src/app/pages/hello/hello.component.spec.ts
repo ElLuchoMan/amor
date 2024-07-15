@@ -45,7 +45,7 @@ describe('HelloComponent', () => {
 
   it('should fetch text on init', () => {
     const mockData = [{ letter: 'line1\n\nline2' }];
-    jest.spyOn(songsService, 'listText').mockReturnValue(of(mockData));
+    jest.spyOn(songsService, 'getText').mockReturnValue(of(mockData));
     jest.spyOn(toastrService, 'success');
 
     component.ngOnInit();
@@ -57,7 +57,7 @@ describe('HelloComponent', () => {
 
   it('should handle error when fetching text', () => {
     const mockError = new Error('Error fetching data');
-    jest.spyOn(songsService, 'listText').mockReturnValue(throwError(mockError));
+    jest.spyOn(songsService, 'getText').mockReturnValue(throwError(mockError));
     jest.spyOn(toastrService, 'error');
 
     component.ngOnInit();

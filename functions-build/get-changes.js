@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,8 +71,7 @@ module.exports =
 module.exports = require("faunadb");
 
 /***/ }),
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -464,7 +463,7 @@ exports.handler = /*#__PURE__*/function () {
           });
           _context.prev = 6;
           _context.next = 9;
-          return client.query(q.Map(q.Paginate(q.Documents(q.Collection('resources'))), q.Lambda('ref', q.Get(q.Var('ref')))));
+          return client.query(q.Map(q.Paginate(q.Documents(q.Collection('changes'))), q.Lambda('ref', q.Get(q.Var('ref')))));
         case 9:
           result = _context.sent;
           data = result.data.map(function (item) {
@@ -482,7 +481,7 @@ exports.handler = /*#__PURE__*/function () {
             statusCode: 500,
             headers: headers,
             body: JSON.stringify({
-              message: 'Error fetching resources',
+              message: 'Error fetching changes',
               error: _context.t0.message
             })
           });

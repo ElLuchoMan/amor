@@ -10,6 +10,8 @@ module.exports = {
     'get-resources': './get-resources.js',
     'update-songs': './update-songs.js',
     'update-resources': './update-resources.js',
+    'get-changes': './get-changes.js',
+    'update-changes': './update-changes.js'
   },
   target: 'node',
   externals: [nodeExternals()],

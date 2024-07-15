@@ -20,7 +20,7 @@ export class SongsService {
     return this.http.get<any>(`${this.apiUrl}/get-songs`);
   }
 
-  listText(): Observable<any> {
+  getText(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/get-text`);
   }
 
@@ -34,6 +34,10 @@ export class SongsService {
 
   getToken(user_id: string): Observable<{ token: string }> {
     return this.http.get<{ token: string }>(`${this.apiUrl}/get-token`, { params: { user_id } });
+  }
+  
+  getChanges(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/get-changes`);
   }
 
   generateUUID(): string {
@@ -56,4 +60,5 @@ export class SongsService {
     const resource = data.find(item => item.type === type);
     return resource ? resource.url : '';
   }
+
 }

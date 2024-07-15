@@ -61,18 +61,19 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports) {
 
 module.exports = require("faunadb");
 
 /***/ }),
-/* 1 */,
-/* 2 */
+
+/***/ 6:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -391,6 +392,70 @@ function _regeneratorRuntime() {
     }
   }, e;
 }
+function _createForOfIteratorHelper(o, allowArrayLike) {
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+  if (!it) {
+    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+      if (it) o = it;
+      var i = 0;
+      var F = function F() {};
+      return {
+        s: F,
+        n: function n() {
+          if (i >= o.length) return {
+            done: true
+          };
+          return {
+            done: false,
+            value: o[i++]
+          };
+        },
+        e: function e(_e) {
+          throw _e;
+        },
+        f: F
+      };
+    }
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  var normalCompletion = true,
+    didErr = false,
+    err;
+  return {
+    s: function s() {
+      it = it.call(o);
+    },
+    n: function n() {
+      var step = it.next();
+      normalCompletion = step.done;
+      return step;
+    },
+    e: function e(_e2) {
+      didErr = true;
+      err = _e2;
+    },
+    f: function f() {
+      try {
+        if (!normalCompletion && it["return"] != null) it["return"]();
+      } finally {
+        if (didErr) throw err;
+      }
+    }
+  };
+}
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+  return arr2;
+}
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -425,7 +490,7 @@ var faunadb = __webpack_require__(0);
 var q = faunadb.query;
 exports.handler = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-    var headers, client, result, data;
+    var headers, client, _JSON$parse, changes, results, _iterator, _step, change, result;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -447,7 +512,7 @@ exports.handler = /*#__PURE__*/function () {
             })
           });
         case 3:
-          if (!(event.httpMethod !== 'GET')) {
+          if (!(event.httpMethod !== 'POST')) {
             _context.next = 5;
             break;
           }
@@ -460,37 +525,68 @@ exports.handler = /*#__PURE__*/function () {
           });
         case 5:
           client = new faunadb.Client({
-            secret: "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
+            secret: process.env.Faunadb_SECRET
           });
-          _context.prev = 6;
-          _context.next = 9;
-          return client.query(q.Map(q.Paginate(q.Documents(q.Collection('resources'))), q.Lambda('ref', q.Get(q.Var('ref')))));
-        case 9:
+          _JSON$parse = JSON.parse(event.body), changes = _JSON$parse.changes;
+          _context.prev = 7;
+          results = [];
+          _iterator = _createForOfIteratorHelper(changes);
+          _context.prev = 10;
+          _iterator.s();
+        case 12:
+          if ((_step = _iterator.n()).done) {
+            _context.next = 20;
+            break;
+          }
+          change = _step.value;
+          _context.next = 16;
+          return client.query(q.Create(q.Collection('changes'), {
+            data: {
+              change: change
+            }
+          }));
+        case 16:
           result = _context.sent;
-          data = result.data.map(function (item) {
-            return item.data;
+          results.push({
+            id: result.ref.id,
+            change: result.data.change
           });
+        case 18:
+          _context.next = 12;
+          break;
+        case 20:
+          _context.next = 25;
+          break;
+        case 22:
+          _context.prev = 22;
+          _context.t0 = _context["catch"](10);
+          _iterator.e(_context.t0);
+        case 25:
+          _context.prev = 25;
+          _iterator.f();
+          return _context.finish(25);
+        case 28:
           return _context.abrupt("return", {
             statusCode: 200,
             headers: headers,
-            body: JSON.stringify(data)
+            body: JSON.stringify(results)
           });
-        case 14:
-          _context.prev = 14;
-          _context.t0 = _context["catch"](6);
+        case 31:
+          _context.prev = 31;
+          _context.t1 = _context["catch"](7);
           return _context.abrupt("return", {
             statusCode: 500,
             headers: headers,
             body: JSON.stringify({
-              message: 'Error fetching resources',
-              error: _context.t0.message
+              message: 'Error updating changes',
+              error: _context.t1.message
             })
           });
-        case 17:
+        case 34:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[6, 14]]);
+    }, _callee, null, [[7, 31], [10, 22, 25, 28]]);
   }));
   return function (_x) {
     return _ref.apply(this, arguments);
@@ -498,4 +594,5 @@ exports.handler = /*#__PURE__*/function () {
 }();
 
 /***/ })
-/******/ ]);
+
+/******/ });

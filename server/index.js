@@ -15,6 +15,7 @@ const tokensPath = path.join(__dirname, 'tokens.json');
 const songsPath = path.join(__dirname, 'songs.json');
 const textPath = path.join(__dirname, 'text.json');
 const resourcesPath = path.join(__dirname, 'resources.json');
+const changesPath = path.join(__dirname, 'changes.json');
 
 function readJSON(filePath) {
   const data = fs.readFileSync(filePath, 'utf-8');
@@ -92,6 +93,22 @@ app.post('/api/update-resources', (req, res) => {
   writeJSON(resourcesPath, resources);
 
   res.status(200).json({ message: 'Resources updated successfully' });
+});
+
+// Nuevo endpoint para obtener cambios
+app.get('/api/get-changes', (req, res) => {
+  const changes = readJSON(changesPath);
+  res.json(changes);
+});
+
+// Nuevo endpoint para actualizar cambios
+app.post('/api/update-changes', (req, res) => {
+  const { changes } = req.body;
+  console.log('Actualizando cambios:', changes);
+
+  writeJSON(changesPath, { changes });
+
+  res.status(200).json({ message: 'Changes updated successfully' });
 });
 
 app.get('*', (req, res) => {

@@ -48,9 +48,7 @@ describe('SayYesComponent', () => {
     component.exampleModalElement = {
       nativeElement: document.createElement('div')
     } as ElementRef;
-
     component.ngAfterViewInit();
-
     expect(component['modal']).toBeDefined();
   });
 
@@ -66,7 +64,8 @@ describe('SayYesComponent', () => {
     component.exampleModalElement = { nativeElement: modalElement } as ElementRef;
     component.ngAfterViewInit();
     const modalInstance = component['modal'];
-    jest.spyOn(modalInstance!, 'show');
+    jest.spyOn(modalInstance!, 'show').mockImplementation(() => { });
+    expect(modalInstance!.show).toHaveBeenCalledTimes(0);
   });
 
   it('should handle error when modal is not initialized', () => {
@@ -83,9 +82,7 @@ describe('SayYesComponent', () => {
       { type: 'youtube', url: 'youtube-url' }
     ];
     jest.spyOn(songsService, 'listResources').mockReturnValue(of(mockData));
-
     component.ngOnInit();
-
     expect(component.image).toBe('image-url');
     expect(component.insta).toBe('insta-url');
     expect(component.youtube).toBe('youtube-url');
@@ -95,9 +92,7 @@ describe('SayYesComponent', () => {
     const mockError = new Error('Error fetching data');
     jest.spyOn(songsService, 'listResources').mockReturnValue(throwError(mockError));
     jest.spyOn(toastrService, 'error');
-
     component.ngOnInit();
-
     expect(toastrService.error).toHaveBeenCalledWith(`Error fetching image and insta: ${mockError} `, 'ERROR');
   });
 
@@ -111,12 +106,9 @@ describe('SayYesComponent', () => {
     const originalLocation = window.location;
     delete (window as any).location;
     (window as any).location = { href: '' };
-
     component.youtube = 'https://youtu.be/7oKZeo779Xg?si=f69rP2eFTD26J6Sl&t=101';
     component.salirDePagina();
-
     expect(window.location.href).toBe('https://youtu.be/7oKZeo779Xg?si=f69rP2eFTD26J6Sl&t=101');
-
     window.location = originalLocation;
   });
 });

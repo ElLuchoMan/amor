@@ -1,0 +1,19 @@
+<div class="modal fade" id="cambiosModal" tabindex="-1" aria-labelledby="cambiosModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header bg-dark">
+                <h1 class="card-title" id="cambiosModalLabel">Nuevos Cambios</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-dark">
+                <ol>
+                    <li *ngFor="let cambio of nuevosCambios">{{ cambio }}</li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" id="aceptarCambios"
+                    (click)="aceptarCambios()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,11 +13,12 @@ import { PostToken } from './models/token.model';
 import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
 import { ErrorLoggingService } from './services/error-logging.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NewsModalComponent } from './components/news-modal/news-modal.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, NewsModalComponent ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
