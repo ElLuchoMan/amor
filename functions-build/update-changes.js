@@ -525,10 +525,10 @@ exports.handler = /*#__PURE__*/function () {
           });
         case 5:
           client = new faunadb.Client({
-            secret: process.env.Faunadb_SECRET
+            secret: "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
           });
+          _context.prev = 6;
           _JSON$parse = JSON.parse(event.body), changes = _JSON$parse.changes;
-          _context.prev = 7;
           results = [];
           _iterator = _createForOfIteratorHelper(changes);
           _context.prev = 10;
@@ -573,7 +573,7 @@ exports.handler = /*#__PURE__*/function () {
           });
         case 31:
           _context.prev = 31;
-          _context.t1 = _context["catch"](7);
+          _context.t1 = _context["catch"](6);
           return _context.abrupt("return", {
             statusCode: 500,
             headers: headers,
@@ -586,7 +586,7 @@ exports.handler = /*#__PURE__*/function () {
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[7, 31], [10, 22, 25, 28]]);
+    }, _callee, null, [[6, 31], [10, 22, 25, 28]]);
   }));
   return function (_x) {
     return _ref.apply(this, arguments);

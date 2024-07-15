@@ -25,10 +25,11 @@ exports.handler = async (event) => {
     };
   }
 
-  const client = new faunadb.Client({ secret: process.env.Faunadb_SECRET });
-  const { changes } = JSON.parse(event.body);
+  const client = new faunadb.Client({ secret: process.env.FAUNADB_SECRET });
 
   try {
+    const { changes } = JSON.parse(event.body);
+
     const results = [];
     for (const change of changes) {
       const result = await client.query(
