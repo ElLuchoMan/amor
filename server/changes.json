@@ -1,6 +1,8 @@
-{
-  "changes": [
-    "Modal de cambios para ver si hay algo nuevo",
-    "Almacenamiento en localstorage"
-  ]
-}
+[
+    {
+        "change": "Nuevo cambio 1"
+    },
+    {
+        "change": "Nuevo cambio 2"
+    }
+]
