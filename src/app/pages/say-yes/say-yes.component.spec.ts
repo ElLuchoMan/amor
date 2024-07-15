@@ -58,14 +58,15 @@ describe('SayYesComponent', () => {
     component.initModal();
     expect(toastrService.error).toHaveBeenCalledWith('Modal element not found', 'ERROR');
   });
-
   it('should open modal when modal is initialized', () => {
     const modalElement = document.createElement('div');
     component.exampleModalElement = { nativeElement: modalElement } as ElementRef;
     component.ngAfterViewInit();
+    expect(component['modal']).toBeDefined();
     const modalInstance = component['modal'];
     jest.spyOn(modalInstance!, 'show').mockImplementation(() => { });
-    expect(modalInstance!.show).toHaveBeenCalledTimes(0);
+    component.openModal();
+    expect(modalInstance!.show).toHaveBeenCalledTimes(1);
   });
 
   it('should handle error when modal is not initialized', () => {

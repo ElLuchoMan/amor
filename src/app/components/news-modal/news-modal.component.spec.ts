@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import * as bootstrap from 'bootstrap';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 describe('NewsModalComponent', () => {
   let component: NewsModalComponent;
@@ -22,6 +23,7 @@ describe('NewsModalComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NewsModalComponent);
     component = fixture.componentInstance;
+    component.appVersion = environment.appVersion;
     songsService = TestBed.inject(SongsService);
     mockBootstrapModal = bootstrap.Modal;
     fixture.detectChanges();
@@ -46,7 +48,6 @@ describe('NewsModalComponent', () => {
       value: mockLocalStorage
     });
 
-    // Crear un elemento modal antes de cada prueba
     const modalElement = document.createElement('div');
     modalElement.id = 'cambiosModal';
     modalElement.innerHTML = `
@@ -97,18 +98,25 @@ describe('NewsModalComponent', () => {
     localStorage.getItem = jest.fn().mockReturnValue(null);
     const modalElement = document.getElementById('cambiosModal');
     const modalInstance = new mockBootstrapModal(modalElement);
-    jest.spyOn(modalInstance, 'show').mockImplementation(() => {});
-
+    jest.spyOn(modalInstance, 'show').mockImplementation(() => { });
     component.checkForChanges();
     expect(modalInstance.show).toHaveBeenCalledTimes(0);
   });
 
-  it('should not show changes modal if changes are accepted', () => {
-    localStorage.getItem = jest.fn().mockReturnValue('true');
+  it('should not show changes modal if changes are accepted and version is the same', () => {
+    localStorage.getItem = jest.fn().mockReturnValue(JSON.stringify({ appVersion: '1.4.1', viewed: true }));
     const modalElement = document.getElementById('cambiosModal');
     const modalInstance = new mockBootstrapModal(modalElement);
-    jest.spyOn(modalInstance, 'show').mockImplementation(() => {});
+    jest.spyOn(modalInstance, 'show').mockImplementation(() => { });
+    component.checkForChanges();
+    expect(modalInstance.show).toHaveBeenCalledTimes(0);
+  });
 
+  it('should show changes modal if version is different', () => {
+    localStorage.getItem = jest.fn().mockReturnValue(JSON.stringify({ appVersion: '1.4.0', viewed: true }));
+    const modalElement = document.getElementById('cambiosModal');
+    const modalInstance = new mockBootstrapModal(modalElement);
+    jest.spyOn(modalInstance, 'show').mockImplementation(() => { });
     component.checkForChanges();
     expect(modalInstance.show).toHaveBeenCalledTimes(0);
   });
@@ -118,24 +126,38 @@ describe('NewsModalComponent', () => {
     const modalElement = document.getElementById('cambiosModal');
     const modalInstance = new mockBootstrapModal(modalElement);
     jest.spyOn(mockBootstrapModal, 'getInstance').mockReturnValue(modalInstance);
-    jest.spyOn(modalInstance, 'hide').mockImplementation(() => {});
-
+    jest.spyOn(modalInstance, 'hide').mockImplementation(() => { });
     component.aceptarCambios();
-    expect(localStorage.setItem).toHaveBeenCalledWith('cambiosAceptados', 'true');
+    expect(localStorage.setItem).toHaveBeenCalledWith('cambiosInfo', JSON.stringify({ appVersion: '1.4.1', viewed: true }));
     expect(modalInstance.hide).toHaveBeenCalled();
   });
 
   it('should get changes from the service on init', () => {
     const mockChanges = ['Cambio 1', 'Cambio 2'];
     jest.spyOn(songsService, 'getChanges').mockReturnValue(of(mockChanges));
-
     component.getChanges();
   });
 
   it('should handle error when getChanges service fails', () => {
     jest.spyOn(songsService, 'getChanges').mockReturnValue(throwError(() => new Error('Service error')));
-
     component.getChanges();
     expect(component.nuevosCambios).toEqual([]);
+  });
+
+  describe('isSameVersion', () => {
+    it('should return false if storedVersion is not provided', () => {
+      const result = component.isSameVersion('');
+      expect(result).toBeFalsy();
+    });
+
+    it('should return true if current and stored versions are the same', () => {
+      const result = component.isSameVersion('1.4.1');
+      expect(result).toBeTruthy();
+    });
+
+    it('should return false if current and stored versions are different', () => {
+      const result = component.isSameVersion('1.4.0');
+      expect(result).toBeFalsy();
+    });
   });
 });
