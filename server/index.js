@@ -16,6 +16,7 @@ const songsPath = path.join(__dirname, 'songs.json');
 const textPath = path.join(__dirname, 'text.json');
 const resourcesPath = path.join(__dirname, 'resources.json');
 const changesPath = path.join(__dirname, 'changes.json');
+const lettersPath = path.join(__dirname, 'letters.json');
 
 function readJSON(filePath) {
   const data = fs.readFileSync(filePath, 'utf-8');
@@ -95,13 +96,11 @@ app.post('/api/update-resources', (req, res) => {
   res.status(200).json({ message: 'Resources updated successfully' });
 });
 
-// Nuevo endpoint para obtener cambios
 app.get('/api/get-changes', (req, res) => {
   const changes = readJSON(changesPath);
   res.json(changes);
 });
 
-// Nuevo endpoint para actualizar cambios
 app.post('/api/update-changes', (req, res) => {
   const { changes } = req.body;
   console.log('Actualizando cambios:', changes);
@@ -109,6 +108,45 @@ app.post('/api/update-changes', (req, res) => {
   writeJSON(changesPath, { changes });
 
   res.status(200).json({ message: 'Changes updated successfully' });
+});
+
+app.get('/api/get-letters', (req, res) => {
+  const letters = readJSON(lettersPath);
+  res.json(letters);
+});
+
+app.post('/api/add-letter', (req, res) => {
+  const newLetter = req.body;
+  const letters = readJSON(lettersPath);
+  letters.push(newLetter);
+
+  writeJSON(lettersPath, letters);
+
+  res.status(200).json({ message: 'Letter added successfully' });
+});
+
+app.delete('/api/delete-letter', (req, res) => {
+  const { date } = req.body;
+  let letters = readJSON(lettersPath);
+  letters = letters.filter(letter => letter.date !== date);
+
+  writeJSON(lettersPath, letters);
+
+  res.status(200).json({ message: 'Letter deleted successfully' });
+});
+
+app.put('/api/update-letter', (req, res) => {
+  const { date, newLetter } = req.body;
+  let letters = readJSON(lettersPath);
+  const index = letters.findIndex(letter => letter.date === date);
+
+  if (index !== -1) {
+    letters[index] = { ...letters[index], ...newLetter };
+    writeJSON(lettersPath, letters);
+    res.status(200).json({ message: 'Letter updated successfully' });
+  } else {
+    res.status(404).json({ message: 'Letter not found' });
+  }
 });
 
 app.get('*', (req, res) => {

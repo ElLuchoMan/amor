@@ -18,7 +18,7 @@ import { NewsModalComponent } from './components/news-modal/news-modal.component
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, NewsModalComponent ],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, NewsModalComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

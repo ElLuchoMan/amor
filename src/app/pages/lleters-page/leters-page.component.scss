@@ -1,0 +1,46 @@
+.card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.5s;
+}
+
+.card:hover .card-img-top {
+    transform: rotateY(180deg);
+    opacity: 0.3;
+}
+
+.card-body {
+    transition: transform 0.5s;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateY(180deg);
+    backface-visibility: hidden;
+    opacity: 0;
+}
+
+.card:hover .card-body {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotateY(0deg);
+}
+.stretched-link {
+    color: #9600db;
+    font-style: 'Roboto';
+}
+@media (max-width: 768px) {
+    .card-body {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        padding: 10px;
+    }
+
+    .card-img-top {
+        opacity: 1;
+        transform: none;
+    }
+}

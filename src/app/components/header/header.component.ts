@@ -24,6 +24,7 @@ export class HeaderComponent {
     { label: 'Canciones', path: '/songs' },
     { label: 'Pregunta', path: '/say-yes' },
     { label: 'No Estés Triste', path: '/no-estes-triste' },
+    { label: 'Cartas', path: '/letters' }
   ];
   constructor(private songService: SongsService, private errorLoggingService: ErrorLoggingService, private modalService: NgbModal) { }
   logo = '';

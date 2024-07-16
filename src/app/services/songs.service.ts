@@ -40,6 +40,14 @@ export class SongsService {
     return this.http.get<string[]>(`${this.apiUrl}/get-changes`);
   }
 
+  getLetters(): Observable<{ date: string, image: string, text: string }[]> {
+    return this.http.get<{ date: string, image: string, text: string }[]>(`${this.apiUrl}/get-letters`);
+  }
+
+  addLetter(letter: { date: string, image: string, text: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/add-letter`, letter);
+  }
+  
   generateUUID(): string {
     return '16032024-xxxx-xxx-xx-x'.replace(/[xy]/g, function (c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : ((r & 0x3) | 0x8);
@@ -60,5 +68,4 @@ export class SongsService {
     const resource = data.find(item => item.type === type);
     return resource ? resource.url : '';
   }
-
 }
