@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,7 +73,8 @@ module.exports = require("faunadb");
 /***/ }),
 /* 1 */,
 /* 2 */,
-/* 3 */
+/* 3 */,
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -465,7 +466,7 @@ exports.handler = /*#__PURE__*/function () {
           });
           _context.prev = 6;
           _context.next = 9;
-          return client.query(q.Map(q.Paginate(q.Documents(q.Collection('changes'))), q.Lambda('ref', q.Get(q.Var('ref')))));
+          return client.query(q.Map(q.Paginate(q.Documents(q.Collection('letters'))), q.Lambda('ref', q.Get(q.Var('ref')))));
         case 9:
           result = _context.sent;
           data = result.data.map(function (item) {
@@ -483,7 +484,7 @@ exports.handler = /*#__PURE__*/function () {
             statusCode: 500,
             headers: headers,
             body: JSON.stringify({
-              message: 'Error fetching changes',
+              message: 'Error fetching letters',
               error: _context.t0.message
             })
           });

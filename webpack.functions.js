@@ -11,7 +11,11 @@ module.exports = {
     'update-songs': './update-songs.js',
     'update-resources': './update-resources.js',
     'get-changes': './get-changes.js',
-    'update-changes': './update-changes.js'
+    'update-changes': './update-changes.js',
+    'add-letter': './add-letter.js',
+    'get-letter': './get-letter.js',
+    'update-letter': './update-letter.js',
+    'delete-letter': './delete-letter.js'
   },
   target: 'node',
   externals: [nodeExternals()],

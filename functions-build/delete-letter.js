@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -72,8 +72,7 @@ module.exports = require("faunadb");
 
 /***/ }),
 /* 1 */,
-/* 2 */,
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -426,7 +425,7 @@ var faunadb = __webpack_require__(0);
 var q = faunadb.query;
 exports.handler = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-    var headers, client, result, data;
+    var headers, client, _JSON$parse, date, result;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -448,7 +447,7 @@ exports.handler = /*#__PURE__*/function () {
             })
           });
         case 3:
-          if (!(event.httpMethod !== 'GET')) {
+          if (!(event.httpMethod !== 'DELETE')) {
             _context.next = 5;
             break;
           }
@@ -464,17 +463,17 @@ exports.handler = /*#__PURE__*/function () {
             secret: "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
           });
           _context.prev = 6;
-          _context.next = 9;
-          return client.query(q.Map(q.Paginate(q.Documents(q.Collection('changes'))), q.Lambda('ref', q.Get(q.Var('ref')))));
-        case 9:
+          _JSON$parse = JSON.parse(event.body), date = _JSON$parse.date;
+          _context.next = 10;
+          return client.query(q.Delete(q.Select("ref", q.Get(q.Match(q.Index("letters_by_date"), date)))));
+        case 10:
           result = _context.sent;
-          data = result.data.map(function (item) {
-            return item.data;
-          });
           return _context.abrupt("return", {
             statusCode: 200,
             headers: headers,
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+              message: 'Letter deleted successfully'
+            })
           });
         case 14:
           _context.prev = 14;
@@ -483,7 +482,7 @@ exports.handler = /*#__PURE__*/function () {
             statusCode: 500,
             headers: headers,
             body: JSON.stringify({
-              message: 'Error fetching changes',
+              message: 'Error deleting letter',
               error: _context.t0.message
             })
           });
