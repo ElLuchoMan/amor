@@ -88,9 +88,46 @@ describe('SongsService', () => {
     req.flush(tokenResponse);
   });
 
+  it('should generate a UUID with correct format', () => {
+    const uuidPattern = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{3}-[a-f0-9]{2}-[a-f0-9]{1}$/;
+
+    for (let i = 0; i < 100; i++) {
+      const uuid = service.generateUUID();
+      expect(uuid).toMatch(uuidPattern);
+    }
+  });
+
   it('should generate a UUID', () => {
     const uuid = service.generateUUID();
     expect(uuid).toMatch(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{3}-[a-f0-9]{2}-[a-f0-9]/);
+  });
+
+  it('should correctly apply bitwise operations in UUID generation for y', () => {
+    jest.spyOn(Math, 'random').mockReturnValue(0.5);
+
+    const uuid = service.generateUUID();
+
+    const fourthSegment = uuid.split('-')[3];
+    const fourthSegmentInt = parseInt(fourthSegment, 16);
+
+    expect((fourthSegmentInt & 0x3)).toBe(0x0);
+    expect((fourthSegmentInt | 0x8)).toBe(fourthSegmentInt);
+
+    jest.spyOn(Math, 'random').mockRestore();
+  });
+
+  it('should correctly apply bitwise operations in UUID generation for x', () => {
+    jest.spyOn(Math, 'random').mockReturnValue(0.5);
+
+    const uuid = service.generateUUID();
+
+    const fourthSegment = uuid.split('-')[3];
+    const fourthSegmentInt = parseInt(fourthSegment, 16);
+
+    expect((fourthSegmentInt & 0x3)).toBe(0x0);
+    expect((fourthSegmentInt & 0x8)).toBe(0x8);
+
+    jest.spyOn(Math, 'random').mockRestore();
   });
 
   it('should get a UUID from localStorage', () => {

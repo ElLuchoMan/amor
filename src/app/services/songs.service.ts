@@ -35,14 +35,14 @@ export class SongsService {
   getToken(user_id: string): Observable<{ token: string }> {
     return this.http.get<{ token: string }>(`${this.apiUrl}/get-token`, { params: { user_id } });
   }
-  
+
   getChanges(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/get-changes`);
   }
 
   generateUUID(): string {
     return '16032024-xxxx-xxx-xx-x'.replace(/[xy]/g, function (c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : ((r & 0x3) | 0x8);
       return v.toString(16);
     });
   }
