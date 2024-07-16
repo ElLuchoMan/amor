@@ -49,7 +49,7 @@ export class NewsModalComponent implements OnInit {
     }
   }
 
-  aceptarCambios(): void {
+  AceptarCambios(): void {
     const cambiosInfo = {
       appVersion: this.appVersion,
       viewed: true

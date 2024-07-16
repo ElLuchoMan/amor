@@ -30,4 +30,8 @@ export class LettersPageComponent implements OnInit {
   viewLetter(letter: any): void {
     this.router.navigate(['/letter', letter.date]);
   }
+  
+  goToPage(pageName: string) {
+    this.router.navigate([`${pageName}`]);
+  }
 }

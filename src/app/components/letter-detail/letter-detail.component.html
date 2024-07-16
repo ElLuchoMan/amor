@@ -2,12 +2,16 @@
     <div class="card mt-4">
         <img [src]="letter?.image" class="card-img-top" alt="Letter Image">
         <div class="card-body">
-            <h5 class="card-title">{{ letter?.date }}</h5>
-            <p class="card-text">{{ letter?.text }}</p>
-            <div class="buttons text-center mt-5">
-                <button class="btn btn-dark btn-lg mb-3 me-3" (click)="goBack()">Volver</button>
+            <h5 class="card-title mt-3">{{ letter?.date }}</h5>
+            <p class="card-text mt-5">
+                <ng-container *ngFor="let line of letter?.text?.split('\n')">
+                    {{ line }}<br *ngIf="line">
+                </ng-container>
+            </p>
+            <div class="buttons text-center mt-3">
+                <button class="btn btn-dark btn-lg mt-3 mb-3 me-3" (click)="goBack()">Volver</button>
                 <a *ngIf="letter?.externalLink" [href]="letter.externalLink" class="btn btn-dark btn-lg mb-3 ms-3"
-                    target="_blank">Ver más</a>
+                    target="_blank">Ver Más</a>
             </div>
         </div>
     </div>

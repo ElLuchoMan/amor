@@ -63,7 +63,7 @@ describe('NewsModalComponent', () => {
             </ol>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-dark" id="aceptarCambios" (click)="aceptarCambios()">Aceptar</button>
+            <button type="button" class="btn btn-dark" id="AceptarCambios" (click)="AceptarCambios()">Aceptar</button>
           </div>
         </div>
       </div>`;
@@ -121,14 +121,14 @@ describe('NewsModalComponent', () => {
     expect(modalInstance.show).toHaveBeenCalledTimes(0);
   });
 
-  it('should set cambiosAceptados to true when aceptarCambios is called', () => {
+  it('should set cambiosAceptados to true when AceptarCambios is called', () => {
     localStorage.setItem = jest.fn();
     const modalElement = document.getElementById('cambiosModal');
     const modalInstance = new mockBootstrapModal(modalElement);
     jest.spyOn(mockBootstrapModal, 'getInstance').mockReturnValue(modalInstance);
     jest.spyOn(modalInstance, 'hide').mockImplementation(() => { });
-    component.aceptarCambios();
-    expect(localStorage.setItem).toHaveBeenCalledWith('cambiosInfo', JSON.stringify({ appVersion: '1.4.1', viewed: true }));
+    component.AceptarCambios();
+    expect(localStorage.setItem).toHaveBeenCalledWith('cambiosInfo', JSON.stringify({ appVersion: '1.5.0', viewed: true }));
     expect(modalInstance.hide).toHaveBeenCalled();
   });
 
@@ -151,7 +151,7 @@ describe('NewsModalComponent', () => {
     });
 
     it('should return true if current and stored versions are the same', () => {
-      const result = component.isSameVersion('1.4.1');
+      const result = component.isSameVersion('1.5.0');
       expect(result).toBeTruthy();
     });
 

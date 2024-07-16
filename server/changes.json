@@ -1,8 +1,10 @@
 [
     {
-        "change": "Nuevo cambio 1"
+        "id": "403530393996755021",
+        "change": "Se agrega ventana de nuevos cambios para que puedas saber qué hay de nuevo."
     },
     {
-        "change": "Nuevo cambio 2"
+        "id": "403530394035552333",
+        "change": "Se agrega una vista donde mes a mes te estaré escribiendo cartas."
     }
 ]

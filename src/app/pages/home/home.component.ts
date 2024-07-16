@@ -22,7 +22,7 @@ export class HomeComponent {
   url: string = 'https://github.com/ElLuchoMan'
   cards: Card[] = [
     {
-      title: 'Hello',
+      title: 'Hola',
       imageUrl: 'assets/hello.jpg',
       description: '¿Te gustaría recordar cómo te pedí que fueras mi novia? ¡Revívelo aquí!',
       route: '/hello'
@@ -44,6 +44,12 @@ export class HomeComponent {
       imageUrl: 'assets/no-estes-triste.jpg',
       description: 'Esta es una función especial para ayudarte a distraerte un poco mientras pienso en cómo puedo ayudarte.',
       route: '/no-estes-triste'
+    },
+    {
+      title: 'Cartas',
+      imageUrl: 'assets/letters.jpg',
+      description: '¿Y si mes a mes te escribo algo que te muestre cuánto te amo?',
+      route: '/letters'
     }
   ];
 
