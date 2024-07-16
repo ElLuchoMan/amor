@@ -4,7 +4,7 @@ import { HelloComponent } from './pages/hello/hello.component';
 import { SongsComponent } from './pages/songs/songs.component';
 import { SayYesComponent } from './pages/say-yes/say-yes.component';
 import { TristezaComponent } from './pages/tristeza/tristeza.component';
-import { LettersPageComponent } from './pages/lleters-page/leters-page.component';
+import { LettersPageComponent } from './pages/lleters-page/letters-page.component';
 import { LetterDetailComponent } from './components/letter-detail/letter-detail.component';
 
 const appRoutes: Routes = [

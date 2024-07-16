@@ -164,4 +164,33 @@ describe('SongsService', () => {
     expect(service.getUrlByType(data, 'image')).toBe('http://example.com/image.jpg');
     expect(service.getUrlByType(data, 'nonexistent')).toBe('');
   });
+
+  it('should fetch list of letters', () => {
+    const dummyLetters = [
+      { date: '16/07/2024', image: 'image1.jpg', text: 'Letter 1' },
+      { date: '17/07/2024', image: 'image2.jpg', text: 'Letter 2' }
+    ];
+
+    service.getLetters().subscribe(letters => {
+      expect(letters.length).toBe(2);
+      expect(letters).toEqual(dummyLetters);
+    });
+
+    const req = httpMock.expectOne(environment.apiUrl + '/get-letters');
+    expect(req.request.method).toBe('GET');
+    req.flush(dummyLetters);
+  });
+
+  it('should add a letter', () => {
+    const newLetter = { date: '18/07/2024', image: 'image3.jpg', text: 'Letter 3' };
+
+    service.addLetter(newLetter).subscribe(response => {
+      expect(response).toEqual(newLetter);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/add-letter`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(newLetter);
+    req.flush(newLetter);
+  });
 });
