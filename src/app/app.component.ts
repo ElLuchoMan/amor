@@ -6,16 +6,16 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { firebaseConfig } from './environments/firebase-config';
 import { initializeApp } from "firebase/app";
 import { ToastrService } from 'ngx-toastr';
-import { SongsService } from './services/songs.service';
 import { MessagePayload } from 'firebase/messaging';
 import { BehaviorSubject } from 'rxjs';
 import { PostToken } from './models/token.model';
 import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
-import { ErrorLoggingService } from './services/error-logging.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NewsModalComponent } from './components/news-modal/news-modal.component';
+import { ErrorLoggingService } from './services/error-logging.service';
 import { TokenService } from './services/token.service';
 import { UUIDService } from './services/uuid.service';
+import { ServiceWorkerService } from './services/service-worker.service';
 
 @Component({
   selector: 'app-root',
@@ -28,22 +28,26 @@ export class AppComponent implements OnInit {
   title = 'amor';
   messaging = getMessaging(initializeApp(firebaseConfig));
   currentMessage = new BehaviorSubject<MessagePayload | null>(null);
-
-  constructor(private toastr: ToastrService, private songService: SongsService,
-    private errorLoggingService: ErrorLoggingService, private tokenService: TokenService, private uuidService: UUIDService, private modalService: NgbModal) { }
-
   token = '';
   user_id = this.uuidService.getUUID();
 
+  constructor(
+    private toastr: ToastrService,
+    private errorLoggingService: ErrorLoggingService,
+    private tokenService: TokenService,
+    private uuidService: UUIDService,
+    private modalService: NgbModal,
+    private serviceWorkerService: ServiceWorkerService
+  ) { }
+
   ngOnInit() {
-    this.user_id = this.uuidService.getUUID();
     this.registerServiceWorker();
     this.requestNotificationPermission();
     this.listenForMessages();
   }
 
   requestNotificationPermission() {
-    Notification.requestPermission().then((permission) => {
+    Notification.requestPermission().then(permission => {
       if (permission === 'granted') {
         this.subscribeToNotifications();
       } else {
@@ -53,32 +57,30 @@ export class AppComponent implements OnInit {
   }
 
   subscribeToNotifications() {
-    getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then((token) => {
+    getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then(token => {
       if (token) {
         this.tokenService.token = token;
         const postToken: PostToken = {
           token: token,
           user_id: this.user_id
         };
-        this.tokenService.postToken(postToken).subscribe(response => {
-          this.getToken();
-        }, error => {
-          this.openModal(`Error enviando token al servidor: ${this.errorLoggingService.logError(error)}`);
-        });
+        this.tokenService.postToken(postToken).subscribe(
+          () => this.getToken(),
+          error => this.openModal(`Error enviando token al servidor: ${this.errorLoggingService.logError(error)}`)
+        );
       } else {
         this.openModal('No hay un token de registro disponible. Solicita permiso para generar uno.');
       }
-    }).catch((err) => {
+    }).catch(err => {
       this.openModal(`Se produjo un error al recuperar el token: ${this.errorLoggingService.logError(err)}`);
     });
   }
 
   getToken() {
-    this.tokenService.getToken(this.user_id).subscribe(response => {
-      this.token = response.token;
-    }, error => {
-      this.openModal(`Error recuperando token: ${this.errorLoggingService.logError(error)}`);
-    });
+    this.tokenService.getToken(this.user_id).subscribe(
+      response => this.token = response.token,
+      error => this.openModal(`Error recuperando token: ${this.errorLoggingService.logError(error)}`)
+    );
   }
 
   listenForMessages() {
@@ -96,26 +98,15 @@ export class AppComponent implements OnInit {
   }
 
   registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js').then(registration => {
-      }).catch(error => {
-        this.openModal(`Service Worker registration failed: ${this.errorLoggingService.logError(error)}`);
-      });
-    }
+    this.serviceWorkerService.registerServiceWorker().catch(error => {
+      this.openModal(`Service Worker registration failed: ${this.errorLoggingService.logError(error)}`);
+    });
   }
 
   updateCache() {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(registrations => {
-        registrations.forEach(registration => {
-          registration.update().then(() => {
-            if (registration.waiting) {
-              registration.waiting.postMessage({ action: 'skipWaiting' });
-            }
-          });
-        });
-      });
-    }
+    this.serviceWorkerService.updateCache().catch(error => {
+      this.openModal(`Cache update failed: ${this.errorLoggingService.logError(error)}`);
+    });
   }
 
   openModal(errorMessage: string): void {

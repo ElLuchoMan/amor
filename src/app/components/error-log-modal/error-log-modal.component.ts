@@ -13,7 +13,7 @@ import { NgbActiveModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 export class ErrorLogModalComponent implements OnInit {
   errorLogs: string[] = [];
 
-  constructor(public activeModal: NgbActiveModal, private errorLoggingService: ErrorLoggingService) {}
+  constructor(public activeModal: NgbActiveModal, private errorLoggingService: ErrorLoggingService) { }
 
   ngOnInit(): void {
     this.errorLogs = this.errorLoggingService.getErrors();

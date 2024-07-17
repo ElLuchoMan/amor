@@ -47,7 +47,7 @@ describe('ErrorLogModalComponent', () => {
   });
 
   it('should call clearErrors method on button click', () => {
-    jest.spyOn(component, 'clearErrors'); // Usando jest.spyOn
+    jest.spyOn(component, 'clearErrors');
     fixture.detectChanges();
     const button = fixture.debugElement.query(By.css('.clear-errors'));
     expect(button).not.toBeNull();

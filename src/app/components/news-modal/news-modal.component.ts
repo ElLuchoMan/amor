@@ -26,7 +26,7 @@ export class NewsModalComponent implements OnInit {
   checkForChanges(): void {
     const cambiosInfo = localStorage.getItem('cambiosInfo');
     const cambiosInfoParsed = cambiosInfo ? JSON.parse(cambiosInfo) : null;
-    
+
     if (!cambiosInfoParsed || !this.isSameVersion(cambiosInfoParsed.appVersion) || !cambiosInfoParsed.viewed) {
       this.mostrarCambiosModal();
     }
@@ -65,7 +65,6 @@ export class NewsModalComponent implements OnInit {
 
   getChanges(): void {
     this.changesService.getChanges().subscribe((data: any) => {
-      console.log('Data:', data);
       this.nuevosCambios = data.map((item: any) => item.change);
     }, (error: any) => {
       console.error('Error al obtener los cambios', error);

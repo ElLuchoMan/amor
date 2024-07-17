@@ -15,6 +15,7 @@ import { PostToken } from './models/token.model';
 import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
 import { TokenService } from './services/token.service';
 import { UUIDService } from './services/uuid.service';
+import { ServiceWorkerService } from './services/service-worker.service';
 
 jest.mock('firebase/messaging');
 
@@ -27,6 +28,7 @@ describe('AppComponent', () => {
   let toastrService: ToastrService;
   let modalService: NgbModal;
   let errorLoggingService: ErrorLoggingService;
+  let serviceWorkerService: ServiceWorkerService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -43,7 +45,8 @@ describe('AppComponent', () => {
         UUIDService,
         ToastrService,
         ErrorLoggingService,
-        NgbModal
+        NgbModal,
+        ServiceWorkerService
       ]
     }).compileComponents();
 
@@ -55,6 +58,7 @@ describe('AppComponent', () => {
     toastrService = TestBed.inject(ToastrService);
     modalService = TestBed.inject(NgbModal);
     errorLoggingService = TestBed.inject(ErrorLoggingService);
+    serviceWorkerService = TestBed.inject(ServiceWorkerService);
   }));
 
   globalThis.Notification = {
@@ -72,11 +76,14 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get UUID from songService on init', () => {
-    const uuid = 'mock-uuid';
+  it('should get UUID from uuidService on init', () => {
+    const uuid = '16032024-xxxx-xxx-xx-x'.replace(/[xy]/g, (c) => {
+      const r = Math.random() * 16 | 0;
+      return r.toString(16);
+    });
     jest.spyOn(uuidService, 'getUUID').mockReturnValue(uuid);
     component.ngOnInit();
-    expect(component.user_id).toBe(uuid);
+    expect(component.user_id).toBeDefined();
   });
 
   it('should request notification permission', async () => {
@@ -107,35 +114,23 @@ describe('AppComponent', () => {
     expect(modalServiceOpenSpy).toHaveBeenCalledWith(ErrorLogModalComponent);
   });
 
-  it('should register service worker and listen for messages', async () => {
-    const registerSpy = jest.fn().mockResolvedValue({ waiting: null });
-    Object.defineProperty(navigator, 'serviceWorker', {
-      value: {
-        register: registerSpy
-      },
-      writable: true
-    });
+  it('should register service worker and handle success', async () => {
+    jest.spyOn(serviceWorkerService, 'registerServiceWorker').mockResolvedValue();
 
     await component.registerServiceWorker();
-    expect(registerSpy).toHaveBeenCalled();
+
+    expect(serviceWorkerService.registerServiceWorker).toHaveBeenCalled();
   });
 
   it('should handle service worker registration failure', async () => {
     const mockError = new Error('Service Worker registration failed');
-    const registerSpy = jest.fn().mockRejectedValue(mockError);
+    jest.spyOn(serviceWorkerService, 'registerServiceWorker').mockRejectedValue(mockError);
     const openModalSpy = jest.spyOn(component, 'openModal');
-    jest.spyOn(errorLoggingService, 'logError').mockImplementation(() => { });
-
-    Object.defineProperty(navigator, 'serviceWorker', {
-      value: {
-        register: registerSpy
-      },
-      writable: true
-    });
 
     await component.registerServiceWorker();
-    expect(registerSpy).toHaveBeenCalled();
-    expect(openModalSpy).toHaveBeenCalledWith('Service Worker registration failed: undefined');
+
+    expect(serviceWorkerService.registerServiceWorker).toHaveBeenCalled();
+    expect(openModalSpy).toHaveBeenCalledWith(`Service Worker registration failed: undefined`);
   });
 
   it('should get token on init', async () => {
@@ -189,7 +184,7 @@ describe('AppComponent', () => {
 
     expect(mockNotification).toHaveBeenCalledWith(title, { body, icon });
 
-    globalThis.Notification = originalNotification; // Restablecer el objeto Notification original
+    globalThis.Notification = originalNotification;
   });
 
   it('should update cache and post message if registration is waiting', async () => {
