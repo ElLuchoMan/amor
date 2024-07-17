@@ -6,12 +6,12 @@ import { environment } from '../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class SongsService {
+export class ChangesService {
   private readonly apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
-  listSongs(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/get-songs`);
+  getChanges(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/get-changes`);
   }
 }

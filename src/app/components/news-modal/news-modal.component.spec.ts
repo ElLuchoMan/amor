@@ -6,17 +6,19 @@ import * as bootstrap from 'bootstrap';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environment';
+import { ChangesService } from '../../services/changes.service';
 
 describe('NewsModalComponent', () => {
   let component: NewsModalComponent;
   let fixture: ComponentFixture<NewsModalComponent>;
   let songsService: SongsService;
+  let changesService: ChangesService;
   let mockBootstrapModal: any;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, NewsModalComponent, CommonModule],
-      providers: [SongsService],
+      providers: [SongsService, ChangesService],
     }).compileComponents();
   });
 
@@ -25,6 +27,7 @@ describe('NewsModalComponent', () => {
     component = fixture.componentInstance;
     component.appVersion = environment.appVersion;
     songsService = TestBed.inject(SongsService);
+    changesService = TestBed.inject(ChangesService);
     mockBootstrapModal = bootstrap.Modal;
     fixture.detectChanges();
 
@@ -134,12 +137,12 @@ describe('NewsModalComponent', () => {
 
   it('should get changes from the service on init', () => {
     const mockChanges = ['Cambio 1', 'Cambio 2'];
-    jest.spyOn(songsService, 'getChanges').mockReturnValue(of(mockChanges));
+    jest.spyOn(changesService, 'getChanges').mockReturnValue(of(mockChanges));
     component.getChanges();
   });
 
   it('should handle error when getChanges service fails', () => {
-    jest.spyOn(songsService, 'getChanges').mockReturnValue(throwError(() => new Error('Service error')));
+    jest.spyOn(changesService, 'getChanges').mockReturnValue(throwError(() => new Error('Service error')));
     component.getChanges();
     expect(component.nuevosCambios).toEqual([]);
   });

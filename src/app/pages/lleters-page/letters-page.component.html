@@ -1,0 +1,16 @@
+<div class="container">
+    <h1>Cartas de amor</h1>
+    <div class="row">
+        <div *ngFor="let letter of letters" class="col-md-4 mb-4">
+            <div class="card">
+                <div [routerLink]="['/letter', letter.date]" class="stretched-link">
+                    <img [src]="letter.image" class="card-img-top" alt="Letter Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ letter.date }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button (click)="goToPage('home')" type="button" class="btn btn-dark mt-3">Volver</button>
+</div>

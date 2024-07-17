@@ -5,6 +5,8 @@ import { SongsService } from '../../services/songs.service';
 import { ErrorLoggingService } from '../../services/error-logging.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorLogModalComponent } from '../error-log-modal/error-log-modal.component';
+import { ResourcesService } from '../../services/resources.service';
+import { UUIDService } from '../../services/uuid.service';
 interface NavLink {
   label: string;
   path: string;
@@ -26,12 +28,13 @@ export class HeaderComponent {
     { label: 'No Estés Triste', path: '/no-estes-triste' },
     { label: 'Cartas', path: '/letters' }
   ];
-  constructor(private songService: SongsService, private errorLoggingService: ErrorLoggingService, private modalService: NgbModal) { }
+  constructor(private songService: SongsService, private errorLoggingService: ErrorLoggingService,
+    private resourcesService: ResourcesService, private uuidService: UUIDService, private modalService: NgbModal) { }
   logo = '';
   user_id = '';
 
   ngOnInit(): void {
-    this.user_id = this.songService.getUUID();
+    this.user_id = this.uuidService.getUUID();
     this.getLogo();
   }
 
@@ -45,9 +48,9 @@ export class HeaderComponent {
     }
   }
   getLogo() {
-    this.songService.listResources().subscribe({
+    this.resourcesService.listResources().subscribe({
       next: (data: any) => {
-        this.logo = this.songService.getUrlByType(data, 'logo');
+        this.logo = this.resourcesService.getUrlByType(data, 'logo');
       }
     });
   }

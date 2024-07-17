@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingComponent } from '../../components/loading/loading.component';
+import { TextService } from '../../services/text.service';
 
 @Component({
   selector: 'app-hello',
@@ -16,6 +17,7 @@ export class HelloComponent implements OnInit {
   text: string[][] = [];
   isLoading = true;
   private songService = inject(SongsService);
+  private textService = inject(TextService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
 
@@ -24,7 +26,7 @@ export class HelloComponent implements OnInit {
   }
 
   getText() {
-    this.songService.getText().subscribe((data: any) => {
+    this.textService.getText().subscribe((data: any) => {
       this.text = data[0].letter.split("\n\n").map((line: string) => line.split(/(\d+)/));
       this.toastr.success('Información cargada', '¡BIEN!');
       this.isLoading = false;

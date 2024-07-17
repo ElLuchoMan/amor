@@ -7,11 +7,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TextService } from '../../services/text.service';
 
 describe('HelloComponent', () => {
   let component: HelloComponent;
   let fixture: ComponentFixture<HelloComponent>;
   let songsService: SongsService;
+  let textService: TextService;
   let toastrService: ToastrService;
   let router: Router;
 
@@ -24,7 +26,8 @@ describe('HelloComponent', () => {
         HelloComponent
       ],
       providers: [
-        SongsService
+        SongsService,
+        TextService,
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -34,6 +37,7 @@ describe('HelloComponent', () => {
     fixture = TestBed.createComponent(HelloComponent);
     component = fixture.componentInstance;
     songsService = TestBed.inject(SongsService);
+    textService = TestBed.inject(TextService);
     toastrService = TestBed.inject(ToastrService);
     router = TestBed.inject(Router);
     fixture.detectChanges();
@@ -45,7 +49,7 @@ describe('HelloComponent', () => {
 
   it('should fetch text on init', () => {
     const mockData = [{ letter: 'line1\n\nline2' }];
-    jest.spyOn(songsService, 'getText').mockReturnValue(of(mockData));
+    jest.spyOn(textService, 'getText').mockReturnValue(of(mockData));
     jest.spyOn(toastrService, 'success');
 
     component.ngOnInit();
@@ -57,7 +61,7 @@ describe('HelloComponent', () => {
 
   it('should handle error when fetching text', () => {
     const mockError = new Error('Error fetching data');
-    jest.spyOn(songsService, 'getText').mockReturnValue(throwError(mockError));
+    jest.spyOn(textService, 'getText').mockReturnValue(throwError(mockError));
     jest.spyOn(toastrService, 'error');
 
     component.ngOnInit();

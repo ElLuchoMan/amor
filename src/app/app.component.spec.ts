@@ -13,6 +13,8 @@ import { firebaseConfig } from './environments/firebase-config';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { PostToken } from './models/token.model';
 import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
+import { TokenService } from './services/token.service';
+import { UUIDService } from './services/uuid.service';
 
 jest.mock('firebase/messaging');
 
@@ -20,6 +22,8 @@ describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let songService: SongsService;
+  let tokenService: TokenService;
+  let uuidService: UUIDService;
   let toastrService: ToastrService;
   let modalService: NgbModal;
   let errorLoggingService: ErrorLoggingService;
@@ -35,6 +39,8 @@ describe('AppComponent', () => {
       ],
       providers: [
         SongsService,
+        TokenService,
+        UUIDService,
         ToastrService,
         ErrorLoggingService,
         NgbModal
@@ -44,6 +50,8 @@ describe('AppComponent', () => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     songService = TestBed.inject(SongsService);
+    tokenService = TestBed.inject(TokenService);
+    uuidService = TestBed.inject(UUIDService);
     toastrService = TestBed.inject(ToastrService);
     modalService = TestBed.inject(NgbModal);
     errorLoggingService = TestBed.inject(ErrorLoggingService);
@@ -66,7 +74,7 @@ describe('AppComponent', () => {
 
   it('should get UUID from songService on init', () => {
     const uuid = 'mock-uuid';
-    jest.spyOn(songService, 'getUUID').mockReturnValue(uuid);
+    jest.spyOn(uuidService, 'getUUID').mockReturnValue(uuid);
     component.ngOnInit();
     expect(component.user_id).toBe(uuid);
   });
@@ -116,7 +124,7 @@ describe('AppComponent', () => {
     const mockError = new Error('Service Worker registration failed');
     const registerSpy = jest.fn().mockRejectedValue(mockError);
     const openModalSpy = jest.spyOn(component, 'openModal');
-    jest.spyOn(errorLoggingService, 'logError').mockImplementation(() => {});
+    jest.spyOn(errorLoggingService, 'logError').mockImplementation(() => { });
 
     Object.defineProperty(navigator, 'serviceWorker', {
       value: {
@@ -131,14 +139,14 @@ describe('AppComponent', () => {
   });
 
   it('should get token on init', async () => {
-    const getTokenSpy = jest.spyOn(songService, 'getToken').mockReturnValue(of({ token: 'mock-token' }));
+    const getTokenSpy = jest.spyOn(tokenService, 'getToken').mockReturnValue(of({ token: 'mock-token' }));
     await component.getToken();
     expect(getTokenSpy).toHaveBeenCalled();
   });
 
   it('should handle get token error', async () => {
     const openModalSpy = jest.spyOn(component, 'openModal').mockImplementation();
-    const getTokenSpy = jest.spyOn(songService, 'getToken').mockReturnValue(throwError(new Error('error')));
+    const getTokenSpy = jest.spyOn(tokenService, 'getToken').mockReturnValue(throwError(new Error('error')));
 
     await component.getToken();
     expect(openModalSpy).toHaveBeenCalled();
@@ -235,15 +243,15 @@ describe('AppComponent', () => {
     const postToken: PostToken = { token: mockToken, user_id: component.user_id };
 
     (getToken as jest.Mock).mockResolvedValue(mockToken);
-    jest.spyOn(songService, 'postToken').mockReturnValue(of(postToken));
+    jest.spyOn(tokenService, 'postToken').mockReturnValue(of(postToken));
     jest.spyOn(component, 'getToken');
     jest.spyOn(component, 'openModal');
     jest.spyOn(errorLoggingService, 'logError');
 
     await component.subscribeToNotifications();
 
-    expect(songService.token).toBe(mockToken);
-    expect(songService.postToken).toHaveBeenCalledWith(postToken);
+    expect(tokenService.token).toBe(mockToken);
+    expect(tokenService.postToken).toHaveBeenCalledWith(postToken);
     expect(component.getToken).toHaveBeenCalled();
     expect(component.openModal).not.toHaveBeenCalled();
   });
@@ -277,14 +285,14 @@ describe('AppComponent', () => {
     const postToken: PostToken = { token: mockToken, user_id: component.user_id };
 
     (getToken as jest.Mock).mockResolvedValue(mockToken);
-    jest.spyOn(songService, 'postToken').mockReturnValue(throwError(mockError));
+    jest.spyOn(tokenService, 'postToken').mockReturnValue(throwError(mockError));
     jest.spyOn(component, 'openModal');
     jest.spyOn(errorLoggingService, 'logError');
 
     await component.subscribeToNotifications();
 
-    expect(songService.token).toBe(mockToken);
-    expect(songService.postToken).toHaveBeenCalledWith(postToken);
+    expect(tokenService.token).toBe(mockToken);
+    expect(tokenService.postToken).toHaveBeenCalledWith(postToken);
     expect(errorLoggingService.logError).toHaveBeenCalledWith(mockError);
     expect(component.openModal).toHaveBeenCalledWith(`Error enviando token al servidor: ${errorLoggingService.logError(mockError)}`);
   });

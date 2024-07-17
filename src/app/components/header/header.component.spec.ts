@@ -8,11 +8,15 @@ import { ErrorLoggingService } from '../../services/error-logging.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { of, throwError } from 'rxjs';
 import { ErrorLogModalComponent } from '../error-log-modal/error-log-modal.component';
+import { ResourcesService } from '../../services/resources.service';
+import { UUIDService } from '../../services/uuid.service';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let songsService: SongsService;
+  let resourcesService: ResourcesService;
+  let uuidService: UUIDService;
   let errorLoggingService: ErrorLoggingService;
   let modalService: NgbModal;
   let toastrService: ToastrService;
@@ -27,6 +31,8 @@ describe('HeaderComponent', () => {
       ],
       providers: [
         SongsService,
+        ResourcesService,
+        UUIDService,
         ErrorLoggingService,
         ToastrService,
         NgbModal
@@ -45,6 +51,8 @@ describe('HeaderComponent', () => {
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     songsService = TestBed.inject(SongsService);
+    resourcesService = TestBed.inject(ResourcesService);
+    uuidService = TestBed.inject(UUIDService);
     errorLoggingService = TestBed.inject(ErrorLoggingService);
     modalService = TestBed.inject(NgbModal);
     toastrService = TestBed.inject(ToastrService);
@@ -57,7 +65,7 @@ describe('HeaderComponent', () => {
 
   it('should get UUID from songService on init', () => {
     const uuid = 'mock-uuid';
-    jest.spyOn(songsService, 'getUUID').mockReturnValue(uuid);
+    jest.spyOn(uuidService, 'getUUID').mockReturnValue(uuid);
     component.ngOnInit();
     expect(component.user_id).toBe(uuid);
   });
@@ -75,15 +83,15 @@ describe('HeaderComponent', () => {
     const openModalSpy = jest.spyOn(component, 'openModal');
 
     await component.copyTokenToClipboard();
-    
+
     expect(writeTextSpy).toHaveBeenCalledWith('mock-uuid');
     expect(openModalSpy).toHaveBeenCalled();
   });
 
   it('should fetch logo on init', () => {
     const mockData = [{ type: 'logo', url: 'logo-url' }];
-    jest.spyOn(songsService, 'listResources').mockReturnValue(of(mockData));
-    const getUrlByTypeSpy = jest.spyOn(songsService, 'getUrlByType').mockReturnValue('logo-url');
+    jest.spyOn(resourcesService, 'listResources').mockReturnValue(of(mockData));
+    const getUrlByTypeSpy = jest.spyOn(resourcesService, 'getUrlByType').mockReturnValue('logo-url');
 
     component.ngOnInit();
 

@@ -8,11 +8,13 @@ import { of, throwError } from 'rxjs';
 import { NO_ERRORS_SCHEMA, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import * as bootstrap from 'bootstrap';
+import { ResourcesService } from '../../services/resources.service';
 
 describe('SayYesComponent', () => {
   let component: SayYesComponent;
   let fixture: ComponentFixture<SayYesComponent>;
   let songsService: SongsService;
+  let resourcesService: ResourcesService;
   let toastrService: ToastrService;
   let router: Router;
 
@@ -25,7 +27,8 @@ describe('SayYesComponent', () => {
       ],
       declarations: [SayYesComponent],
       providers: [
-        SongsService
+        SongsService,
+        ResourcesService,
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -35,6 +38,7 @@ describe('SayYesComponent', () => {
     fixture = TestBed.createComponent(SayYesComponent);
     component = fixture.componentInstance;
     songsService = TestBed.inject(SongsService);
+    resourcesService = TestBed.inject(ResourcesService);
     toastrService = TestBed.inject(ToastrService);
     router = TestBed.inject(Router);
     fixture.detectChanges();
@@ -82,7 +86,7 @@ describe('SayYesComponent', () => {
       { type: 'insta', url: 'insta-url' },
       { type: 'youtube', url: 'youtube-url' }
     ];
-    jest.spyOn(songsService, 'listResources').mockReturnValue(of(mockData));
+    jest.spyOn(resourcesService, 'listResources').mockReturnValue(of(mockData));
     component.ngOnInit();
     expect(component.image).toBe('image-url');
     expect(component.insta).toBe('insta-url');
@@ -91,7 +95,7 @@ describe('SayYesComponent', () => {
 
   it('should handle error when fetching resources', () => {
     const mockError = new Error('Error fetching data');
-    jest.spyOn(songsService, 'listResources').mockReturnValue(throwError(mockError));
+    jest.spyOn(resourcesService, 'listResources').mockReturnValue(throwError(mockError));
     jest.spyOn(toastrService, 'error');
     component.ngOnInit();
     expect(toastrService.error).toHaveBeenCalledWith(`Error fetching image and insta: ${mockError} `, 'ERROR');

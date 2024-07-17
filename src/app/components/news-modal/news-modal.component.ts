@@ -3,6 +3,7 @@ import * as bootstrap from 'bootstrap';
 import { SongsService } from '../../services/songs.service';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environments/environment';
+import { ChangesService } from '../../services/changes.service';
 
 @Component({
   selector: 'app-news-modal',
@@ -15,7 +16,7 @@ export class NewsModalComponent implements OnInit {
   nuevosCambios: string[] = [];
   appVersion: string = environment.appVersion;
 
-  constructor(private songsService: SongsService) { }
+  constructor(private songsService: SongsService, private changesService: ChangesService) { }
 
   ngOnInit(): void {
     this.checkForChanges();
@@ -63,7 +64,7 @@ export class NewsModalComponent implements OnInit {
   }
 
   getChanges(): void {
-    this.songsService.getChanges().subscribe((data: any) => {
+    this.changesService.getChanges().subscribe((data: any) => {
       console.log('Data:', data);
       this.nuevosCambios = data.map((item: any) => item.change);
     }, (error: any) => {

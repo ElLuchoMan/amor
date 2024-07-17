@@ -14,6 +14,8 @@ import { ErrorLogModalComponent } from './components/error-log-modal/error-log-m
 import { ErrorLoggingService } from './services/error-logging.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NewsModalComponent } from './components/news-modal/news-modal.component';
+import { TokenService } from './services/token.service';
+import { UUIDService } from './services/uuid.service';
 
 @Component({
   selector: 'app-root',
@@ -28,13 +30,13 @@ export class AppComponent implements OnInit {
   currentMessage = new BehaviorSubject<MessagePayload | null>(null);
 
   constructor(private toastr: ToastrService, private songService: SongsService,
-    private errorLoggingService: ErrorLoggingService, private modalService: NgbModal) { }
+    private errorLoggingService: ErrorLoggingService, private tokenService: TokenService, private uuidService: UUIDService, private modalService: NgbModal) { }
 
   token = '';
-  user_id = this.songService.getUUID();
+  user_id = this.uuidService.getUUID();
 
   ngOnInit() {
-    this.user_id = this.songService.getUUID();
+    this.user_id = this.uuidService.getUUID();
     this.registerServiceWorker();
     this.requestNotificationPermission();
     this.listenForMessages();
@@ -53,12 +55,12 @@ export class AppComponent implements OnInit {
   subscribeToNotifications() {
     getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then((token) => {
       if (token) {
-        this.songService.token = token;
+        this.tokenService.token = token;
         const postToken: PostToken = {
           token: token,
           user_id: this.user_id
         };
-        this.songService.postToken(postToken).subscribe(response => {
+        this.tokenService.postToken(postToken).subscribe(response => {
           this.getToken();
         }, error => {
           this.openModal(`Error enviando token al servidor: ${this.errorLoggingService.logError(error)}`);
@@ -72,7 +74,7 @@ export class AppComponent implements OnInit {
   }
 
   getToken() {
-    this.songService.getToken(this.user_id).subscribe(response => {
+    this.tokenService.getToken(this.user_id).subscribe(response => {
       this.token = response.token;
     }, error => {
       this.openModal(`Error recuperando token: ${this.errorLoggingService.logError(error)}`);

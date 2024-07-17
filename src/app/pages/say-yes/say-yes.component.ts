@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import * as bootstrap from 'bootstrap';
 import { Router } from '@angular/router';
-import { SongsService } from '../../services/songs.service';
 import { ToastrService } from 'ngx-toastr';
+import { ResourcesService } from '../../services/resources.service';
+import { SongsService } from '../../services/songs.service';
 
 @Component({
   selector: 'app-say-yes',
@@ -16,7 +17,7 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   insta = '';
   youtube = '';
 
-  constructor(private router: Router, private service: SongsService, private toastr: ToastrService) { }
+  constructor(private router: Router, private songsService: SongsService, private resourcesService: ResourcesService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.getResources();
@@ -27,11 +28,11 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   }
 
   getResources(): void {
-    this.service.listResources().subscribe({
+    this.resourcesService.listResources().subscribe({
       next: (data: any) => {
-        this.image = this.service.getUrlByType(data, 'image');
-        this.insta = this.service.getUrlByType(data, 'insta');
-        this.youtube = this.service.getUrlByType(data, 'youtube');
+        this.image = this.resourcesService.getUrlByType(data, 'image');
+        this.insta = this.resourcesService.getUrlByType(data, 'insta');
+        this.youtube = this.resourcesService.getUrlByType(data, 'youtube');
       },
       error: (error: any) => {
         console.error('Error fetching image and insta:', error);

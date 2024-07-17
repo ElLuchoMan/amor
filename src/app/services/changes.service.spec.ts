@@ -1,19 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { SongsService } from './songs.service';
+import { ChangesService } from './changes.service';
 import { environment } from '../environments/environment';
 
-describe('SongsService', () => {
-  let service: SongsService;
+describe('ChangesService', () => {
+  let service: ChangesService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [SongsService]
+      providers: [ChangesService]
     });
 
-    service = TestBed.inject(SongsService);
+    service = TestBed.inject(ChangesService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -25,16 +25,16 @@ describe('SongsService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should fetch list of songs', () => {
-    const dummySongs = [{ title: 'Song 1' }, { title: 'Song 2' }];
+  it('should fetch list of changes', () => {
+    const dummyChanges = ['Change 1', 'Change 2'];
 
-    service.listSongs().subscribe(songs => {
-      expect(songs.length).toBe(2);
-      expect(songs).toEqual(dummySongs);
+    service.getChanges().subscribe(changes => {
+      expect(changes.length).toBe(2);
+      expect(changes).toEqual(dummyChanges);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}/get-songs`);
+    const req = httpMock.expectOne(`${environment.apiUrl}/get-changes`);
     expect(req.request.method).toBe('GET');
-    req.flush(dummySongs);
+    req.flush(dummyChanges);
   });
 });
