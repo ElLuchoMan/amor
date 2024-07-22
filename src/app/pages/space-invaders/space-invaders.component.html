@@ -19,7 +19,7 @@
 <div class="contenido flexColumn">
     <canvas #canvas class="gameCanvas"></canvas>
     <p class="textoCentrado">
-        <label *ngIf="lives <= 0">¡PERDISTE!</label>
+        <label *ngIf="lives <= 0">Game Over</label>
     </p>
     <p class="textoCentrado">
         <label>Round: {{ round }}</label>
@@ -27,15 +27,31 @@
     <div class="flexColumn textoCentrado mt-2">
         <button *ngIf="$stopped.value" (click)="$stopped.next(false)" class="btn btn-dark mt-2">Iniciar</button>
         <button *ngIf="!$stopped.value" (click)="$stopped.next(true)" class="btn btn-dark mt-2">Terminar</button>
-        <button *ngIf="lives <= 0" (click)="setUpGame()" class="btn btn-dark mt-2">Reiniciar</button>
+        <button *ngIf="lives <= 0" (click)="setUpGame()" class="btn btn-dark mt-2">Restart</button>
     </div>
 </div>
-
-<div class="controls" *ngIf="isMobile">
-    <div class="flexFila2">
-        <button (touchstart)="moveLeft(true)" (touchend)="moveLeft(false)" class="btn btn-dark">←</button>
-        <button (touchstart)="moveRight(true)" (touchend)="moveRight(false)" class="btn btn-dark">→</button>
-    </div>
-</div>
-
 <button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">Volver</button>
+
+<!-- Modal General -->
+<div class="modal fade" id="resultadoModal" tabindex="-1" aria-labelledby="resultadoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-secondary">
+                <h1 class="modal-title textoCentrado" id="resultadoModalLabel">{{ modalTitle }}</h1>
+                <button type="button" class="btn-close btn-close-white" (click)="closeModalAndRestart()"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center mb-3">
+                    <i [ngClass]="modalIconClass" [style.color]="modalIconColor" style="font-size: 3rem;"></i>
+                </div>
+                <h2 class="textoCentrado">Puntaje: </h2>
+                <h2 class="textoCentrado">{{ score }}</h2>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-dark" (click)="setUpGame(); cerrarModal()">Reiniciar</button>
+                <button type="button" class="btn btn-dark" (click)="goToPage('/home'); cerrarModal()">Volver</button>
+            </div>
+        </div>
+    </div>
+</div>

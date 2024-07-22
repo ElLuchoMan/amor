@@ -6,6 +6,7 @@ import { Enemy } from '../../models/enemy.model';
 import { ParticalCluster } from '../../models/partical-cluster.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-space-invaders',
@@ -36,6 +37,10 @@ export class SpaceInvadersPageComponent implements OnInit, AfterViewInit {
   isMovingLeft = false;
   isMovingRight = false;
   isMobile = false;
+
+  modalTitle: string = '';
+  modalIconClass: string = '';
+  modalIconColor: string = '';
 
   ngOnInit(): void {
     console.log(navigator.userAgent);
@@ -104,6 +109,9 @@ export class SpaceInvadersPageComponent implements OnInit, AfterViewInit {
 
   gameLoop = () => {
     if (this.$stopped.value || this.lives <= 0) {
+      if (this.lives <= 0) {
+        this.finalizarPerdedor();
+      }
       return;
     }
 
@@ -178,5 +186,27 @@ export class SpaceInvadersPageComponent implements OnInit, AfterViewInit {
 
   goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
+  }
+
+  finalizarPerdedor(): void {
+    this.$stopped.next(true);
+    this.modalTitle = '¡PERDISTE!';
+    this.modalIconClass = 'fas fa-sad-tear';
+    this.modalIconColor = 'red';
+    const modal = new bootstrap.Modal(document.getElementById('resultadoModal')!);
+    modal.show();
+  }
+
+  cerrarModal(): void {
+    const modalElement = document.getElementById('resultadoModal');
+    if (modalElement) {
+      const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+      modal.hide();
+    }
+  }
+
+  closeModalAndRestart(): void {
+    this.cerrarModal();
+    this.setUpGame();
   }
 }
