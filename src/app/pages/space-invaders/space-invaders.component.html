@@ -1,0 +1,41 @@
+<h1 class="textoCentrado">Space Invaders</h1>
+<hr>
+<div *ngIf="lives > 0" class="flexColumn">
+    <div class="cabecera flexColumn">
+        <div class="flexFila filaPuntuaciones">
+            <div class="flexFila filaPuntuacionesAciertos">
+                <div class="iconoAciertos"><i class="fas fa-star"></i></div>
+                <div class="numeroAciertos">{{ score }}</div>
+            </div>
+            <div class="flexFila filaPuntuacionesFallos">
+                <div class="iconoFallos"><i class="fas fa-heart"></i></div>
+                <div class="numeroFallos">{{ lives }}</div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+
+<div class="contenido flexColumn">
+    <canvas #canvas class="gameCanvas"></canvas>
+    <p class="textoCentrado">
+        <label *ngIf="lives <= 0">¡PERDISTE!</label>
+    </p>
+    <p class="textoCentrado">
+        <label>Round: {{ round }}</label>
+    </p>
+    <div class="flexColumn textoCentrado mt-2">
+        <button *ngIf="$stopped.value" (click)="$stopped.next(false)" class="btn btn-dark mt-2">Iniciar</button>
+        <button *ngIf="!$stopped.value" (click)="$stopped.next(true)" class="btn btn-dark mt-2">Terminar</button>
+        <button *ngIf="lives <= 0" (click)="setUpGame()" class="btn btn-dark mt-2">Reiniciar</button>
+    </div>
+</div>
+
+<div class="controls" *ngIf="isMobile">
+    <div class="flexFila">
+        <button (touchstart)="moveLeft(true)" (touchend)="moveLeft(false)" class="btn btn-secondary">←</button>
+        <button (touchstart)="moveRight(true)" (touchend)="moveRight(false)" class="btn btn-secondary">→</button>
+    </div>
+</div>
+
+<button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">Volver</button>

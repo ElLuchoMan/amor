@@ -1,0 +1,243 @@
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.flexFila {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.textoCentrado {
+    margin: auto;
+    text-align: center;
+}
+
+.cabecera {
+    margin: auto;
+    height: auto;
+    width: 98%;
+}
+
+.aciertos,
+.fallos {
+    height: 15%;
+}
+
+.iconoAciertos,
+.iconoFallos {
+    height: 78%;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.iconoAciertos {
+    margin: 10px 0;
+    color: gold;
+}
+
+.iconoFallos {
+    margin: 10px 0;
+    color: red;
+}
+
+.numeroAciertos,
+.numeroFallos {
+    font-size: 40px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+
+.filaPuntuacionesAciertos,
+.filaPuntuacionesFallos {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin: 10px;
+    min-height: 100%;
+    border-radius: 10px;
+}
+
+.filaPuntuacionesAciertos {
+    border: 1px solid gold;
+}
+
+.filaPuntuacionesFallos {
+    border: 1px solid red;
+}
+
+.contenido {
+    height: 70%;
+    align-items: center;
+}
+
+.gameCanvas {
+    border: 1px solid white;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}
+
+.botonReiniciar {
+    width: 60%;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.panelGanador,
+.panelPerdedor {
+    width: 100%;
+    height: 15%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: auto;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.panelGanador {
+    background-color: rgba(161, 224, 175, 0.5);
+    border: 1px solid green;
+}
+
+.panelPerdedor {
+    background-color: rgba(224, 161, 161, 0.5);
+    border: 1px solid red;
+    color: red;
+}
+
+@media (max-width: 1200px) {
+    .flexFila {
+        flex-direction: column;
+    }
+
+    .filaPuntuacionesAciertos,
+    .filaPuntuacionesFallos {
+        width: 100%;
+    }
+
+    .botonReiniciar {
+        width: 80%;
+    }
+
+    .mensaje {
+        width: 80%;
+    }
+
+    .iconoAciertos,
+    .iconoFallos {
+        height: 60%;
+        width: 60%;
+        font-size: 2.5rem;
+        margin: auto;
+    }
+}
+
+@media (max-width: 992px) {
+    .numeroAciertos,
+    .numeroFallos {
+        font-size: 30px;
+    }
+
+    .botonReiniciar {
+        width: 80%;
+    }
+
+    .mensaje {
+        width: 80%;
+    }
+
+    .iconoAciertos,
+    .iconoFallos {
+        height: 50%;
+        width: 50%;
+        font-size: 2rem;
+        margin: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .numeroAciertos,
+    .numeroFallos {
+        font-size: 20px;
+    }
+
+    .botonReiniciar {
+        width: 100%;
+    }
+
+    .mensaje {
+        width: 100%;
+    }
+
+    .iconoAciertos,
+    .iconoFallos {
+        height: 100%;
+        width: 50%;
+        font-size: 1.5rem;
+        margin: auto;
+    }
+
+    .filaPuntuacionesAciertos,
+    .filaPuntuacionesFallos {
+        height: 50%;
+    }
+
+    .botonReiniciar {
+        width: 100%;
+        margin: auto;
+        margin-top: 20px;
+        align-items: center;
+    }
+
+    .panelGanador,
+    .panelPerdedor {
+        width: 100%;
+        height: 10%;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: auto;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 500px;
+        margin: 20px auto;
+    }
+
+    .controls button {
+        flex: 1;
+        margin: 0 5px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .controls .flexFila {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+}
