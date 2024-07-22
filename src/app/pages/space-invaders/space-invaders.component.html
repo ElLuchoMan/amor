@@ -30,6 +30,12 @@
         <button *ngIf="lives <= 0" (click)="setUpGame()" class="btn btn-dark mt-2">Restart</button>
     </div>
 </div>
+<div class="controls" *ngIf="isMobile">
+    <div class="flexFila2">
+        <button (touchstart)="moveLeft(true)" (touchend)="moveLeft(false)" class="btn btn-dark">←</button>
+        <button (touchstart)="moveRight(true)" (touchend)="moveRight(false)" class="btn btn-dark">→</button>
+    </div>
+</div>
 <button (click)="goToPage('/home')" type="button" class="btn btn-dark mt-5">Volver</button>
 
 <!-- Modal General -->
