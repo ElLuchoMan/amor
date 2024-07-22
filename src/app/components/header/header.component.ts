@@ -27,7 +27,8 @@ export class HeaderComponent implements OnInit {
     { label: 'Canciones', path: '/songs' },
     { label: 'Pregunta', path: '/say-yes' },
     { label: 'No Estés Triste', path: '/no-estes-triste' },
-    { label: 'Cartas', path: '/letters' }
+    { label: 'Cartas', path: '/letters' },
+    { label: 'Space Invaders', path: '/space-invaders' },
   ];
   logo = '';
   user_id = '';
