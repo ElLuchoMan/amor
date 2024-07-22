@@ -6,6 +6,13 @@
 }
 
 .flexFila {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.flexFila2 {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
