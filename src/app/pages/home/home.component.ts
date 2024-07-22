@@ -50,6 +50,12 @@ export class HomeComponent {
       imageUrl: 'assets/letters.jpg',
       description: '¿Y si mes a mes te escribo algo que te muestre cuánto te amo?',
       route: '/letters'
+    },
+    {
+      title: 'Space Invaders',
+      imageUrl: 'assets/space-invaders.jpg',
+      description: 'Incluimos tu juego favorito para distraerte cuando estés triste o sientas ansiedad.',
+      route: '/space-invaders'
     }
   ];
 
