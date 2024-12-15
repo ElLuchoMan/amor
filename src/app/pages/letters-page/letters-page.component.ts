@@ -22,10 +22,15 @@ export class LettersPageComponent implements OnInit {
 
   loadLetters(): void {
     this.lettersService.getLetters().subscribe(data => {
-      this.letters = data;
+      this.letters = data.sort((a, b) => this.transformDate(b.date).getTime() - this.transformDate(a.date).getTime());
     }, error => {
       console.error('Error fetching letters:', error);
     });
+  }
+
+  transformDate(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('/').map(Number);
+    return new Date(year, month - 1, day);
   }
 
   viewLetter(letter: any): void {
