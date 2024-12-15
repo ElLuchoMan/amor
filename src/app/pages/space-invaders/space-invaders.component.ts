@@ -43,7 +43,6 @@ export class SpaceInvadersPageComponent implements OnInit, AfterViewInit {
   modalIconColor: string = '';
 
   ngOnInit(): void {
-    console.log(navigator.userAgent);
     this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;

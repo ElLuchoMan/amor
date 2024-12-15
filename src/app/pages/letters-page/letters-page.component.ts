@@ -13,16 +13,20 @@ import { LettersService } from '../../services/letters.service';
 })
 export class LettersPageComponent implements OnInit {
   letters: { date: string, image: string, text: string }[] = [];
+  isMobile = false;
 
   constructor(private router: Router, private lettersService: LettersService) { }
 
   ngOnInit(): void {
+    this.isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     this.loadLetters();
   }
 
   loadLetters(): void {
     this.lettersService.getLetters().subscribe(data => {
-      this.letters = data.sort((a, b) => this.transformDate(b.date).getTime() - this.transformDate(a.date).getTime());
+      this.letters = this.isMobile
+        ? data
+        : data.sort((a, b) => this.transformDate(b.date).getTime() - this.transformDate(a.date).getTime());
     }, error => {
       console.error('Error fetching letters:', error);
     });
@@ -36,7 +40,7 @@ export class LettersPageComponent implements OnInit {
   viewLetter(letter: any): void {
     this.router.navigate(['/letter', letter.date]);
   }
-  
+
   goToPage(pageName: string) {
     this.router.navigate([`${pageName}`]);
   }
