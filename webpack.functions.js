@@ -13,7 +13,7 @@ module.exports = {
     'get-changes': './get-changes.js',
     'update-changes': './update-changes.js',
     'add-letter': './add-letter.js',
-    'get-letter': './get-letter.js',
+    'get-letter': './get-letters.js',
     'update-letter': './update-letter.js',
     'delete-letter': './delete-letter.js'
   },
