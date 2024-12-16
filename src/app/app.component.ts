@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
@@ -7,7 +7,7 @@ import { firebaseConfig } from './environments/firebase-config';
 import { initializeApp } from "firebase/app";
 import { ToastrService } from 'ngx-toastr';
 import { MessagePayload } from 'firebase/messaging';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter } from 'rxjs';
 import { PostToken } from './models/token.model';
 import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -37,13 +37,23 @@ export class AppComponent implements OnInit {
     private tokenService: TokenService,
     private uuidService: UUIDService,
     private modalService: NgbModal,
-    private serviceWorkerService: ServiceWorkerService
+    private serviceWorkerService: ServiceWorkerService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
     this.registerServiceWorker();
     this.requestNotificationPermission();
     this.listenForMessages();
+  
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
   }
 
   requestNotificationPermission() {
