@@ -49,10 +49,7 @@ export class AppComponent implements OnInit {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile) {
           window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
       });
   }
 
