@@ -16,12 +16,11 @@ import { ErrorLoggingService } from './services/error-logging.service';
 import { TokenService } from './services/token.service';
 import { UUIDService } from './services/uuid.service';
 import { ServiceWorkerService } from './services/service-worker.service';
-import { ScrollToTopDirective } from './directives/scroll-to-top.directive';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, NewsModalComponent, ScrollToTopDirective],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, NewsModalComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
