@@ -1,6 +1,6 @@
 {
   "name": "amor",
-  "version": "1.6.1",
+  "version": "2.0.0",
   "scripts": {
     "ng": "ng",
     "up": "concurrently \"ng serve \" \"nodemon ./server/index.js\"",
