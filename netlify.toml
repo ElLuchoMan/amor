@@ -2,17 +2,21 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
+  force = true
+  
 [[redirects]]
   from = "/service-worker.js"
   to = "/service-worker.js"
   status = 200
   force = true
 
+[dev]
+  targetPort = 4200
+
 [build]
- command = "npm run build"
- publish = "dist/amor/browser"
- functions = "functions-build"
+  command = "npm run build"
+  publish = "dist/amor/browser"
+  functions = ".netlify/functions"
 
 [[redirects]]
   from = "/api/*"
@@ -28,6 +32,7 @@
 
 [build.environment]
   FAUNADB_SECRET = "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
+
 
 [context.production.environment]
   FAUNADB_SECRET = "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"

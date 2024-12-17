@@ -13,7 +13,7 @@ module.exports = {
     'get-changes': './get-changes.js',
     'update-changes': './update-changes.js',
     'add-letter': './add-letter.js',
-    'get-letter': './get-letters.js',
+    'get-letters': './get-letters.js',
     'update-letter': './update-letter.js',
     'delete-letter': './delete-letter.js'
   },
@@ -32,7 +32,9 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            presets: [
+              ['@babel/preset-env', { targets: { node: 'current' } }]
+            ]
           }
         }
       }
