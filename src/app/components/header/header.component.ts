@@ -45,14 +45,6 @@ export class HeaderComponent implements OnInit {
     this.getLogo();
   }
 
-  copyTokenToClipboard(): void {
-    if (this.user_id) {
-      navigator.clipboard.writeText(this.user_id).catch(err => {
-        this.openModal(`Could not copy uuid: ${this.errorLoggingService.logError(err)}`);
-      });
-    }
-  }
-
   getLogo(): void {
     this.resourcesService.listResources().subscribe({
       next: (data: any) => {

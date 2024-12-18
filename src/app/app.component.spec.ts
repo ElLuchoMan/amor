@@ -8,8 +8,6 @@ import { AppComponent } from './app.component';
 import { SongsService } from './services/songs.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorLoggingService } from './services/error-logging.service';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { firebaseConfig } from './environments/firebase-config';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { PostToken } from './models/token.model';
 import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
