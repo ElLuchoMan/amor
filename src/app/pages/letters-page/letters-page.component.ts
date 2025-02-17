@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { SongsService } from '../../services/songs.service';
 import { LettersService } from '../../services/letters.service';
 
 @Component({
@@ -21,8 +20,13 @@ export class LettersPageComponent implements OnInit {
   }
 
   loadLetters(): void {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     this.lettersService.getLetters().subscribe(data => {
-      this.letters = data.sort((a, b) => this.transformDate(b.date).getTime() - this.transformDate(a.date).getTime());
+      this.letters = data
+        .filter(letter => this.transformDate(letter.date).getTime() <= today.getTime())
+        .sort((a, b) => this.transformDate(b.date).getTime() - this.transformDate(a.date).getTime());
     }, error => {
       console.error('Error fetching letters:', error);
     });
