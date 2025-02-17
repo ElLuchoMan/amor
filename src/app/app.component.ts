@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.registerServiceWorker();
-    this.requestNotificationPermission();
+    // this.requestNotificationPermission();
     this.listenForMessages();
   
     this.router.events
@@ -53,35 +53,35 @@ export class AppComponent implements OnInit {
       });
   }
 
-  requestNotificationPermission() {
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        this.subscribeToNotifications();
-      } else {
-        this.openModal('No se han otorgado permisos para notificaciones.');
-      }
-    });
-  }
+  // requestNotificationPermission() {
+  //   Notification.requestPermission().then(permission => {
+  //     if (permission === 'granted') {
+  //       this.subscribeToNotifications();
+  //     } else {
+  //       this.openModal('No se han otorgado permisos para notificaciones.');
+  //     }
+  //   });
+  // }
 
-  subscribeToNotifications() {
-    getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then(token => {
-      if (token) {
-        this.tokenService.token = token;
-        const postToken: PostToken = {
-          token: token,
-          user_id: this.user_id
-        };
-        this.tokenService.postToken(postToken).subscribe(
-          () => this.getToken(),
-          error => this.openModal(`Error enviando token al servidor: ${this.errorLoggingService.logError(error)}`)
-        );
-      } else {
-        this.openModal('No hay un token de registro disponible. Solicita permiso para generar uno.');
-      }
-    }).catch(err => {
-      this.openModal(`Se produjo un error al recuperar el token: ${this.errorLoggingService.logError(err)}`);
-    });
-  }
+  // subscribeToNotifications() {
+  //   getToken(this.messaging, { vapidKey: 'BI-L9JSRv9h8lb39CQYbnW5IBEx7MMGhn6x_Wbe1GF_XwXQ56fcGpRao0j8Ex-PkzwYMwr1JYJIP2qHPyZHeNjs' }).then(token => {
+  //     if (token) {
+  //       this.tokenService.token = token;
+  //       const postToken: PostToken = {
+  //         token: token,
+  //         user_id: this.user_id
+  //       };
+  //       this.tokenService.postToken(postToken).subscribe(
+  //         () => this.getToken(),
+  //         error => this.openModal(`Error enviando token al servidor: ${this.errorLoggingService.logError(error)}`)
+  //       );
+  //     } else {
+  //       this.openModal('No hay un token de registro disponible. Solicita permiso para generar uno.');
+  //     }
+  //   }).catch(err => {
+  //     null
+  //   });
+  // }
 
   getToken() {
     this.tokenService.getToken(this.user_id).subscribe(

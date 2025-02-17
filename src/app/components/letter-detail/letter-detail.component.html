@@ -1,6 +1,11 @@
 <div class="container">
     <div class="card mt-4">
-        <img [src]="letter?.image" class="card-img-top" alt="Letter Image">
+        <img *ngIf="letter?.image && !letter?.video" [src]="letter.image" class="card-img-top" alt="Letter Image">
+
+        <div *ngIf="letter?.video" class="video-container">
+            <div [innerHTML]="getVideoIframe()"></div>
+        </div>
+
         <div class="card-body">
             <h5 class="card-title mt-3">{{ letter?.date }}</h5>
             <p class="card-text mt-5">
@@ -9,7 +14,7 @@
                 </ng-container>
             </p>
             <div class="buttons text-center mt-3">
-                <button class="btn btn-dark btn-lg mt-3 mb-3 me-3" (click)="goBack()">Volver</button>
+                <button class="btn btn-dark btn-lg mt-3 me-3" (click)="goBack()">Volver</button>
                 <a *ngIf="letter?.externalLink" [href]="letter.externalLink" class="btn btn-dark btn-lg mb-3 ms-3"
                     target="_blank">Ver Más</a>
             </div>
