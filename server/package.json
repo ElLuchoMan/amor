@@ -13,10 +13,11 @@
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "faunadb": "^4.8.0",
+    "firebase-admin": "^13.4.0",
+    "firebase-functions": "^6.3.2",
     "webpack-node-externals": "^3.0.0"
   },
   "devDependencies": {
-    "netlify-lambda": "^2.0.16"
+    "netlify-lambda": "^0.4.0"
   }
 }
