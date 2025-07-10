@@ -17,8 +17,5 @@
     "firebase-admin": "^13.4.0",
     "firebase-functions": "^6.3.2",
     "webpack-node-externals": "^3.0.0"
-  },
-  "devDependencies": {
-    "netlify-lambda": "^0.4.0"
   }
 }
