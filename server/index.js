@@ -206,9 +206,10 @@ app.put('/api/update-letter', async (req, res) => {
 });
 
 // SPA fallback
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../dist/amor/browser/index.html'));
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
