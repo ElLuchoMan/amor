@@ -1,154 +1,211 @@
+// server/index.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
-const fs = require('fs');
+const db = require('./firebase'); // exporta admin.firestore()
 
 const app = express();
 app.use(cors());
-const PORT = process.env.PORT || 3000;
-
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../dist/amor/browser')));
 
-const tokensPath = path.join(__dirname, 'tokens.json');
-const songsPath = path.join(__dirname, 'songs.json');
-const textPath = path.join(__dirname, 'text.json');
-const resourcesPath = path.join(__dirname, 'resources.json');
-const changesPath = path.join(__dirname, 'changes.json');
-const lettersPath = path.join(__dirname, 'letters.json');
+const PORT = process.env.PORT || 3000;
 
-function readJSON(filePath) {
-  const data = fs.readFileSync(filePath, 'utf-8');
-  return JSON.parse(data);
-}
-
-function writeJSON(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-}
-
-app.post('/api/update-token', (req, res) => {
-  const { token, user_id } = req.body;
-  console.log(`Guardando token para el usuario: ${user_id}`);
-
-  const db = readJSON(tokensPath);
-  db.userTokens[user_id] = token;
-  writeJSON(tokensPath, db);
-
-  res.status(200).json({ message: 'Token actualizado correctamente' });
-});
-
-app.get('/api/get-token', (req, res) => {
-  const { user_id } = req.query;
-
-  if (!user_id) {
-    return res.status(400).json({ message: 'User ID is required' });
-  }
-
-  const db = readJSON(tokensPath);
-  const token = db.userTokens[user_id];
-
-  if (token) {
-    console.log(`Token encontrado para el usuario: ${user_id}`);
-    res.status(200).json({ token });
-  } else {
-    console.log(`Token no encontrado para el usuario: ${user_id}`);
-    res.status(404).json({ message: 'Token no encontrado para el usuario proporcionado', user: user_id });
+// — Tokens —
+// Guarda o actualiza el token de un usuario
+app.post('/api/update-token', async (req, res) => {
+  try {
+    const { token, user_id } = req.body;
+    await db.collection('tokens').doc(user_id).set({ token }, { merge: true });
+    res.status(200).json({ message: 'Token actualizado correctamente' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al actualizar token' });
   }
 });
 
-app.get('/api/get-songs', (req, res) => {
-  const songs = readJSON(songsPath);
-  res.json(songs);
-});
+// Obtiene el token de un usuario
+app.get('/api/get-token', async (req, res) => {
+  try {
+    const { user_id } = req.query;
+    if (!user_id) return res.status(400).json({ message: 'User ID is required' });
 
-app.post('/api/update-songs', (req, res) => {
-  const { songs } = req.body;
-  console.log('Actualizando canciones:', songs);
+    const doc = await db.collection('tokens').doc(user_id).get();
+    if (!doc.exists) return res.status(404).json({ message: 'Token no encontrado' });
 
-  writeJSON(songsPath, { songs });
-
-  res.status(200).json({ message: 'Songs updated successfully' });
-});
-
-app.get('/api/get-text', (req, res) => {
-  const db = readJSON(textPath);
-  const textData = db.text;
-
-  if (textData) {
-    res.status(200).json(textData);
-  } else {
-    res.status(404).json({ message: 'Text not found' });
+    res.json({ token: doc.data().token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al leer token' });
   }
 });
 
-app.get('/api/get-resources', (req, res) => {
-  const resources = readJSON(resourcesPath);
-  res.json(resources);
-});
-
-app.post('/api/update-resources', (req, res) => {
-  const resources = req.body;
-  console.log('Actualizando recursos:', resources);
-
-  writeJSON(resourcesPath, resources);
-
-  res.status(200).json({ message: 'Resources updated successfully' });
-});
-
-app.get('/api/get-changes', (req, res) => {
-  const changes = readJSON(changesPath);
-  res.json(changes);
-});
-
-app.post('/api/update-changes', (req, res) => {
-  const { changes } = req.body;
-  console.log('Actualizando cambios:', changes);
-
-  writeJSON(changesPath, { changes });
-
-  res.status(200).json({ message: 'Changes updated successfully' });
-});
-
-app.get('/api/get-letters', (req, res) => {
-  const letters = readJSON(lettersPath);
-  res.json(letters);
-});
-
-app.post('/api/add-letter', (req, res) => {
-  const newLetter = req.body;
-  const letters = readJSON(lettersPath);
-  letters.push(newLetter);
-
-  writeJSON(lettersPath, letters);
-
-  res.status(200).json({ message: 'Letter added successfully' });
-});
-
-app.delete('/api/delete-letter', (req, res) => {
-  const { date } = req.body;
-  let letters = readJSON(lettersPath);
-  letters = letters.filter(letter => letter.date !== date);
-
-  writeJSON(lettersPath, letters);
-
-  res.status(200).json({ message: 'Letter deleted successfully' });
-});
-
-app.put('/api/update-letter', (req, res) => {
-  const { date, newLetter } = req.body;
-  let letters = readJSON(lettersPath);
-  const index = letters.findIndex(letter => letter.date === date);
-
-  if (index !== -1) {
-    letters[index] = { ...letters[index], ...newLetter };
-    writeJSON(lettersPath, letters);
-    res.status(200).json({ message: 'Letter updated successfully' });
-  } else {
-    res.status(404).json({ message: 'Letter not found' });
+// — Songs —
+// Devuelve todas las canciones
+app.get('/api/get-songs', async (req, res) => {
+  try {
+    const snap = await db.collection('songs').get();
+    const songs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    res.json(songs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al leer songs' });
   }
 });
 
+// Reemplaza todas las canciones (borrando y volcando las nuevas)
+app.post('/api/update-songs', async (req, res) => {
+  try {
+    const { songs } = req.body;
+    const batch = db.batch();
+
+    // 1) borra las existentes
+    const existing = await db.collection('songs').get();
+    existing.docs.forEach(doc => batch.delete(doc.ref));
+
+    // 2) añade las nuevas
+    songs.forEach(song => {
+      const ref = db.collection('songs').doc();
+      batch.set(ref, song);
+    });
+
+    await batch.commit();
+    res.json({ message: 'Songs updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al actualizar songs' });
+  }
+});
+
+// — Text —
+// Devuelve todos los textos
+app.get('/api/get-text', async (req, res) => {
+  try {
+    const snap = await db.collection('text').get();
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    res.json(items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al leer text' });
+  }
+});
+
+// — Resources —
+// Devuelve todos los recursos
+app.get('/api/get-resources', async (req, res) => {
+  try {
+    const snap = await db.collection('resources').get();
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    res.json(items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al leer resources' });
+  }
+});
+
+// Reemplaza todos los recursos
+app.post('/api/update-resources', async (req, res) => {
+  try {
+    const resources = req.body;
+    const batch = db.batch();
+    const existing = await db.collection('resources').get();
+    existing.docs.forEach(doc => batch.delete(doc.ref));
+    resources.forEach(item => {
+      const ref = db.collection('resources').doc();
+      batch.set(ref, item);
+    });
+    await batch.commit();
+    res.json({ message: 'Resources updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al actualizar resources' });
+  }
+});
+
+// — Changes —
+// Devuelve todos los cambios
+app.get('/api/get-changes', async (req, res) => {
+  try {
+    const snap = await db.collection('changes').get();
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    res.json(items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al leer changes' });
+  }
+});
+
+// Reemplaza todos los cambios
+app.post('/api/update-changes', async (req, res) => {
+  try {
+    const { changes } = req.body;
+    const batch = db.batch();
+    const existing = await db.collection('changes').get();
+    existing.docs.forEach(doc => batch.delete(doc.ref));
+    changes.forEach(item => {
+      const ref = db.collection('changes').doc();
+      batch.set(ref, item);
+    });
+    await batch.commit();
+    res.json({ message: 'Changes updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al actualizar changes' });
+  }
+});
+
+// — Letters —
+// Devuelve todas las cartas
+app.get('/api/get-letters', async (req, res) => {
+  try {
+    const snap = await db.collection('letters').orderBy('date').get();
+    const letters = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    res.json(letters);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al leer letters' });
+  }
+});
+
+// Agrega una carta nueva
+app.post('/api/add-letter', async (req, res) => {
+  try {
+    const data = req.body;
+    if (!data.date) data.date = new Date().toISOString();
+    const ref = await db.collection('letters').add(data);
+    res.json({ message: 'Letter added successfully', id: ref.id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al agregar letter' });
+  }
+});
+
+// Elimina una carta por ID
+app.delete('/api/delete-letter', async (req, res) => {
+  try {
+    const { id } = req.body;
+    await db.collection('letters').doc(id).delete();
+    res.json({ message: 'Letter deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al borrar letter' });
+  }
+});
+
+// Actualiza una carta por ID
+app.put('/api/update-letter', async (req, res) => {
+  try {
+    const { id, updates } = req.body;
+    await db.collection('letters').doc(id).update(updates);
+    res.json({ message: 'Letter updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al actualizar letter' });
+  }
+});
+
+// SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/amor/browser/index.html'));
 });

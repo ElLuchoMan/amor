@@ -24,14 +24,18 @@ export class SongsComponent implements OnInit {
   }
 
   getSongs() {
-    this.songService.listSongs().subscribe((data: any) => {
-      this.songs = data.songs[0].songs;
-      this.isLoading = false;
-    }, (error: any) => {
-      console.error('Error fetching songs:', error);
-      this.isLoading = false;
-      this.toastr.error(`Error fetching songs: ${error} `, 'ERROR');
-    });
+    this.songService.listSongs().subscribe(
+      (data: any[]) => {
+        console.log('Songs fetched successfully:', data);
+        this.songs = data;
+        this.isLoading = false;
+      },
+      (error: any) => {
+        console.error('Error fetching songs:', error);
+        this.isLoading = false;
+        this.toastr.error(`Error fetching songs: ${error}`, 'ERROR');
+      }
+    );
   }
 
   goToPage(pageName: string) {

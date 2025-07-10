@@ -10,7 +10,9 @@
     "test": "jest --coverage",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "limpieza": "npx rimraf node_modules package-lock.json"
+    "limpieza": "npx rimraf node_modules package-lock.json",
+    "serve:api": "nodemon server/index.js",
+    "serve:app": "ng serve"
   },
   "private": true,
   "dependencies": {
