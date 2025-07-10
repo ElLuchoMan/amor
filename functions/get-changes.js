@@ -1,11 +1,10 @@
-const faunadb = require('faunadb');
-const q = faunadb.query;
+const db = require('../server/firebase');
 
 exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Content-Type': 'application/json',
   };
 
@@ -25,18 +24,9 @@ exports.handler = async (event) => {
     };
   }
 
-  const client = new faunadb.Client({ secret: process.env.FAUNADB_SECRET });
-
   try {
-    const result = await client.query(
-      q.Map(
-        q.Paginate(q.Documents(q.Collection('changes'))),
-        q.Lambda('ref', q.Get(q.Var('ref')))
-      )
-    );
-
-    const data = result.data.map(item => item.data);
-
+    const snap = await db.collection('changes').get();
+    const data = snap.docs.map(doc => doc.data());
     return {
       statusCode: 200,
       headers,
