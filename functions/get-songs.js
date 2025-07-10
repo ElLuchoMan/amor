@@ -19,7 +19,7 @@ exports.handler = async (event) => {
   try {
     const snap = await db.collection('songs').get();
     const songs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return { statusCode: 200, headers, body: JSON.stringify({ songs }) };
+    return { statusCode: 200, headers, body: JSON.stringify(songs) };
   } catch (error) {
     return { statusCode: 500, headers, body: JSON.stringify({ message: 'Error fetching songs', error: error.message }) };
   }
