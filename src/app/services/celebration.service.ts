@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface CelebrationEvent {
@@ -15,7 +16,7 @@ export class CelebrationService {
   private showBalloonsSubject = new BehaviorSubject<boolean>(false);
   private celebrationEventSubject = new BehaviorSubject<CelebrationEvent | null>(null);
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   // Observable para que los componentes se suscriban
   get showBalloons$(): Observable<boolean> {
@@ -28,33 +29,41 @@ export class CelebrationService {
 
   // Métodos públicos para activar celebraciones
   triggerBirthdayCelebration(message?: string) {
+    if (!this.isAllowedRoute()) return;
+    
     this.triggerCelebration({
       type: 'birthday',
       message: message || '🎉 ¡Feliz Cumpleaños! 🎉',
       duration: 10000,
-      balloonCount: 15
+      balloonCount: 20 // 5 globos más como mencionaste
     });
   }
 
   triggerAnniversaryCelebration(message?: string) {
+    if (!this.isAllowedRoute()) return;
+    
     this.triggerCelebration({
       type: 'anniversary',
       message: message || '🎊 ¡Feliz Aniversario! 🎊',
       duration: 8000,
-      balloonCount: 12
+      balloonCount: 23 // 5 globos más
     });
   }
 
   triggerSpecialCelebration(message?: string) {
+    if (!this.isAllowedRoute()) return;
+    
     this.triggerCelebration({
       type: 'special',
       message: message || '✨ ¡Celebremos! ✨',
       duration: 6000,
-      balloonCount: 10
+      balloonCount: 15 // 5 globos más
     });
   }
 
   triggerCustomCelebration(event: CelebrationEvent) {
+    if (!this.isAllowedRoute()) return;
+    
     this.triggerCelebration(event);
   }
 
@@ -95,38 +104,38 @@ export class CelebrationService {
         type: 'birthday',
         message: '🎂 ¡Feliz Cumpleaños! 🎂',
         duration: 12000,
-        balloonCount: 20
+        balloonCount: 25
       },
       '3-16': {
         type: 'anniversary',
         message: '💕 ¡Feliz Aniversario! 💕',
         duration: 10000,
-        balloonCount: 18
+        balloonCount: 23 // 5 globos más
       },
       // Otras fechas especiales
       '1-1': {
         type: 'special',
         message: '🎊 ¡Feliz Año Nuevo! 🎊',
         duration: 12000,
-        balloonCount: 20
+        balloonCount: 25 // 5 globos más
       },
       '2-14': {
         type: 'special',
         message: '💕 ¡Feliz Día del Amor y la Amistad! 💕',
         duration: 8000,
-        balloonCount: 12
+        balloonCount: 17 // 5 globos más
       },
       '12-25': {
         type: 'special',
         message: '🎄 ¡Feliz Navidad! 🎄',
         duration: 10000,
-        balloonCount: 15
+        balloonCount: 20 // 5 globos más
       },
       '12-31': {
         type: 'special',
         message: '🎆 ¡Feliz Nochevieja! 🎆',
         duration: 10000,
-        balloonCount: 18
+        balloonCount: 23 // 5 globos más
       }
     };
 
@@ -134,8 +143,25 @@ export class CelebrationService {
     return specialDates[dateKey] || null;
   }
 
+  // Verificar si estamos en una ruta donde se deben mostrar los globos
+  private isAllowedRoute(): boolean {
+    const currentUrl = this.router.url;
+    const allowedRoutes = [
+      '/', // Home
+      '/home', // Home alternativo
+      '/letter/16%2F09%2F2025' // Fecha específica URL encoded
+    ];
+    
+    return allowedRoutes.includes(currentUrl);
+  }
+
   // Método para activar celebración automática si es fecha especial
   checkAndTriggerSpecialDate() {
+    // Solo activar si estamos en una ruta permitida
+    if (!this.isAllowedRoute()) {
+      return false;
+    }
+    
     const specialEvent = this.checkForSpecialDates();
     if (specialEvent) {
       this.triggerCustomCelebration(specialEvent);
