@@ -1,35 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { getMessaging, getToken, onMessage } from "firebase/messaging";
-import { firebaseConfig } from './environments/firebase-config';
-import { initializeApp } from "firebase/app";
-import { ToastrService } from 'ngx-toastr';
-import { MessagePayload } from 'firebase/messaging';
-import { BehaviorSubject, filter } from 'rxjs';
-import { PostToken } from './models/token.model';
-import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { initializeApp } from "firebase/app";
+import { getMessaging, MessagePayload, onMessage } from "firebase/messaging";
+import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject, filter, Subscription } from 'rxjs';
+import { BirthdayBalloonsComponent } from './components/birthday-balloons/birthday-balloons.component';
+import { ErrorLogModalComponent } from './components/error-log-modal/error-log-modal.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HeaderComponent } from './components/header/header.component';
 import { NewsModalComponent } from './components/news-modal/news-modal.component';
+import { firebaseConfig } from './environments/firebase-config';
+import { CelebrationEvent, CelebrationService } from './services/celebration.service';
 import { ErrorLoggingService } from './services/error-logging.service';
+import { ServiceWorkerService } from './services/service-worker.service';
 import { TokenService } from './services/token.service';
 import { UUIDService } from './services/uuid.service';
-import { ServiceWorkerService } from './services/service-worker.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent, NewsModalComponent],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent, NewsModalComponent, BirthdayBalloonsComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'amor';
   messaging = getMessaging(initializeApp(firebaseConfig));
   currentMessage = new BehaviorSubject<MessagePayload | null>(null);
   token = '';
   user_id = this.uuidService.getUUID();
+  
+  // Propiedades para globos de celebración
+  showBalloons = false;
+  currentCelebration: CelebrationEvent | null = null;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private toastr: ToastrService,
@@ -39,18 +44,62 @@ export class AppComponent implements OnInit {
     private modalService: NgbModal,
     private serviceWorkerService: ServiceWorkerService,
     private router: Router,
+    private celebrationService: CelebrationService
   ) { }
 
   ngOnInit() {
     this.registerServiceWorker();
     // this.requestNotificationPermission();
     this.listenForMessages();
+    this.initializeCelebrations();
   
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
       });
+  }
+
+  ngOnDestroy() {
+    // Limpiar suscripciones para evitar memory leaks
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  private initializeCelebrations() {
+    // Suscribirse a los observables del servicio de celebración
+    const balloonsSubscription = this.celebrationService.showBalloons$.subscribe(
+      show => this.showBalloons = show
+    );
+    
+    const celebrationSubscription = this.celebrationService.celebrationEvent$.subscribe(
+      event => this.currentCelebration = event
+    );
+    
+    this.subscriptions.push(balloonsSubscription, celebrationSubscription);
+    
+    // Verificar si hoy es una fecha especial y activar celebración
+    setTimeout(() => {
+      this.celebrationService.checkAndTriggerSpecialDate();
+    }, 2000); // Delay de 2 segundos para que la app cargue completamente
+    
+    // También verificar en cada cambio de ruta
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Pequeño delay para asegurar que la página esté cargada
+        setTimeout(() => {
+          this.celebrationService.checkAndTriggerSpecialDate();
+        }, 1000);
+      });
+  }
+
+  // Método público para activar celebraciones manualmente (se puede usar desde otros componentes)
+  triggerBirthdayCelebration() {
+    this.celebrationService.triggerBirthdayCelebration();
+  }
+
+  triggerSpecialCelebration(message?: string) {
+    this.celebrationService.triggerSpecialCelebration(message);
   }
 
   // requestNotificationPermission() {

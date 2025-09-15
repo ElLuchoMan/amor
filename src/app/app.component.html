@@ -14,3 +14,11 @@
     </div>
 </section>
 <app-footer></app-footer>
+
+<!-- Componente de globos de celebración -->
+<app-birthday-balloons 
+    [show]="showBalloons" 
+    [duration]="currentCelebration?.duration || 10000"
+    [balloonCount]="currentCelebration?.balloonCount || 15"
+    [celebrationMessage]="currentCelebration?.message || ''">
+</app-birthday-balloons>

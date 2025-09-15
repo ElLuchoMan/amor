@@ -1,12 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { SongsService } from '../../services/songs.service';
-import { ErrorLoggingService } from '../../services/error-logging.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ErrorLogModalComponent } from '../error-log-modal/error-log-modal.component';
+import { ErrorLoggingService } from '../../services/error-logging.service';
 import { ResourcesService } from '../../services/resources.service';
 import { UUIDService } from '../../services/uuid.service';
+import { ErrorLogModalComponent } from '../error-log-modal/error-log-modal.component';
 
 interface NavLink {
   label: string;

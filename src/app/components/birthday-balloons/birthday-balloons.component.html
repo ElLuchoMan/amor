@@ -1,0 +1,23 @@
+<div class="balloons-container" *ngIf="show" (click)="hideBalloons()">
+  <div 
+    class="balloon" 
+    *ngFor="let balloon of balloons"
+    [style.left.%]="balloon.left"
+    [style.animation-delay.s]="balloon.delay"
+    [style.animation-duration.s]="balloon.duration"
+    [style.transform]="'scale(' + balloon.size + ')'"
+  >
+    <!-- Globo principal -->
+    <div class="balloon-body" [style.background-color]="balloon.color">
+      <div class="balloon-highlight"></div>
+    </div>
+    <!-- Hilo del globo -->
+    <div class="balloon-string"></div>
+  </div>
+  
+  <!-- Mensaje de celebración opcional -->
+  <div class="celebration-message">
+    <h2>{{ celebrationMessage || '🎉  ¡Feliz Cumpleaños Amor de mi vida! 🎉' }}</h2>
+    <p>💘Que tengas un día maravilloso, nunca olvides cuanto te amo💘</p>
+  </div>
+</div>
