@@ -100,7 +100,7 @@ export class CelebrationService {
     // Fechas especiales personalizadas y otras importantes
     const specialDates: { [key: string]: CelebrationEvent } = {
       // Fechas personalizadas específicas
-      '9-14': {
+      '9-16': {
         type: 'birthday',
         message: '🎂 ¡Feliz Cumpleaños! 🎂',
         duration: 12000,
