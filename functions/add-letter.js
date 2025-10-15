@@ -1,4 +1,4 @@
-const db = require('../server/firebase');
+const db = require('./firebase-config');
 
 exports.handler = async (event) => {
   const headers = {
