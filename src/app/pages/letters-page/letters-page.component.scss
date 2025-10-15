@@ -2,6 +2,8 @@
     position: relative;
     overflow: hidden;
     transition: transform 0.5s;
+    height: 96%;
+    width: 100%;
 }
 
 .card:hover .card-img-top {
