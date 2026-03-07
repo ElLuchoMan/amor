@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import * as bootstrap from 'bootstrap';
 import { SongsService } from '../../services/songs.service';
 import { CommonModule } from '@angular/common';
@@ -16,7 +16,11 @@ export class NewsModalComponent implements OnInit {
   nuevosCambios: string[] = [];
   appVersion: string = environment.appVersion;
 
-  constructor(private songsService: SongsService, private changesService: ChangesService) { }
+  constructor(
+    private songsService: SongsService, 
+    private changesService: ChangesService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.checkForChanges();
@@ -65,7 +69,10 @@ export class NewsModalComponent implements OnInit {
 
   getChanges(): void {
     this.changesService.getChanges().subscribe((data: any) => {
-      this.nuevosCambios = data.map((item: any) => item.change);
+      setTimeout(() => {
+        this.nuevosCambios = data.map((item: any) => item.change);
+        this.cdr.detectChanges();
+      });
     }, (error: any) => {
       console.error('Error al obtener los cambios', error);
     });

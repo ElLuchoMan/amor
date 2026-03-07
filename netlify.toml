@@ -28,6 +28,7 @@
 
 [build.environment]
   FAUNADB_SECRET = "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"
+  NODE_VERSION = "22"
 
 [context.production.environment]
   FAUNADB_SECRET = "fnAFlqySWtAAQgxz9uNHjgDxeXWN8rQ1WMpk03WB"

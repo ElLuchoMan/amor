@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SongsService } from '../../services/songs.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -18,6 +18,7 @@ export class SongsComponent implements OnInit {
   private songService = inject(SongsService);
   private router = inject(Router);
   private toastr = inject(ToastrService);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.getSongs();
@@ -28,11 +29,20 @@ export class SongsComponent implements OnInit {
       (data: any[]) => {
         console.log('Songs fetched successfully:', data);
         this.songs = data;
-        this.isLoading = false;
+        
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
       },
       (error: any) => {
         console.error('Error fetching songs:', error);
-        this.isLoading = false;
+        
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
+        
         this.toastr.error(`Error fetching songs: ${error}`, 'ERROR');
       }
     );

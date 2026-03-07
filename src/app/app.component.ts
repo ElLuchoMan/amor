@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { initializeApp } from "firebase/app";
@@ -44,7 +44,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private serviceWorkerService: ServiceWorkerService,
     private router: Router,
-    private celebrationService: CelebrationService
+    private celebrationService: CelebrationService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -68,11 +69,17 @@ export class AppComponent implements OnInit, OnDestroy {
   private initializeCelebrations() {
     // Suscribirse a los observables del servicio de celebración
     const balloonsSubscription = this.celebrationService.showBalloons$.subscribe(
-      show => this.showBalloons = show
+      show => setTimeout(() => {
+        this.showBalloons = show;
+        this.cdr.detectChanges();
+      })
     );
     
     const celebrationSubscription = this.celebrationService.celebrationEvent$.subscribe(
-      event => this.currentCelebration = event
+      event => setTimeout(() => {
+        this.currentCelebration = event;
+        this.cdr.detectChanges();
+      })
     );
     
     this.subscriptions.push(balloonsSubscription, celebrationSubscription);

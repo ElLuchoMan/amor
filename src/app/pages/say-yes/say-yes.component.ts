@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import * as bootstrap from 'bootstrap';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -17,7 +17,13 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   insta = '';
   youtube = '';
 
-  constructor(private router: Router, private songsService: SongsService, private resourcesService: ResourcesService, private toastr: ToastrService) { }
+  constructor(
+    private router: Router, 
+    private songsService: SongsService, 
+    private resourcesService: ResourcesService, 
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.getResources();
@@ -30,9 +36,12 @@ export class SayYesComponent implements OnInit, AfterViewInit {
   getResources(): void {
     this.resourcesService.listResources().subscribe({
       next: (data: any) => {
-        this.image = this.resourcesService.getUrlByType(data, 'image');
-        this.insta = this.resourcesService.getUrlByType(data, 'insta');
-        this.youtube = this.resourcesService.getUrlByType(data, 'youtube');
+        setTimeout(() => {
+          this.image = this.resourcesService.getUrlByType(data, 'image');
+          this.insta = this.resourcesService.getUrlByType(data, 'insta');
+          this.youtube = this.resourcesService.getUrlByType(data, 'youtube');
+          this.cdr.detectChanges();
+        });
       },
       error: (error: any) => {
         console.error('Error fetching image and insta:', error);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -16,6 +16,7 @@ export class TristezaComponent {
   palabrasPosibles: string[] = ["coffie", "milu", "natalia", "mia", "amorcito", "alejandro", "betty", "monchito", "morado", "elefante"];
   toastr = inject(ToastrService);
   router = inject(Router);
+  cdr = inject(ChangeDetectorRef);
   letras: string = "abcdefghijklmnñopqrstuvwxyz";
   palabraOculta: string;
   palabraVisible: string;
@@ -142,16 +143,21 @@ export class TristezaComponent {
     if (this.juegoTerminado) return;
     const letra = this.recogerLetra();
     this.letraElegida = letra ? letra.toLowerCase() : '';
-    if (this.letraElegida && this.letraElegida.length === 1) {
-      if (this.letras.includes(this.letraElegida)) {
-        this.comprobarLetras(this.letraElegida);
+    
+    // Forzamos salida del loop asíncrono en caso de clicks rápidos
+    setTimeout(() => {
+      if (this.letraElegida && this.letraElegida.length === 1) {
+        if (this.letras.includes(this.letraElegida)) {
+          this.comprobarLetras(this.letraElegida);
+        } else {
+          this.mostrarMensaje('El caracter ingresado no es una letra');
+        }
       } else {
-        this.mostrarMensaje('El caracter ingresado no es una letra');
+        this.mostrarMensaje('Por favor ingrese solo una letra');
       }
-    } else {
-      this.mostrarMensaje('Por favor ingrese solo una letra');
-    }
-    this.letraElegida = '';
+      this.letraElegida = '';
+      this.cdr.detectChanges();
+    });
   }
 
   finalizarGanador(): void {

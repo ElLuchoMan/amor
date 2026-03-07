@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LettersService } from '../../services/letters.service';
 import { CommonModule } from '@angular/common';
@@ -19,19 +19,23 @@ export class LetterDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private lettersService: LettersService,
-    private sanitizer: DomSanitizer // Agregar DomSanitizer
+    private sanitizer: DomSanitizer, // Agregar DomSanitizer
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     const date = this.route.snapshot.paramMap.get('date');
     this.lettersService.getLetters().subscribe(letters => {
-        this.letter = letters.find(l => l.date === date);
-        
-        if (this.letter?.video) {
-            console.log("Video URL antes de sanitizar:", this.letter.video);
-            this.safeVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.letter.video);
-            console.log("URL Sanitizada:", this.safeVideoUrl);
-        }
+        setTimeout(() => {
+          this.letter = letters.find(l => l.date === date);
+          
+          if (this.letter?.video) {
+              console.log("Video URL antes de sanitizar:", this.letter.video);
+              this.safeVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.letter.video);
+              console.log("URL Sanitizada:", this.safeVideoUrl);
+          }
+          this.cdr.detectChanges();
+        });
     });
 }
 getVideoIframe(): SafeHtml {

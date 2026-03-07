@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ErrorLoggingService } from '../../services/error-logging.service';
@@ -36,7 +36,8 @@ export class HeaderComponent implements OnInit {
     private resourcesService: ResourcesService,
     private uuidService: UUIDService,
     private modalService: NgbModal,
-    private errorLoggingService: ErrorLoggingService
+    private errorLoggingService: ErrorLoggingService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -47,10 +48,16 @@ export class HeaderComponent implements OnInit {
   getLogo(): void {
     this.resourcesService.listResources().subscribe({
       next: (data: any) => {
-        this.logo = this.resourcesService.getUrlByType(data, 'logo');
+        setTimeout(() => {
+          this.logo = this.resourcesService.getUrlByType(data, 'logo');
+          this.cdr.detectChanges();
+        });
       },
       error: (err: any) => {
-        this.openModal(`Error retrieving logo: ${this.errorLoggingService.logError(err)}`);
+        setTimeout(() => {
+          this.openModal(`Error retrieving logo: ${this.errorLoggingService.logError(err)}`);
+          this.cdr.detectChanges();
+        });
       }
     });
   }
