@@ -70,10 +70,18 @@ a {
     }
 }
 
-// Detalle de carta: la card exterior del layout usa p-5 (3rem por lado), lo que
-// deja muy poco ancho en móvil. Se reduce solo cuando la ruta activa es el detalle.
+// Detalle y lista de cartas: la card exterior del layout usa p-5 (3rem por lado), lo que
+// deja muy poco ancho en móvil. Se reduce solo cuando la ruta activa es el detalle o la lista.
 @media (max-width: 767.98px) {
-    .card-body:has(> app-letter-detail) {
+    .card-body:has(> app-letter-detail),
+    .card-body:has(> app-letters-page) {
         padding: 1rem !important;
     }
+}
+
+// Ángulo animable para el borde LED de la lista de cartas
+@property --led-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
 }
