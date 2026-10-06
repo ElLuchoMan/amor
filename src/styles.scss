@@ -69,3 +69,11 @@ a {
         align-items: center;
     }
 }
+
+// Detalle de carta: la card exterior del layout usa p-5 (3rem por lado), lo que
+// deja muy poco ancho en móvil. Se reduce solo cuando la ruta activa es el detalle.
+@media (max-width: 767.98px) {
+    .card-body:has(> app-letter-detail) {
+        padding: 1rem !important;
+    }
+}
