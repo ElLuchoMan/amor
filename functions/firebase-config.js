@@ -1,4 +1,5 @@
-const admin = require('firebase-admin');
+const { initializeApp, getApps, cert } = require('firebase-admin/app');
+const { getFirestore } = require('firebase-admin/firestore');
 
 // Configuración para Netlify Functions - solo usa variables de entorno
 let serviceAccount;
@@ -22,11 +23,11 @@ try {
 }
 
 // Inicializar Firebase Admin solo si no está ya inicializado
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+if (!getApps().length) {
+  initializeApp({
+    credential: cert(serviceAccount),
     projectId: projectId
   });
 }
 
-module.exports = admin.firestore();
+module.exports = getFirestore();

@@ -1,5 +1,6 @@
 require("dotenv").config(); // solo en local, al inicio
-const admin = require("firebase-admin");
+const { initializeApp, getApps, cert } = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
 
 // Configurar Firebase Admin
 let serviceAccount;
@@ -35,11 +36,11 @@ try {
   }
 }
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+if (!getApps().length) {
+  initializeApp({
+    credential: cert(serviceAccount),
     projectId: projectId,
   });
 }
 
-module.exports = admin.firestore();
+module.exports = getFirestore();
