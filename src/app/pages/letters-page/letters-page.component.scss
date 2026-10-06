@@ -4,33 +4,23 @@
     transition: transform 0.5s;
     height: 96%;
     width: 100%;
-    // Borde tipo tira LED: un "cometa" de luz morada recorre el contorno
-    border: 0;
-    padding: 3px;
+    // Brillo que "respira": el borde y el resplandor suben y bajan suavemente
+    border: 2px solid rgba(124, 58, 237, 0.55);
     border-radius: 12px;
-    background: conic-gradient(
-        from var(--led-angle),
-        #2b0f4d 0deg,
-        #2b0f4d 190deg,
-        #6a11cb 250deg,
-        #9d4dff 310deg,
-        #d9b3ff 345deg,
-        #ffffff 360deg
-    );
-    box-shadow: 0 0 14px rgba(124, 58, 237, 0.45);
-    animation: led-spin 4s linear infinite;
+    box-shadow: 0 0 6px rgba(124, 58, 237, 0.25);
+    animation: breathe 3.2s ease-in-out infinite;
 }
 
-.stretched-link {
-    display: block;
-    overflow: hidden;
-    border-radius: 9px;
-    background-color: #212529;
-}
+@keyframes breathe {
+    0%,
+    100% {
+        border-color: rgba(124, 58, 237, 0.55);
+        box-shadow: 0 0 6px rgba(124, 58, 237, 0.25);
+    }
 
-@keyframes led-spin {
-    to {
-        --led-angle: 360deg;
+    50% {
+        border-color: #b266ff;
+        box-shadow: 0 0 22px rgba(157, 77, 255, 0.75);
     }
 }
 
@@ -45,6 +35,7 @@
     opacity: 0.3;
 }
 
+// Fecha que se muestra al pasar el mouse (escritorio)
 .card-body {
     transition: transform 0.5s;
     position: absolute;
@@ -53,63 +44,80 @@
     transform: translate(-50%, -50%) rotateY(180deg);
     backface-visibility: hidden;
     opacity: 0;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .card:hover .card-body {
     opacity: 1;
     transform: translate(-50%, -50%) rotateY(0deg);
 }
+
 .stretched-link {
+    position: relative;
     color: #9600db;
     font-style: 'Roboto';
 }
+
+// Fecha con corazones: mismo estilo en el hover y en el overlay fijo
+.card-title,
+.date-text {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+
+    &::before,
+    &::after {
+        content: '\2665';
+        display: inline-block;
+        margin: 0 0.5rem;
+        font-size: 0.7em;
+        vertical-align: middle;
+        color: #c58bff;
+    }
+}
+
+// Overlay fijo con la fecha sobre la parte baja de la imagen (siempre visible).
+// En escritorio se desvanece al hacer hover, cuando aparece la fecha centrada.
+.date-badge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 2.5rem 0.75rem 1.25rem;
+    text-align: center;
+    background: linear-gradient(
+        to top,
+        rgba(22, 6, 44, 0.92) 0%,
+        rgba(22, 6, 44, 0.6) 55%,
+        rgba(22, 6, 44, 0) 100%
+    );
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.card:hover .date-badge {
+    opacity: 0;
+}
+
 @media (max-width: 768px) {
-    // La fecha se superpone en la parte baja de la imagen con un degradé,
-    // en lugar de una franja negra aparte.
-    .stretched-link {
-        position: relative;
-    }
-
+    // En móvil no hay hover: solo queda el overlay fijo
     .card-body {
-        position: absolute;
-        top: auto;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        transform: none;
-        opacity: 1;
-        color: #fff;
-        padding: 2.5rem 0.75rem 0.75rem;
-        background: linear-gradient(
-            to top,
-            rgba(22, 6, 44, 0.92) 0%,
-            rgba(22, 6, 44, 0.6) 55%,
-            rgba(22, 6, 44, 0) 100%
-        );
-        text-align: center;
+        display: none;
     }
 
-    .card-title {
-        margin: 0;
-        font-size: 1.25rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-
-        &::before,
-        &::after {
-            content: '\2665';
-            display: inline-block;
-            margin: 0 0.5rem;
-            font-size: 0.7em;
-            vertical-align: middle;
-            color: #c58bff;
-        }
-    }
-
-    .card-img-top {
+    .card-img-top,
+    .card:hover .card-img-top {
         opacity: 1;
         transform: none;
+    }
+
+    .card:hover .date-badge {
+        opacity: 1;
     }
 }
 
