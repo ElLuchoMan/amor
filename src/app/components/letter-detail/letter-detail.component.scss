@@ -1,17 +1,29 @@
+// La card exterior del layout (app.component) ya enmarca el contenido, así que
+// la card interna se aplana en todos los tamaños para no tener card dentro de card.
 .container {
-    max-width: 600px;
+    max-width: 680px;
     margin: auto;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .card {
-    border: 1px solid #444;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s;
-    cursor: pointer;
-    background-color: #333;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
     color: #fff;
 }
+
+.card-img-top {
+    border-radius: 0.75rem;
+}
+
+.card-body {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .video-container {
     position: relative;
     width: 100%;
@@ -26,27 +38,47 @@
     border-radius: 10px; /* Opcional para bordes redondeados */
 }
 
-// En móvil la card externa del layout (app.component) ya enmarca el contenido,
-// así que se aplana la card interna y se quitan gutters extra para ganar ancho útil.
-@media (max-width: 767.98px) {
+// Escritorio: dos columnas (imagen fija a la izquierda, carta a la derecha)
+// para aprovechar el ancho en lugar de una columna angosta con scroll largo.
+@media (min-width: 992px) {
     .container {
-        padding-left: 0;
-        padding-right: 0;
+        max-width: 1100px;
     }
 
     .card {
-        background-color: transparent;
-        border: 0;
-        border-radius: 0;
-        box-shadow: none;
+        display: grid;
+        grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+        column-gap: 2.5rem;
+        align-items: center;
     }
 
-    .card-img-top {
-        border-radius: 0.75rem;
+    .card-img-top,
+    .video-container {
+        position: sticky;
+        top: 5.5rem;
+        align-self: start;
     }
 
     .card-body {
-        padding-left: 0;
-        padding-right: 0;
+        text-align: left;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        margin-top: 0 !important;
+    }
+
+    .card-text {
+        margin-top: 1.5rem !important;
+        line-height: 1.7;
+    }
+
+    .buttons {
+        text-align: left !important;
+    }
+
+    .buttons .btn {
+        margin-left: 0 !important;
+        margin-right: 0.75rem !important;
     }
 }
